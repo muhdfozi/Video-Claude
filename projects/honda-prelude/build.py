@@ -19,6 +19,7 @@ WORD_FIX, TOKEN_FIX, KEYWORDS = getattr(edl, "WORD_FIX", {}), getattr(edl, "TOKE
 MUSIC = getattr(edl, "MUSIC", None)
 THEME = getattr(edl, "THEME", "clean")      # "clean" (Prelude look) or "paper" (collage look)
 NO_ZOOM = getattr(edl, "NO_ZOOM", False)   # source has burned-in graphics: never crop/zoom
+LAYOUT = getattr(edl, "LAYOUT", None)       # dict(kind="inset", box=(x,y,w,h) in 1080x1920, border=16): video as a photo on paper
 AUDIO_SRC = getattr(edl, "AUDIO", None)    # optional cleaner audio file with identical timing     # dict(file=..., start=sec, lufs=-27, duck_db=6)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -42,7 +43,10 @@ args = ap.parse_args()
 if args.mode == "final":
     _cs = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=color_space",
                           "-of", "csv=p=0", args.src], capture_output=True, text=True).stdout.strip()
-    OW, OH, FPS, SRC_MATRIX = 1080, 1920, 60, ("bt2020" if "2020" in _cs else "bt709")
+    _fr = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=r_frame_rate",
+                          "-of", "csv=p=0", args.src], capture_output=True, text=True).stdout.strip()
+    _n, _d = (_fr.split(",")[0].split("\n")[0].split("/") + ["1"])[:2]
+    OW, OH, FPS, SRC_MATRIX = 1080, 1920, round(float(_n) / float(_d)), ("bt2020" if "2020" in _cs else "bt709")   # fps follows source
 else:
     OW, OH, FPS, SRC_MATRIX = 720, 1280, 30, "bt709"
 
@@ -397,7 +401,7 @@ if MUSIC:
     gain = np.repeat(g, blk); gain = np.concatenate([gain, np.full(n_total - len(gain), gain[-1] if len(gain) else 1.0)])
     mix += mus * gain[:, None]
 
-GAIN = dict(whoosh=0.20, pop=0.22, cash=0.30, riser=0.20, scratch=0.28, ding=0.25, thump=0.38, paper=0.16)
+GAIN = dict(whoosh=0.20, pop=0.22, cash=0.30, riser=0.20, scratch=0.28, ding=0.25, thump=0.38, paper=0.16, click=0.30)
 for t0, name in sfx_events:
     base = "riser" if name == "riser_in" else name
     x = read_wav(os.path.join(args.sfx, base + ".wav"))
@@ -443,6 +447,31 @@ writer = subprocess.Popen(
      *enc, "-movflags", "+faststart", "-shortest", args.out], stdin=subprocess.PIPE)
 
 base = OW / SW
+PANEL = None
+if LAYOUT and LAYOUT.get("kind") == "inset":
+    sc = OW / 1080
+    bx, by, bw, bh = [int(round(v * sc)) for v in LAYOUT["box"]]
+    brd = int(round(LAYOUT.get("border", 16) * sc))
+    gain = GFX_GAIN
+    rng = np.random.default_rng(3)
+    # cream paper: base colour + fine grain + soft low-frequency mottling
+    paper = np.array([242, 236, 223], np.float32) / 255.0
+    lo = cv2.resize(rng.standard_normal((24, 14)).astype(np.float32), (OW, OH), interpolation=cv2.INTER_CUBIC)
+    grain = rng.standard_normal((OH, OW)).astype(np.float32)
+    lum = 1.0 + 0.018 * lo + 0.012 * grain
+    bg = paper[None, None, :] * lum[:, :, None]
+    # soft drop shadow under the photo
+    sh = np.zeros((OH, OW), np.float32)
+    sh[by - brd + int(14 * sc): by + bh + brd + int(14 * sc), bx - brd + int(6 * sc): bx + bw + brd + int(6 * sc)] = 1
+    sh = cv2.GaussianBlur(sh, (0, 0), 18 * sc)
+    bg *= (1 - 0.30 * sh)[:, :, None]
+    bg[by - brd: by + bh + brd, bx - brd: bx + bw + brd] = np.array([251, 250, 247], np.float32) / 255.0   # white photo border
+    bg = np.clip(bg * gain, 0, 1)
+    if args.hdr:
+        BG = (bg * 65535).astype(np.uint16)                     # RGB order (rgb48le)
+    else:
+        BG = (bg[:, :, ::-1] * 255).astype(np.uint8)            # BGR order (bgr24)
+    PANEL = (bx, by, bw, bh)
 n_frames = int(round((min(TOTAL, args.limit) if args.limit else TOTAL) * FPS))
 fi = 0
 for s in subs:
@@ -465,12 +494,23 @@ for s in subs:
             frame = np.frombuffer(b, NP).reshape(SH, SW, 3)
         tv = s["v0"] + off + j / FPS
         z, cx, cy = zoom_at(s["seg"], tv, s["punch"])
-        k = base * z
-        rw, rh = max(OW, round(SW * k)), max(OH, round(SH * k))
-        img = cv2.resize(frame, (rw, rh), interpolation=cv2.INTER_AREA if k < 1 else cv2.INTER_LINEAR)
-        x0 = int(round(min(max(cx * rw - OW / 2, 0), rw - OW)))
-        y0 = int(round(min(max(cy * rh - OH / 2, 0), rh - OH)))
-        writer.stdin.write(np.ascontiguousarray(img[y0:y0 + OH, x0:x0 + OW]).tobytes())
+        if PANEL:
+            bx, by, bw, bh = PANEL
+            k = bw * z / SW                                     # z = 1: full source width fills the photo
+            rw, rh = max(bw, round(SW * k)), max(bh, round(SH * k))
+            img = cv2.resize(frame, (rw, rh), interpolation=cv2.INTER_AREA if k < 1 else cv2.INTER_LINEAR)
+            x0 = int(round(min(max(cx * rw - bw / 2, 0), rw - bw)))
+            y0 = int(round(min(max(cy * rh - bh / 2, 0), rh - bh)))
+            canvas = BG.copy()
+            canvas[by:by + bh, bx:bx + bw] = img[y0:y0 + bh, x0:x0 + bw]
+            writer.stdin.write(canvas.tobytes())
+        else:
+            k = base * z
+            rw, rh = max(OW, round(SW * k)), max(OH, round(SH * k))
+            img = cv2.resize(frame, (rw, rh), interpolation=cv2.INTER_AREA if k < 1 else cv2.INTER_LINEAR)
+            x0 = int(round(min(max(cx * rw - OW / 2, 0), rw - OW)))
+            y0 = int(round(min(max(cy * rh - OH / 2, 0), rh - OH)))
+            writer.stdin.write(np.ascontiguousarray(img[y0:y0 + OH, x0:x0 + OW]).tobytes())
         fi += 1
     rd.stdout.close(); rd.kill(); rd.wait()
     print(f"\r{fi}/{n_frames} frames", end="", flush=True)

@@ -172,3 +172,12 @@ User pilih: **grafik kertas di atas footage** (walkaround kekal). Set `THEME = "
 - Saiz font libass ≠ PIL: `paper_gfx.libass_scale()` betulkan (Patrick Hand 0.74, Permanent Marker 0.70).
 - Untuk lebih dekat dengan reference: minta user gambar bukti (geran, rekod servis, mileage) untuk
   dijadikan "dokumen" dengan stabilo; maskot hanya jika user beri watak sendiri (jangan tiru watak orang).
+| Resit | `kind="receipt"`: borang kertas dengan tajuk marker, baris bergaris; setiap baris (label mesin taip + nilai marker) muncul tepat bila nombor disebut (bunyi klik); baris `"total"` merah + stabilo + cash. Untuk video kira-kira (harga, OTR, loan, gaji) |
+| Pita | `kind="tape"`: pita pelekat statik (contoh bucu gambar) |
+
+**Layout "polaroid atas kertas"** (`LAYOUT = dict(kind="inset", box=(110,150,860,860), border=16)` dalam `edl.py`):
+video dikecilkan jadi gambar berbingkai putih + bayang, di atas latar kertas krim bertekstur; semua kad
+kertas di ruang bawah (y ≈ 1075–1560). Guna untuk **talking head selfie** (muka penuh frame): tanpa layout
+ini kad pasti tutup dagu/mulut. Zoom keys masih berfungsi (relatif kepada gambar). Pastikan ruang bawah
+sentiasa ada satu elemen (kad/keypoint/cop) — reference tak pernah biar kertas kosong > ~2 s.
+Contoh: `projects/gr86-gaji/edl.py`.

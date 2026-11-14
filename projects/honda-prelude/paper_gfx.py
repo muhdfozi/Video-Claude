@@ -73,7 +73,7 @@ def arrow_down(len_=120, w=14):
 
 
 def render(GRAPHICS, KEYPOINTS, src2out, add, TOTAL, C, sfx_events, KEYPOINTS_ON=True):
-    PAPER, INK, HILITE, TAG, RED, TAPE, GREY = (C("F3EDE0"), C("1C1B19"), C("FFE14D"), C("F7D84A"),
+    PAPER, INK, HILITE, TAG, RED, TAPE, GREY = (C("FCFAF4"), C("1C1B19"), C("FFE14D"), C("F7D84A"),
                                                  C("D23A2C"), C("E9DDC1"), C("5B5750"))
     SH = r"\shad7\4c&H000000&\4a&HA8&"             # soft paper shadow
 
@@ -173,6 +173,39 @@ def render(GRAPHICS, KEYPOINTS, src2out, add, TOTAL, C, sfx_events, KEYPOINTS_ON
                   sfx=None if g.get("sfx") else "thump")
         elif k == "name":
             paper_note(t0, t1, 540, g.get("y", 1150), [g["text"]], 64, TYPE, TYPE_N, INK, 2, seed, hl=False, bg=TAG)
+        elif k == "tape":
+            add(t0, t1, "{" + r"\an5\pos(" + f"{g['x']},{g['y']}" + r")\frz" + str(g.get("rot", 30)) + r"\p1\bord0\shad2\4a&HC8&\c" + TAPE
+                + r"&\1a&H28&}" + tape(g.get("w", 150), g.get("h", 44), seed), 9)
+        elif k == "receipt":
+            # paper form that fills in row by row as the numbers are spoken
+            y0 = g.get("y", 1000); rows = g["rows"]; rh = g.get("rh", 80)
+            t_end = min(src2out(g["until"]) if g.get("until") else TOTAL, TOTAL)
+            w = g.get("w", 880); x0 = 540 - w / 2
+            h = 120 + rh * len(rows) + 20
+            org = r"\org(" + f"540,{y0 + h / 2:.0f}" + ")"
+            common = org + r"\frz" + str(g.get("rot", -1.5))
+            add(t0, t_end, "{" + r"\an7" + slide(x0, y0, 40, 200) + common + r"\fad(0,160)\p1\bord0" + SH + r"\c" + PAPER + "&}" + torn(w, h, seed, 6, 18), 5)
+            add(t0, t_end, "{" + r"\an4" + slide(x0 + 40, y0 + 62, 40, 200) + common + r"\fad(0,160)\bord0\shad0\fn" + MARKER_N + r"\fs74\c" + INK + "&}" + g["title"], 7)
+            add(t0, t_end, "{" + r"\an5" + slide(x0 + w - 60, y0 + 8, 40, 200) + org + r"\frz20\fad(0,160)\p1\bord0\shad0\c" + TAPE + r"&\1a&H40&}" + tape(110, 30, seed + 3), 8)
+            for i, row in enumerate(rows):
+                at, label, val = row[:3]; style = row[3] if len(row) > 3 else ""
+                ta = max(t0, src2out(at)); yy = y0 + 120 + rh * i + rh / 2
+                if ta >= t_end: continue
+                # faint ruled line under every row from the start (a form waiting to be filled)
+                add(t0, t_end, "{" + r"\an7\pos(" + f"{x0 + 36:.0f},{yy + rh / 2 - 6:.0f}" + ")" + common + r"\fad(0,160)\p1\bord0\shad0\c" + GREY
+                    + (r"&\1a&H60&}" if style != "total" else r"&\1a&H10&}") + rect(w - 72, 3 if style != "total" else 5), 6)
+                fx = r"\fad(120,160)\move(" + "{X}," + f"{yy + 18:.0f}" + ",{X}," + f"{yy:.0f}" + ",0,160)"
+                add(ta, t_end, "{" + r"\an4" + fx.replace("{X}", f"{x0 + 40:.0f}") + common + r"\bord0\shad0\fn" + TYPE_N
+                    + r"\fs40\c" + (INK if style == "total" else GREY) + "&}" + label, 7)
+                if style == "total":
+                    vw = tw(val, MARKER, 84)
+                    hx = x0 + w - 40 - vw - 8
+                    add(ta, t_end, "{" + r"\an7\pos(" + f"{hx:.0f},{yy - 22:.0f}" + ")" + common + r"\clip(" + f"{hx - 10:.0f},0,{hx - 10:.0f},1920)"
+                        + r"\t(150,450,\clip(" + f"{hx - 10:.0f},0,{hx + vw + 30:.0f},1920))" + r"\fad(0,160)\p1\bord0\shad0\c" + HILITE + r"&\1a&H20&}" + rect(vw + 16, 46), 6)
+                add(ta, t_end, "{" + r"\an6" + fx.replace("{X}", f"{x0 + w - 40:.0f}") + common + r"\bord0\shad0\fn" + MARKER_N
+                    + r"\fs" + ("84" if style == "total" else "72") + r"\c" + (RED if style == "total" else INK) + "&}" + val, 7)
+                sfx_events.append((ta, "cash" if style == "total" else "click"))
+            sfx_events.append((t0, "paper"))
         elif k == "cta":
             ty = g.get("y", 470)
             w, h = paper_note(t0, t1, 540, ty, ["", g["text"], ""], 84, HAND, HAND_N, INK, -2, seed, bg=TAG, sfx="paper")
