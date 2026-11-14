@@ -11,7 +11,12 @@ import numpy as np
 import cv2
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from edl import SEGMENTS, GRAPHICS, WORD_FIX, TOKEN_FIX, KEYWORDS, KEYPOINTS
+import importlib.util
+_edl_path = sys.argv[sys.argv.index("--edl") + 1] if "--edl" in sys.argv else os.path.join(os.path.dirname(os.path.abspath(__file__)), "edl.py")
+_spec = importlib.util.spec_from_file_location("edl", _edl_path); edl = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(edl)
+SEGMENTS, GRAPHICS, KEYPOINTS = edl.SEGMENTS, edl.GRAPHICS, getattr(edl, "KEYPOINTS", [])
+WORD_FIX, TOKEN_FIX, KEYWORDS = getattr(edl, "WORD_FIX", {}), getattr(edl, "TOKEN_FIX", {}), getattr(edl, "KEYWORDS", set())
+MUSIC = getattr(edl, "MUSIC", None)     # dict(file=..., start=sec, lufs=-27, duck_db=6)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SR = 48000
@@ -25,6 +30,7 @@ ap.add_argument("--words", required=True)
 ap.add_argument("--sfx", required=True)
 ap.add_argument("--out", required=True)
 ap.add_argument("--work", default=".")
+ap.add_argument("--edl", default=None)
 ap.add_argument("--hdr", action="store_true", help="final: keep original HLG/BT.2020 10-bit colour (no conversion)")
 ap.add_argument("--keypoints", action="store_true", help="key-point stickers instead of running subtitles")
 ap.add_argument("--limit", type=float, default=0, help="render only the first N seconds (test)")
@@ -102,9 +108,9 @@ TOTAL = t
 def src2out(ts, prefer_next=True):
     for s in subs:
         if s["a0"] - 1e-6 <= ts < s["a1"]: return s["o0"] + ts - s["a0"]
-    if prefer_next:
-        for s in subs:
-            if s["a0"] >= ts: return s["o0"]
+    if prefer_next:                      # anchor fell in a removed gap: snap to the nearest later kept piece
+        later = [s for s in subs if s["a0"] >= ts]
+        if later: return min(later, key=lambda s: s["a0"])["o0"]
     return None
 
 # ---------------------------------------------------------------- zoom curve
@@ -236,8 +242,16 @@ for g in GRAPHICS:
     k = g["kind"]
     if g.get("sfx"): sfx_events.append((t0, g["sfx"]))
     if k == "hooktext":
-        add(t0, t1, r"{\an5\pos(540,450)\fad(0,120)\frz3\bord8\shad0" + POP + r"\fs104}" + g["lines"][0], 8)
-        add(t0 + 0.12, t1, r"{\an5\pos(540,585)\fad(0,120)\frz3\bord10\shad0\c" + YEL + "&" + POP + r"\fs150}" + g["lines"][1], 8)
+        lines = g["lines"]
+        if all(isinstance(x, str) for x in lines):        # legacy: small white line + big yellow line
+            lines = [(lines[0], 104, False), (lines[1], 150, True)]
+        y = 450 - lines[0][1] / 2 + 52
+        for li, (txt, fs, yel) in enumerate(lines):
+            y += fs * 0.5
+            col = (r"\c" + YEL + "&") if yel else ""
+            add(t0 + 0.12 * li, t1, r"{\an5\pos(540," + str(int(y)) + r")\fad(0,120)\frz3\bord" + str(8 if fs < 130 else 10)
+                + r"\shad0" + col + POP + r"\fs" + str(fs) + "}" + txt, 8)
+            y += fs * 0.55
     elif k == "name":
         w, h = 330, 92
         add(t0, t1, r"{\an5\pos(540,1150)\p1\bord0\shad0\c" + YEL + r"&\fad(80,120)" + POP + "}" + rrect(w, h, 46), 6)
@@ -254,7 +268,10 @@ for g in GRAPHICS:
     elif k == "spec":
         y = 620 + 150 * g.get("slot", 0)
         label, val = g["rows"][0]
-        w, h, xr = 580, 130, 1040
+        from PIL import ImageFont
+        _f = lambda fs: ImageFont.truetype(os.path.join(HERE, "fonts", "Montserrat-900.ttf"), fs)
+        w = max(580, int(_f(48).getlength(label) * 1.08 + _f(88).getlength(val) + 34 + 30 + 50))
+        h, xr = 130, 1040
         mv = lambda x0, yy: r"\move(" + f"{x0+420},{yy},{x0},{yy},0,200" + ")"
         add(t0, t1, r"{\an6" + mv(xr, y) + r"\p1\bord0\shad0\c" + BLK + r"&\1a&H40&\fad(60,150)}" + rrect(w, h, 28), 6)
         add(t0, t1, r"{\an4" + mv(xr - w + 34, y) + r"\bord0\shad0\c" + WHT + r"&\fs48\fsp2\fad(60,150)}" + label, 7)
@@ -346,6 +363,27 @@ subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vraw, "-af",
                 "loudnorm=I=-15:TP=-2:LRA=9", "-ar", str(SR), vproc], check=True)
 mix = read_wav(vproc)[:n_total]
 if len(mix) < n_total: mix = np.vstack([mix, np.zeros((n_total - len(mix), 2), np.float32)])
+if MUSIC:
+    mpath = os.path.join(args.work, "music_bed.wav")
+    fade_out = MUSIC.get("fade_out", 1.5)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(MUSIC["start"]), "-t", f"{TOTAL:.3f}", "-i", MUSIC["file"], "-vn",
+                    "-af", f"loudnorm=I={MUSIC.get('lufs', -27)}:TP=-3:LRA=11,afade=t=in:d=0.25,"
+                           f"afade=t=out:st={max(0, TOTAL - fade_out):.3f}:d={fade_out}",
+                    "-ac", "2", "-ar", str(SR), mpath], check=True)
+    mus = read_wav(mpath)[:n_total]
+    if len(mus) < n_total: mus = np.vstack([mus, np.zeros((n_total - len(mus), 2), np.float32)])
+    # duck under speech: envelope of the edited voice, fast attack / slow release
+    env = np.abs(mix.mean(1))
+    blk = 480; nb = len(env) // blk
+    lv = 20 * np.log10(np.sqrt((env[:nb * blk].reshape(nb, blk) ** 2).mean(1)) + 1e-9)
+    talk = (lv > -42).astype(np.float32)
+    g = np.ones(nb, np.float32); duck = 10 ** (-MUSIC.get("duck_db", 6) / 20); cur = 1.0
+    for i in range(nb):
+        tgt = duck if talk[max(0, i - 2):i + 3].any() else 1.0
+        cur += (tgt - cur) * (0.35 if tgt < cur else 0.04)
+        g[i] = cur
+    gain = np.repeat(g, blk); gain = np.concatenate([gain, np.full(n_total - len(gain), gain[-1] if len(gain) else 1.0)])
+    mix += mus * gain[:, None]
 
 GAIN = dict(whoosh=0.20, pop=0.22, cash=0.30, riser=0.20, scratch=0.28, ding=0.25)
 for t0, name in sfx_events:

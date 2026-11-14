@@ -68,6 +68,8 @@ Kalau ragu, buang. Video mesti nampak macam editor manusia yang yakin, bukan tem
 - **Zoom-on-cut:** selang-seli 100% ↔ ~110% pada jump cut dalam take sama.
 - **Emphasis punch:** 1.2–1.4× ke muka pada perkataan kunci.
 - **Detail crop dari source 4K** sebagai B-roll (caliper, door handle, stereng, lampu).
+- **Footage POV (tiada muka):** zoom sasar kereta/objek, bukan muka. Shot "tangan + kereta jauh"
+  → crop 1.8–2.2× ke kereta dari source 4K. Hook guna B-roll sudut terbaik kereta.
 - Audio fade 8 ms di setiap cut. Jangan potong tengah perkataan. Sahkan dengan
   transcribe semula audio hasil edit.
 
@@ -105,7 +107,13 @@ Kalau ragu, buang. Video mesti nampak macam editor manusia yang yakin, bukan tem
 - Suara keutamaan: highpass 90 Hz, denoise ringan, EQ (−2.5 dB @250 Hz, +2 dB @3.5 kHz),
   compressor 3:1, loudnorm ~-15 LUFS, limiter.
 - **Muzik:** reference ada muzik latar berterusan perlahan. Untuk projek Honda Prelude user pilih
-  **tiada muzik** (dia tambah trending sound dalam app). Tanya setiap projek.
+  **tiada muzik**. Bila user letak fail dalam folder Drive `Music`, guna fail itu.
+  - Fail panjang/kompilasi: analisis tenaga + tempo setiap 30 s (librosa), cari sempadan
+    movement (silencedetect −40 dB, ≥1 s), mula bahagian bertenaga **di permulaan frasa/movement**.
+    Jangan mula tengah frasa.
+  - Bed: loudnorm −27 LUFS, fade-in 0.25 s, fade-out 1.5–1.8 s di hujung video.
+  - **Ducking** bawah suara: −7 dB bila presenter bercakap (attack cepat, release perlahan).
+  - Set `MUSIC = dict(file=…, start=…, lufs=-27, duck_db=7)` dalam `edl.py`.
 - **SFX** (synth: `make_sfx.py`), setiap satu terikat pada event visual:
   whoosh = tukar section / cut dari B-roll, pop = kad/text masuk, cash = harga,
   riser = sebelum payoff, scratch = blooper. Purata ≤ 1 SFX setiap 3–4 s. Sticker keypoint tiada SFX.
@@ -140,4 +148,4 @@ Kalau ragu, buang. Video mesti nampak macam editor manusia yang yakin, bukan tem
 6. Preview (`build.py preview`), semak frame + transcribe semula audio. Tunjuk user. Jangan render final sebelum approve.
 7. Final: `build.py final --hdr --keypoints` (atau tanpa `--hdr` untuk SDR). Sahkan spec, warna, loudness.
 
-Pipeline rujukan: `projects/honda-prelude/` (edl.py, build.py, make_sfx.py, face_track.py).
+Pipeline rujukan: `projects/honda-prelude/` (build.py, make_sfx.py, face_track.py). Setiap projek ada `edl.py` sendiri: `python3 projects/honda-prelude/build.py final --hdr --keypoints --edl projects/<projek>/edl.py ...`. Contoh: `projects/honda-prelude/edl.py` (presenter on-camera), `projects/honda-jade/edl.py` (POV + muzik).
