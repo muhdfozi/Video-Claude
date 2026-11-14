@@ -11,7 +11,7 @@ import numpy as np
 import cv2
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from edl import SEGMENTS, GRAPHICS, WORD_FIX, TOKEN_FIX, KEYWORDS
+from edl import SEGMENTS, GRAPHICS, WORD_FIX, TOKEN_FIX, KEYWORDS, KEYPOINTS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SR = 48000
@@ -25,6 +25,9 @@ ap.add_argument("--words", required=True)
 ap.add_argument("--sfx", required=True)
 ap.add_argument("--out", required=True)
 ap.add_argument("--work", default=".")
+ap.add_argument("--hdr", action="store_true", help="final: keep original HLG/BT.2020 10-bit colour (no conversion)")
+ap.add_argument("--keypoints", action="store_true", help="key-point stickers instead of running subtitles")
+ap.add_argument("--limit", type=float, default=0, help="render only the first N seconds (test)")
 args = ap.parse_args()
 
 if args.mode == "final":
@@ -188,7 +191,11 @@ for w in kept:
 if cur: chunks.append(cur)
 
 # ---------------------------------------------------------------- ASS
-YEL, WHT, BLK = "&H001FD2FF", "&H00FFFFFF", "&H00000000"
+GFX_GAIN = 0.80 if args.hdr else 1.0     # HLG: graphics white ~75-80% signal (BT.2408 ref white), not 100%
+def C(hexrgb):
+    r, g, b = (round(int(hexrgb[i:i + 2], 16) * GFX_GAIN) for i in (0, 2, 4))
+    return f"&H00{b:02X}{g:02X}{r:02X}"
+YEL, WHT, BLK, BLUE, INK, RED = C("FFD21F"), C("FFFFFF"), C("000000"), C("4F6EF7"), C("15171A"), C("E02020")
 FONT = "Montserrat Black"
 
 def ts(x):
@@ -205,7 +212,7 @@ def add(t0, t1, text, layer=0, style="Sub"):
 
 POP = r"\fscx70\fscy70\t(0,90,\fscx108\fscy108)\t(90,160,\fscx100\fscy100)"
 
-for i, c in enumerate(chunks):
+for i, c in enumerate([] if args.keypoints else chunks):
     t0 = c[0]["o0"]
     nxt = chunks[i + 1][0]["o0"] if i + 1 < len(chunks) else TOTAL
     t1 = nxt if nxt - c[-1]["o1"] < 0.5 else c[-1]["o1"] + 0.25
@@ -259,7 +266,7 @@ for g in GRAPHICS:
         add(t0, t1, r"{\an5\pos(540,362)\p1\bord0\shad0\c" + YEL + r"&\fad(60,150)\fscx0\t(80,300,\fscx100)}" + rrect(w - 120, 8, 4), 7)
     elif k == "oops":
         anim = r"\t(0,60,\frz12)\t(60,120,\frz4)\t(120,180,\frz10)\t(180,240,\frz6)"
-        add(t0, t1, r"{\an5\pos(540,600)\frz8\bord9\shad0\3c&H002020E0&\fs118\fad(0,100)" + POP + anim + "}" + g["text"], 8)
+        add(t0, t1, r"{\an5\pos(540,600)\frz8\bord9\shad0\3c" + RED + r"&\fs118\fad(0,100)" + POP + anim + "}" + g["text"], 8)
     elif k == "cta":
         w, h = 900, 128
         pulse = "".join(r"\t(%d,%d,\fscx105\fscy105)\t(%d,%d,\fscx100\fscy100)" % (a, a + 300, a + 300, a + 600)
@@ -269,13 +276,31 @@ for g in GRAPHICS:
     elif k == "sfx":
         pass
 
+if args.keypoints:
+    from PIL import ImageFont
+    KFS = 58
+    kfont = ImageFont.truetype("/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf", KFS)
+    for n, (at, dur, txt) in enumerate(KEYPOINTS):
+        t0 = src2out(at)
+        if t0 is None: continue
+        t1 = min(t0 + dur, TOTAL)
+        plain = txt.replace("*", "")
+        w = int(kfont.getlength(plain)) + 64
+        h = 100
+        tilt = (-2.5, 2.0)[n % 2]
+        parts = txt.split("*")
+        body = "".join((r"{\c" + BLUE + "&}" + p + r"{\c" + INK + "&}") if i % 2 else p for i, p in enumerate(parts))
+        common = r"\an5\pos(540,1270)\frz" + str(tilt) + r"\fad(0,120)" + POP
+        add(t0, t1, "{" + common + r"\p1\bord0\shad6\4c" + BLK + r"&\4a&HB0&\c" + WHT + "&}" + rrect(w, h, 22), 6)
+        add(t0, t1, "{" + common + r"\bord0\shad0\fnInter Display\b1\fs" + str(KFS) + r"\c" + INK + "&}" + body, 7)
+
 ASS = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: 1080
 PlayResY: 1920
 WrapStyle: 2
 ScaledBorderAndShadow: yes
-YCbCr Matrix: TV.709
+YCbCr Matrix: None
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
@@ -346,36 +371,48 @@ for sd in probe.get("side_data_list", []):
 if abs(rot) == 90: SW, SH = SH, SW
 print("source", SW, SH, "rot", rot)
 
-if args.mode == "final":
+PIX, NP, BPP = ("rgb48le", np.uint16, 6) if args.hdr else ("bgr24", np.uint8, 3)
+if args.hdr:
+    enc = ["-c:v", "libx265", "-preset", "medium", "-crf", "18", "-pix_fmt", "yuv420p10le", "-tag:v", "hvc1",
+           "-x265-params", "log-level=error:colorprim=bt2020:transfer=arib-std-b67:colormatrix=bt2020nc:range=limited"
+           ":vbv-maxrate=12000:vbv-bufsize=24000",
+           "-color_primaries", "bt2020", "-color_trc", "arib-std-b67", "-colorspace", "bt2020nc", "-color_range", "tv",
+           "-c:a", "aac", "-b:a", "320k"]
+    VF_OUT = "scale=out_color_matrix=bt2020:out_range=tv,format=yuv420p10le"
+elif args.mode == "final":
     enc = ["-c:v", "libx264", "-preset", "slow", "-crf", "16", "-profile:v", "high", "-c:a", "aac", "-b:a", "320k"]
 else:
     enc = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-c:a", "aac", "-b:a", "192k"]
+if not args.hdr:
+    enc += ["-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709"]
+    VF_OUT = "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p"
 fontsdir = os.path.join(HERE, "fonts")
 writer = subprocess.Popen(
-    ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", f"{OW}x{OH}", "-r", str(FPS), "-i", "-",
-     "-i", final_audio, "-vf", f"ass={ass_path}:fontsdir={fontsdir},scale=out_color_matrix=bt709:out_range=tv,format=yuv420p",
-     "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
+    ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", PIX, "-s", f"{OW}x{OH}", "-r", str(FPS), "-i", "-",
+     "-i", final_audio, "-vf", f"ass={ass_path}:fontsdir={fontsdir}," + VF_OUT,
      *enc, "-movflags", "+faststart", "-shortest", args.out], stdin=subprocess.PIPE)
 
 base = OW / SW
-n_frames = int(round(TOTAL * FPS))
+n_frames = int(round((min(TOTAL, args.limit) if args.limit else TOTAL) * FPS))
 fi = 0
 for s in subs:
     first = math.ceil(s["o0"] * FPS - 1e-6)
     last = min(math.ceil(s["o1"] * FPS - 1e-6), n_frames)
     cnt = last - first
-    if cnt <= 0: continue
+    if cnt <= 0:
+        if first >= n_frames: break
+        continue
     off = first / FPS - s["o0"]
     rd = subprocess.Popen(["ffmpeg", "-v", "quiet", "-ss", f"{s['v0'] + off:.4f}", "-i", args.src, "-an",
                            "-frames:v", str(cnt + 2), "-vf",
-                           f"fps={FPS},scale=in_color_matrix={SRC_MATRIX}:in_range=tv,format=bgr24",
+                           f"fps={FPS},scale=in_color_matrix={SRC_MATRIX}:in_range=tv,format=" + PIX,
                            "-f", "rawvideo", "-"], stdout=subprocess.PIPE)
-    fsz = SW * SH * 3
+    fsz = SW * SH * BPP
     frame = None
     for j in range(cnt):
         b = rd.stdout.read(fsz)
         if len(b) == fsz:
-            frame = np.frombuffer(b, np.uint8).reshape(SH, SW, 3)
+            frame = np.frombuffer(b, NP).reshape(SH, SW, 3)
         tv = s["v0"] + off + j / FPS
         z, cx, cy = zoom_at(s["seg"], tv, s["punch"])
         k = base * z

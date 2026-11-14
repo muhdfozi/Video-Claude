@@ -126,3 +126,28 @@ GRAPHICS = [
          why="CTA price repeat with the on-the-road caveat."),
     dict(kind="cta", at=135.40, dur=99, text="DM UNTUK INFO LANJUT", sfx=None, why="Clear next action until the end."),
 ]
+
+# v3 (after reference study): no running subtitles. Only key points, as white "sticker" labels
+# (reference style: sentence case, dark text, one keyword in blue, slight tilt, pop-in).
+# (source anchor, duration, text with *keyword*)
+KEYPOINTS = [
+    (2.98, 2.2, "Dalaman warna *hitam*"),
+    (13.92, 1.9, "Sangat-sangat *jarang*"),
+    (20.60, 2.9, "2 pintu · coupe · *mileage rendah*"),
+    (25.52, 1.9, "Model baru, *recon imported*"),
+    (30.28, 2.3, "Enjin *hidup/mati* sendiri"),
+    (50.38, 2.0, "Caliper *biru* bertulis Prelude"),
+    (52.48, 2.2, "Sport rim *gloss black*"),
+    (62.04, 2.6, "Door handle ala *kereta mewah*"),
+    (66.36, 1.2, "*4* tempat duduk"),
+    (77.20, 1.3, "Belakang *tak selesa*"),
+    (80.28, 1.0, "Gearbox *S+*"),
+    (87.36, 0.8, "*Paddle shifter*"),
+    (88.67, 1.4, "Meter *digital*"),
+    (95.48, 2.0, "*Tiada* frameless"),
+    (106.60, 3.0, "Bonet + cermin *terangkat sekali*"),
+    (112.30, 2.6, "Platform *Civic FL5*"),
+    (122.30, 2.2, "Kerusi belakang *boleh dilipat*"),
+    (136.44, 1.6, "Taillight *bercantum*"),
+    (138.10, 1.4, "*Cantik gila!*"),
+]

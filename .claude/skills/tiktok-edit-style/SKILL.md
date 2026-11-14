@@ -1,172 +1,143 @@
 ---
 name: tiktok-edit-style
-description: TikTok Edit Style — gaya editing video TikTok/Reels 9:16 untuk content talking-head jualan (car dealer / product walkaround) dalam Bahasa Melayu. Guna bila user minta edit raw footage jadi video TikTok, buat hook, subtitles, jump cut, motion graphics, SFX, atau minta "edit macam style aku". Mengandungi bila, kenapa dan bagaimana setiap teknik digunakan, serta pipeline ffmpeg/ASS yang boleh diulang.
+description: TikTok Edit Style — gaya editing video TikTok/Reels 9:16 user ini untuk content talking-head (jualan kereta / produk / tutorial) dalam Bahasa Melayu. Guna bila user minta edit raw footage jadi video TikTok, buat hook, keypoint text, jump cut, motion graphics, SFX, atau minta "edit macam style aku". Mengandungi bila, kenapa dan bagaimana setiap teknik digunakan, serta pipeline ffmpeg/ASS yang boleh diulang.
 ---
 
-# TikTok Edit Style
+# TikTok Edit Style (v1.0)
 
-> **STATUS: PROVISIONAL (v0.1).** Skill ini ditulis TANPA reference video. Folder
-> `References Video` kosong semasa skill ini dibina, jadi peraturan di bawah datang
-> daripada amalan biasa editor TikTok car-dealer/talking-head Malaysia, BUKAN analisis
-> editor user. Bila reference video tersedia: study dulu, kemudian kemas kini setiap
-> bahagian yang bertanda `[VERIFY]` dengan nilai sebenar (font, warna, posisi subtitle,
-> kadar cut, jenis SFX, gaya meme) dan buang label provisional.
+Sumber gaya:
+1. **Reference video user** (`References Video/v1c044g50000dbenm3fog65ur7ujrt4g.mp4`, 88 s, talking-head
+   tutorial). Dikaji: contact sheet 1 fps, scene detection, transcript + kadar cakap, spektrum audio.
+2. **Feedback user pada projek pertama (Honda Prelude):**
+   - "Keypoint saja highlight. Subtitles tak perlu."
+   - "Warna video yang asal": jangan tukar atau grade warna footage.
+   - "Yang lain dah cantik": hook flash-forward, jump cut + zoom, kad harga/spec, label section,
+     SFX dan CTA diterima.
 
-## 0. Prinsip utama (kenapa)
+Peraturan bertanda **[USER]** datang terus daripada feedback user. Jangan langgar tanpa tanya.
 
-Setiap keputusan editing mesti jawab salah satu soalan ini. Kalau tak jawab satu pun, buang.
+## 0. Prinsip (kenapa)
 
-1. **Retention:** adakah ia menghalang penonton swipe dalam 1–2 saat akan datang?
-2. **Clarity:** adakah ia buat maklumat (harga, spec, feature) lebih cepat difahami?
-3. **Entertainment:** adakah ia tambah personaliti atau humor yang ASLI daripada footage?
+Setiap elemen mesti menambah satu daripada **retention**, **clarity** atau **entertainment**.
+Reference sangat bersih: satu idea di skrin pada satu masa, banyak ruang kosong, tiada efek berlonggok.
+Kalau ragu, buang. Video mesti nampak macam editor manusia yang yakin, bukan template AI.
 
-Kurang lebih baik daripada serabut. Video mesti nampak macam editor manusia yang yakin,
-bukan template AI. Rule of thumb: **maksimum 1 elemen "baru" (zoom/graphic/SFX) setiap ~1.5 s**,
-dan beri ruang "bernafas" (2–3 s tanpa graphic) selepas setiap momen besar.
+## 1. Apa yang reference buat (pemerhatian)
 
-## 1. Flow & storytelling
+| Aspek | Reference |
+|---|---|
+| Pacing cakap | ~204 perkataan/minit, hampir tiada jeda > 0.3 s (semua jeda dibuang) |
+| Shot | Satu framing talking-head, jump cut berterusan; sesekali punch-in kecil |
+| Hook | 0–4 s: tajuk besar ("✳ Claude") + kata-kata kecil muncul satu-satu di atas; ayat terus ke masalah penonton ("tapi kau masih *lost*") |
+| Teks | **Bukan subtitle penuh.** Hanya keyphrase terpilih, *sentence case* (bukan ALL CAPS), 1 kata kunci berwarna **biru**, kadang-kadang kata aksen dalam *serif italic biru* ("Claude *Pro*", "*lawa-lawa*", "pandai *edit*") |
+| Kinetic word | Satu perkataan besar (contoh "install", "wajib") untuk momen paling penting, hitam atas latar cerah atau biru |
+| Sticker | Label putih bucu bulat, teks gelap tebal, senget ±2–3°, bayang lembut ("Siap dalam 20–30 minit", "Weekly habis hari ke-6") |
+| UI card | Kad gelap gaya macOS (bucu bulat, header 3 titik) yang beranimasi (taip prompt, baris muncul, highlight biru bergerak, progress bar terisi) di 1/3 bawah |
+| Progress | Label kecil kiri atas "step 1 / 5" / "bonus" + garis progres biru nipis merentas atas |
+| Emphasis | Bracket sudut "viewfinder" berkelip pada momen penting |
+| Warna | Natural, hangat, tiada grading berat |
+| Audio | Muzik latar berterusan perlahan di bawah suara; suara padat dan jelas |
+| Ending | Kad CTA ("Share link, biar aku tengok" + butang pill merah "Share hasil kau"), kemudian end card |
 
-Struktur untuk video jualan/walkaround (60–90 s ideal untuk TikTok):
+## 2. Flow & storytelling
 
-| Bahagian | Masa | Tujuan | Isi |
-|---|---|---|---|
-| HOOK | 0–3 s | Hentikan scroll | Visual paling "wow" + claim paling kuat (harga / "first in Malaysia" / rare) |
-| CONTEXT | 3–10 s | Beritahu apa ni & kenapa peduli | Nama produk, harga, 1 selling point |
-| PROOF / TOUR | 10–60 s | Bina keinginan | Feature ikut susunan fizikal (luar → dalam → belakang), setiap feature ≤ 6 s |
-| PAYOFF | akhir | Momen "seksi" disimpan | Feature paling unik (open loop yang dijanji di awal) |
-| CTA | 3–5 s terakhir | Convert | Ulang harga + arahan jelas (DM / komen / link) |
+| Bahagian | Masa | Tujuan |
+|---|---|---|
+| HOOK | 0–3 s | Visual paling kuat + claim paling kuat + text hook |
+| CONTEXT | 3–10 s | Apa ni, kenapa peduli, harga/outcome awal |
+| BODY | bahagian demi bahagian | Setiap point ≤ 6 s, label section/progress bila tukar bahagian |
+| PAYOFF | akhir | Benda paling "wow" disimpan (open loop dari hook) |
+| CTA | 3–5 s terakhir | Satu arahan jelas |
 
-- **Open loop:** dalam 10 s pertama, janji sesuatu yang datang kemudian ("tunggu sampai
-  tengok bahagian belakang dia"). Ia beri sebab untuk tonton sampai habis.
-- **Susun semula footage** kalau feature terbaik ada di hujung raw: ambil 1–2 s visual
-  feature itu untuk HOOK (flash-forward), kemudian main penuh di PAYOFF.
-- **Jangan ubah maksud asal.** Susun semula hanya ayat yang berdiri sendiri; jangan
-  sambung separuh ayat daripada tempat berlainan sampai jadi claim baru.
-- Kalau presenter ragu-ragu tentang fakta ("kalau tak silap saya"), kekalkan keraguan itu
-  dalam subtitle (atau buang ayat). Jangan tukar jadi fakta pasti.
+- **Open loop:** tunjuk payoff sekejap di hook (flash-forward), bayar balik di hujung.
+- **Susun semula** hanya ayat yang berdiri sendiri. Jangan ubah maksud asal.
+- Kekalkan keraguan presenter ("kalau tak silap saya"). Buang claim yang boleh mengelirukan
+  (contoh jumlah kuasa hybrid yang dicampur salah) dan beritahu user.
 
-## 2. Hook (0–3 s)
+## 3. Hook (0–3 s)
 
-Tiga lapis serentak:
+- **Visual:** shot paling dinamik, sudah bergerak pada frame pertama (slow push 1.3→1.45×).
+- **Verbal:** ayat paling kuat, tanpa salam dahulu (salam boleh selepas hook, ≤ 2 s).
+- **Text:** 2–4 perkataan besar di 1/3 atas; pop-in; keluar selepas 2–3 s.
 
-- **Visual hook:** shot paling dinamik/unik (contoh: but belakang terangkat bersama cermin),
-  punch-in zoom 110–120% dengan sedikit gerak (slow push) supaya frame pertama dah "hidup".
-- **Verbal hook:** ayat terkuat presenter, potong terus ke isi (buang "Assalamualaikum"
-  ke bawah atau buang terus; salam boleh kekal sebagai 0.5–1 s selepas hook kalau sopan diperlukan).
-- **Text hook:** 2–5 perkataan besar di tengah-atas frame (safe zone), contoh
-  "FIRST IN MALAYSIA 🇲🇾" atau "RM250K JE?!". Masuk dengan pop/scale-overshoot pada frame 0,
-  keluar selepas 2–3 s.
+## 4. Pacing & jump cuts
 
-Kenapa: TikTok tentukan nasib video dalam ~1.5 s pertama. Frame pertama mesti dah ada
-gerak + text + suara; tiada fade-in, tiada logo intro.
+- Buang semua jeda > ~0.28 s, filler, ayat berulang, salah sebut + pembetulan
+  (kecuali dijadikan momen lawak, lihat §8). Sasar rasa padat macam reference (~200 wpm).
+- Setiap potongan yang tinggal ≥ 0.35 s (potongan lebih pendek nampak macam glitch).
+- **Zoom-on-cut:** selang-seli 100% ↔ ~110% pada jump cut dalam take sama.
+- **Emphasis punch:** 1.2–1.4× ke muka pada perkataan kunci.
+- **Detail crop dari source 4K** sebagai B-roll (caliper, door handle, stereng, lampu).
+- Audio fade 8 ms di setiap cut. Jangan potong tengah perkataan. Sahkan dengan
+  transcribe semula audio hasil edit.
 
-## 3. Pacing & jump cuts
+## 5. Teks atas skrin — KEYPOINT SAHAJA [USER]
 
-- **Buang semua jeda > ~0.25 s**, nafas panjang, "emm", "so", "macam tu", ayat berulang,
-  salah sebut + pembetulan (contoh "Honda Civic.. sorry" → simpan versi betul sahaja).
-- **Purata shot length 1.5–3 s** `[VERIFY]`. Kalau satu take panjang tanpa potong, pecahkan
-  dengan punch-in zoom pada setiap jump cut.
-- **Zoom-on-cut (jump cut punch-in):** selang-seli skala 100% ↔ 112–125% pada setiap cut
-  dalam take yang sama. Ia sembunyikan jump cut (mata baca sebagai "angle baru") dan
-  beri tenaga. Jangan zoom pada SETIAP cut: corak 1-1-0 atau 1-0-1 lebih natural.
-- **Emphasis punch:** zoom snap ke 130–140% di muka/objek pada perkataan kunci (harga,
-  "cantik gila"), tahan 0.5–1 s, kembali.
-- **Detail cutaway (B-roll dari footage 4K):** bila presenter sebut detail (rim, caliper,
-  door handle, lampu), crop masuk ke detail itu daripada source 4K (crop 2× tanpa hilang
-  kualiti pada output 1080p). Ini "B-roll percuma" yang paling sesuai bila tiada B-roll lain.
-- Audio: crossfade 10–20 ms di setiap cut untuk elak "klik"; jangan pernah potong
-  di tengah perkataan.
+- **Tiada subtitle berterusan.** Hanya keypoint: maklumat yang penonton patut ingat
+  (harga, spec bernombor, feature unik, kelebihan/kekurangan, payoff).
+- **Gaya sticker (reference):** label putih bucu bulat (radius ~22 px pada 1080 lebar), teks
+  Inter Display Bold ~58 px *sentence case*, warna dakwat gelap `#15171A`, **satu** kata kunci biru
+  `#4F6EF7`, senget selang-seli −2.5° / +2°, bayang lembut, pop-in (70%→108%→100% dalam 160 ms),
+  fade-out 120 ms. Posisi tengah, ~66% tinggi frame (di atas UI caption TikTok).
+- Kekerapan: ~1 keypoint setiap 4–6 s, durasi 1–3 s, tidak bertindih.
+- Ayat keypoint ≤ 5 perkataan, guna bahasa presenter (jangan cipta claim baru).
+- Elemen besar sedia ada yang user dah suka: text hook (Montserrat Black, putih + kuning),
+  **kad harga** kuning senget + pill "SAHAJA"/"BELUM ON THE ROAD", **kad spec** gelap slide-in
+  dari kanan (label putih + nilai kuning), **label section** pill gelap di atas, name tag kuning,
+  CTA pill kuning berdenyut.
+- Belum diguna tapi ada dalam reference (cuba pada projek akan datang, tanya user dulu):
+  progress bar "step x / y", kinetic word besar, UI card gelap beranimasi, bracket viewfinder,
+  aksen serif italic biru.
 
-## 4. Subtitles
+## 6. Warna — KEKALKAN ASAL [USER]
 
-- **Gaya:** 1–4 perkataan setiap paparan, bold sans-serif tebal (Montserrat ExtraBold /
-  Inter Black / Poppins Bold) `[VERIFY font]`, HURUF BESAR, putih dengan outline hitam 6–8 px
-  + drop shadow lembut.
-- **Highlight keyword:** perkataan kunci (harga, nombor, nama model, kata sifat kuat)
-  warna kuning/brand `[VERIFY warna]`, sedikit lebih besar. Hanya 1 keyword setiap paparan.
-- **Animasi:** setiap chunk masuk dengan pop kecil (scale 85%→105%→100% dalam ~120 ms).
-  Tiada typewriter, tiada bounce berlebihan.
-- **Posisi:** tengah horizontal, ~62–70% dari atas (atas caption TikTok, bawah muka).
-  Elak 15% bawah dan 10% kanan (UI TikTok).
-- **Ketepatan:** semak setiap perkataan. Betulkan istilah teknikal (Prelude, e:HEV,
-  paddle shifter, PS, RM). Bahasa campur Melayu–Inggeris dikekalkan seperti dituturkan.
-  Nombor ditulis sebagai angka (RM250,000; 19 inci).
+- **Jangan grade dan jangan tukar colour space.** Footage iPhone HDR (HLG, BT.2020, 10-bit)
+  dikeluarkan semula sebagai HLG BT.2020 10-bit (HEVC Main10, `hvc1`, MP4). Pipeline: decode
+  ke `rgb48le` (matrix bt2020), zoom/crop dalam 16-bit, overlay ASS terus atas `rgb48le`, encode
+  balik dengan matrix bt2020 + tag `arib-std-b67`. Sahkan: purata beza piksel output vs source < 1/255.
+- Grafik dalam HLG: putih grafik ~75–80% isyarat (BT.2408), bukan 100%, supaya teks tak menyilaukan
+  di skrin HDR. Fungsi `C()` dalam `build.py` skala semua warna ASS.
+- Footage SDR biasa: kekalkan BT.709 apa adanya.
+- Jangan guna tonemap hable/mobius: hasilnya pudar/oren.
 
-## 5. Motion design
+## 7. Sound design
 
-Guna hanya bila ia menambah clarity:
+- Suara keutamaan: highpass 90 Hz, denoise ringan, EQ (−2.5 dB @250 Hz, +2 dB @3.5 kHz),
+  compressor 3:1, loudnorm ~-15 LUFS, limiter.
+- **Muzik:** reference ada muzik latar berterusan perlahan. Untuk projek Honda Prelude user pilih
+  **tiada muzik** (dia tambah trending sound dalam app). Tanya setiap projek.
+- **SFX** (synth: `make_sfx.py`), setiap satu terikat pada event visual:
+  whoosh = tukar section / cut dari B-roll, pop = kad/text masuk, cash = harga,
+  riser = sebelum payoff, scratch = blooper. Purata ≤ 1 SFX setiap 3–4 s. Sticker keypoint tiada SFX.
 
-- **Spec card / callout:** maklumat bernombor (kuasa, harga, saiz rim) → kad kecil
-  dengan latar gelap separa lutsinar, masuk slide+pop, kekal semasa ayat itu, keluar fade cepat.
-- **Price reveal:** harga = momen terbesar. Text besar tengah, warna highlight,
-  pop + shake kecil, SFX "ka-ching"/ding.
-- **Arrow / circle highlight:** tunjuk feature kecil yang mudah terlepas pandang (door handle,
-  tulisan pada caliper). Jarang (≤ 2 kali setiap video).
-- **Section label:** label kecil di atas ("EXTERIOR", "INTERIOR", "BELAKANG") bila lokasi
-  berubah, bantu penonton tahu progres tour.
-- **Tracking/masking:** hanya bila text perlu "melekat" pada objek bergerak. Kalau tiada
-  tracker, letak text di kawasan statik frame dan jangan pura-pura track.
-- Easing: ease-out untuk masuk, ease-in untuk keluar. Durasi animasi 100–250 ms.
+## 8. Entertainment
 
-## 6. Sound design
+- Humor daripada momen sebenar sahaja: salah sebut ("Honda Civic… sorry") → punch-in muka +
+  teks "EH? CIVIC??" senget bergoyang + scratch. Satu momen lawak setiap ~20–30 s sudah cukup.
+- Meme luar hanya jika user beri aset.
 
-- **Suara presenter = keutamaan.** Normalize ke ~-14 LUFS (TikTok), high-pass 80 Hz,
-  compressor ringan, de-ess kalau perlu. Ruang gudang yang bergema: kurangkan dengan EQ,
-  jangan sampai suara jadi nipis.
-- **Muzik latar** (kalau ada): -20 hingga -24 dB di bawah suara, duck lagi semasa ayat penting,
-  naik sedikit di jeda/transisi. Kalau user tak mahu muzik, jangan tambah. Mereka akan guna
-  trending sound dalam app.
-- **SFX: setiap satu terikat pada event visual:**
-  - whoosh → zoom besar / tukar bahagian (section change)
-  - pop → spec card / text hook masuk
-  - ding / ka-ching → harga
-  - riser pendek → sebelum payoff
-  - record-scratch / "bruh" → blooper atau salah sebut (comedic)
-  Level SFX -12 hingga -18 dB relatif suara; jangan tindih perkataan kunci.
-- Maksimum ~1 SFX setiap 3–4 s secara purata. SFX berterusan = rasa murahan.
+## 9. CTA & ending
 
-## 7. Entertainment (memes, troll, reaction)
+- Ulang harga/outcome + satu arahan (DM / komen / share). Akhiri pada frame yang boleh loop ke hook.
 
-- Humor mesti datang daripada **momen sebenar** dalam footage:
-  - salah sebut ("Honda Civic.. sorry") → boleh dikekalkan sebagai blooper ringkas dengan
-    freeze-frame/zoom muka + text "eh salah 😅" + SFX, KALAU ia tak mengganggu flow.
-    Kalau video dah panjang, buang terus.
-  - reaksi spontan ("cantik gila") → punch-in muka + highlight text.
-- Meme clip luar hanya bila user sediakan aset; jangan masukkan meme generik secara rawak.
-- Satu momen komedi setiap ~20–30 s sudah cukup untuk video jualan; jangan ganggu kredibiliti
-  penjual.
+## 10. Technical spec
 
-## 8. CTA & ending
+- 1080×1920 (9:16), fps ikut source (60), MP4.
+- HDR source: HEVC Main10 HLG, CRF 18, VBV max 12 Mbps, AAC 320k.
+  SDR source: H.264 High CRF 16, AAC 320k.
+- Kalau user perlu download dari GitHub: fail mesti < 100 MB. App Claude tak boleh download
+  file card; Google Drive tak boleh di-upload tanpa token user.
 
-- Ulang harga + 1 arahan (DM / komen "NAK" / klik profile).
-- Akhiri pada frame yang boleh loop ke hook (contoh: shot kereta), bukan pada skrin hitam.
-- Tiada end-card panjang; 2–3 s maksimum.
+## 11. Workflow
 
-## 9. Technical spec
+1. Download bahan (Drive: `gdown` untuk senarai, `drive.usercontent.google.com/download?id=…&confirm=t` untuk fail besar).
+2. Study reference: contact sheet, scene detect, transcript (wpm, jeda), spektrum audio. Kemas kini skill ini.
+3. Ingest raw: semak rotation, HDR, fps. Buat mezzanine SDR 1080p untuk preview pantas.
+4. Transcribe: Whisper `large-v3`, `language="ms"`, `word_timestamps=True`,
+   `condition_on_previous_text=False`, **tanpa** `initial_prompt` (ia sebabkan halusinasi berulang).
+5. Paper edit dalam `edl.py`: segmen (audio in/out, video override, zoom keys, `why`),
+   GRAPHICS, KEYPOINTS. Semak dengan `build.py plan`.
+6. Preview (`build.py preview`), semak frame + transcribe semula audio. Tunjuk user. Jangan render final sebelum approve.
+7. Final: `build.py final --hdr --keypoints` (atau tanpa `--hdr` untuk SDR). Sahkan spec, warna, loudness.
 
-- Output 1080×1920 (9:16) minimum, MP4 H.264 High, CRF 16–18 / ~16–20 Mbps,
-  AAC 320 kbps 48 kHz, frame rate ikut source (contoh 60 fps).
-- iPhone HDR (HLG/Dolby Vision, BT.2020): tukar ke SDR BT.709. Uji: `scale` dengan
-  `in_color_matrix=bt2020:out_color_matrix=bt709` beri hasil paling natural untuk
-  footage iPhone HLG; tonemap hable/mobius cenderung pudar/oren. Sentiasa banding frame.
-- Source 4K → gunakan resolusi lebih untuk punch-in/detail crop tanpa hilang kualiti.
-- Preview: 720×1280 cukup untuk review; final render dari source asal.
-
-## 10. Workflow (bagaimana)
-
-1. **Study reference** (bila ada): contact sheet frame (`fps=1/2,tile`), ukur shot length
-   (`select='gt(scene,0.3)'`), kaji subtitle (font, warna, posisi), senarai SFX + bila ia
-   berbunyi, dan update `[VERIFY]` dalam skill ini.
-2. **Ingest raw:** semak orientation (displaymatrix), HDR, fps. Buat mezzanine SDR 1080×1920.
-3. **Transcribe:** Whisper (`large-v3`, `language="ms"`, `word_timestamps=True`,
-   `condition_on_previous_text=False`, JANGAN beri `initial_prompt` sebab ia boleh
-   menyebabkan halusinasi berulang). Betulkan transcript secara manual.
-4. **Paper edit:** senarai ayat yang disimpan (dengan timestamp perkataan), susunan baru,
-   hook, open loop. Tandakan setiap zoom/graphic/SFX bersama SEBABnya.
-5. **Build:** EDL → potong & zoom (ffmpeg crop/scale per segment dari source 4K),
-   ASS subtitles + motion graphics, SFX track, mix audio, render preview.
-6. **Review:** semak preview frame-by-frame di cut, semak subtitle vs audio, semak
-   tiada glitch. Tunjuk kepada user. **Jangan render final sebelum user approve.**
-7. **Final:** render dari source 4K pada spec di §9. Semak durasi, sync, loudness.
-
-Pipeline rujukan untuk projek pertama: `projects/<nama>/edit.py` dalam repo ini.
+Pipeline rujukan: `projects/honda-prelude/` (edl.py, build.py, make_sfx.py, face_track.py).
