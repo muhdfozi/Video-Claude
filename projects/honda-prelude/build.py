@@ -16,7 +16,9 @@ _edl_path = sys.argv[sys.argv.index("--edl") + 1] if "--edl" in sys.argv else os
 _spec = importlib.util.spec_from_file_location("edl", _edl_path); edl = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(edl)
 SEGMENTS, GRAPHICS, KEYPOINTS = edl.SEGMENTS, edl.GRAPHICS, getattr(edl, "KEYPOINTS", [])
 WORD_FIX, TOKEN_FIX, KEYWORDS = getattr(edl, "WORD_FIX", {}), getattr(edl, "TOKEN_FIX", {}), getattr(edl, "KEYWORDS", set())
-MUSIC = getattr(edl, "MUSIC", None)     # dict(file=..., start=sec, lufs=-27, duck_db=6)
+MUSIC = getattr(edl, "MUSIC", None)
+NO_ZOOM = getattr(edl, "NO_ZOOM", False)   # source has burned-in graphics: never crop/zoom
+AUDIO_SRC = getattr(edl, "AUDIO", None)    # optional cleaner audio file with identical timing     # dict(file=..., start=sec, lufs=-27, duck_db=6)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SR = 48000
@@ -37,7 +39,9 @@ ap.add_argument("--limit", type=float, default=0, help="render only the first N 
 args = ap.parse_args()
 
 if args.mode == "final":
-    OW, OH, FPS, SRC_MATRIX = 1080, 1920, 60, "bt2020"
+    _cs = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=color_space",
+                          "-of", "csv=p=0", args.src], capture_output=True, text=True).stdout.strip()
+    OW, OH, FPS, SRC_MATRIX = 1080, 1920, 60, ("bt2020" if "2020" in _cs else "bt709")
 else:
     OW, OH, FPS, SRC_MATRIX = 720, 1280, 30, "bt709"
 
@@ -50,7 +54,7 @@ def read_wav(p):
         x = np.frombuffer(w.readframes(w.getnframes()), np.int16).reshape(-1, w.getnchannels())
     return x.astype(np.float32) / 32768
 
-voice_src = read_wav(args.audio)
+voice_src = read_wav(AUDIO_SRC or args.audio)
 mono = voice_src.mean(1)
 HOP = 480                                           # 10 ms
 nfr = len(mono) // HOP
@@ -117,6 +121,7 @@ def src2out(ts, prefer_next=True):
 def ease(x): return x * x * (3 - 2 * x)
 
 def zoom_at(seg, tv, punch):
+    if NO_ZOOM: return 1.0, 0.5, 0.5
     keys = seg["keys"]
     k = keys[0]
     if tv <= keys[0][0]:
@@ -245,7 +250,7 @@ for g in GRAPHICS:
         lines = g["lines"]
         if all(isinstance(x, str) for x in lines):        # legacy: small white line + big yellow line
             lines = [(lines[0], 104, False), (lines[1], 150, True)]
-        y = 450 - lines[0][1] / 2 + 52
+        y = g.get("y", 450) - lines[0][1] / 2 + 52
         for li, (txt, fs, yel) in enumerate(lines):
             y += fs * 0.5
             col = (r"\c" + YEL + "&") if yel else ""
@@ -266,7 +271,7 @@ for g in GRAPHICS:
         add(t0 + 0.25, t1, r"{\an5\pos(540," + str(y + 150) + r")\p1\bord0\shad0\frz-3\c" + BLK + r"&\fad(80,150)" + POP + "}" + rrect(sw, 78, 39), 6)
         add(t0 + 0.25, t1, r"{\an5\pos(540," + str(y + 151) + r")\bord0\shad0\frz-3\c" + WHT + r"&\fs50\fsp2\fad(80,150)" + POP + "}" + g["sub"], 7)
     elif k == "spec":
-        y = 620 + 150 * g.get("slot", 0)
+        y = g.get("y0", 620) + 150 * g.get("slot", 0)
         label, val = g["rows"][0]
         from PIL import ImageFont
         _f = lambda fs: ImageFont.truetype(os.path.join(HERE, "fonts", "Montserrat-900.ttf"), fs)
@@ -278,9 +283,10 @@ for g in GRAPHICS:
         add(t0, t1, r"{\an6" + mv(xr - 30, y) + r"\bord0\shad0\c" + YEL + r"&\fs88\fad(60,150)}" + val, 7)
     elif k == "chip":
         w = 80 + 36 * len(g["text"])
-        add(t0, t1, r"{\an5\pos(540,300)\p1\bord0\shad0\c" + BLK + r"&\1a&H30&\fad(60,150)" + POP + "}" + rrect(w, 96, 48), 6)
-        add(t0, t1, r"{\an5\pos(540,302)\bord0\shad0\c" + WHT + r"&\fs56\fsp4\fad(60,150)" + POP + "}" + g["text"], 7)
-        add(t0, t1, r"{\an5\pos(540,362)\p1\bord0\shad0\c" + YEL + r"&\fad(60,150)\fscx0\t(80,300,\fscx100)}" + rrect(w - 120, 8, 4), 7)
+        cy = g.get("y", 300)
+        add(t0, t1, r"{\an5\pos(540," + str(cy) + r")\p1\bord0\shad0\c" + BLK + r"&\1a&H30&\fad(60,150)" + POP + "}" + rrect(w, 96, 48), 6)
+        add(t0, t1, r"{\an5\pos(540," + str(cy + 2) + r")\bord0\shad0\c" + WHT + r"&\fs56\fsp4\fad(60,150)" + POP + "}" + g["text"], 7)
+        add(t0, t1, r"{\an5\pos(540," + str(cy + 62) + r")\p1\bord0\shad0\c" + YEL + r"&\fad(60,150)\fscx0\t(80,300,\fscx100)}" + rrect(w - 120, 8, 4), 7)
     elif k == "oops":
         anim = r"\t(0,60,\frz12)\t(60,120,\frz4)\t(120,180,\frz10)\t(180,240,\frz6)"
         add(t0, t1, r"{\an5\pos(540,600)\frz8\bord9\shad0\3c" + RED + r"&\fs118\fad(0,100)" + POP + anim + "}" + g["text"], 8)
@@ -288,8 +294,9 @@ for g in GRAPHICS:
         w, h = 900, 128
         pulse = "".join(r"\t(%d,%d,\fscx105\fscy105)\t(%d,%d,\fscx100\fscy100)" % (a, a + 300, a + 300, a + 600)
                         for a in range(400, int((t1 - t0) * 1000), 1200))
-        add(t0, t1, r"{\an5\pos(540,470)\p1\bord0\shad5\4a&H90&\c" + YEL + r"&\fad(120,0)" + POP + pulse + "}" + rrect(w, h, 52), 6)
-        add(t0, t1, r"{\an5\pos(540,472)\bord0\shad0\c" + BLK + r"&\fs68\fsp1\fad(120,0)" + POP + pulse + "}" + g["text"], 7)
+        ty = g.get("y", 470)
+        add(t0, t1, r"{\an5\pos(540," + str(ty) + r")\p1\bord0\shad5\4a&H90&\c" + YEL + r"&\fad(120,0)" + POP + pulse + "}" + rrect(w, h, 52), 6)
+        add(t0, t1, r"{\an5\pos(540," + str(ty + 2) + r")\bord0\shad0\c" + BLK + r"&\fs68\fsp1\fad(120,0)" + POP + pulse + "}" + g["text"], 7)
     elif k == "sfx":
         pass
 
@@ -418,7 +425,7 @@ if args.hdr:
            "-c:a", "aac", "-b:a", "320k"]
     VF_OUT = "scale=out_color_matrix=bt2020:out_range=tv,format=yuv420p10le"
 elif args.mode == "final":
-    enc = ["-c:v", "libx264", "-preset", "slow", "-crf", "16", "-profile:v", "high", "-c:a", "aac", "-b:a", "320k"]
+    enc = ["-c:v", "libx264", "-preset", "slow", "-crf", "16", "-maxrate", "11000k", "-bufsize", "22000k", "-profile:v", "high", "-c:a", "aac", "-b:a", "320k"]
 else:
     enc = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-c:a", "aac", "-b:a", "192k"]
 if not args.hdr:
