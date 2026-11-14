@@ -62,3 +62,17 @@ save("scratch", (saw * 0.5 + rng.standard_normal(len(tt)) * 0.3) * np.exp(-tt * 
 d = 0.03; tt = t(d)
 save("click", rng.standard_normal(len(tt)) * np.exp(-tt * 300))
 print("ok")
+
+# --- paper theme -------------------------------------------------------------
+# thump: rubber-stamp hit (low body + short noise slap)
+d = 0.35; tt = t(d)
+body = np.sin(2 * np.pi * (95 * tt + 40 * (1 - np.exp(-tt * 30)) / 30)) * np.exp(-tt * 18)
+slap = onepole_lp(rng.standard_normal(len(tt)), 2500 * np.ones(len(tt))) * np.exp(-tt * 60)
+save("thump", body + 0.8 * slap)
+
+# paper: short paper slide / rustle (band-passed noise, quick swell)
+d = 0.28; tt = t(d); n = rng.standard_normal(len(tt))
+bp = onepole_lp(n, 6000 * np.ones(len(tt))) - onepole_lp(n, 1200 * np.ones(len(tt)))
+crackle = (rng.random(len(tt)) > 0.995) * rng.standard_normal(len(tt)) * 2
+save("paper", (bp + crackle * 0.3) * np.sin(np.pi * tt / d) ** 0.8)
+print("paper sfx ok")

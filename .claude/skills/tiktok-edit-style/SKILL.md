@@ -149,3 +149,26 @@ Kalau ragu, buang. Video mesti nampak macam editor manusia yang yakin, bukan tem
 7. Final: `build.py final --hdr --keypoints` (atau tanpa `--hdr` untuk SDR). Sahkan spec, warna, loudness.
 
 Pipeline rujukan: `projects/honda-prelude/` (build.py, make_sfx.py, face_track.py). Setiap projek ada `edl.py` sendiri: `python3 projects/honda-prelude/build.py final --hdr --keypoints --edl projects/<projek>/edl.py ...`. Contoh: `projects/honda-prelude/edl.py` (presenter on-camera), `projects/honda-jade/edl.py` (POV + muzik).
+
+## 12. Tema grafik "paper" (kertas collage) — pilihan user untuk video seterusnya
+
+Dikaji daripada video explainer TikTok (@topcasttiktok, 6.4 min, tanpa muka): latar kertas krim,
+petikan artikel atas kertas koyak dengan **stabilo kuning** pada frasa penting, label "sticky tag"
+kuning tulisan tangan, label mesin taip, **cop merah condong** ("BAHAYA KE?", "TUNGGU JAP!"),
+maskot kartun bereaksi, peta/kalendar/nama universiti sebagai bukti, elemen baru setiap 1–2 s,
+voiceover ~150 wpm, subtitle 1 perkataan di bawah (TIDAK diguna: user tak mahu subtitle).
+
+User pilih: **grafik kertas di atas footage** (walkaround kekal). Set `THEME = "paper"` dalam `edl.py`
+(`projects/honda-prelude/paper_gfx.py`):
+| Elemen | Rupa |
+|---|---|
+| Keypoint | Kertas krim koyak, Patrick Hand, stabilo kuning menyapu kata kunci (220–520 ms), pita pelekat di bucu, masuk slide + bunyi kertas |
+| Hook | Jalur kertas besar, Permanent Marker hitam + baris akhir merah (soalan), Patrick Hand untuk baris kecil |
+| Spec | Nota kertas koyak slide dari kanan: label mesin taip (Special Elite) + nilai marker |
+| Harga | Nota kertas besar marker + cop merah ("HARGA OWNER") hentak selepas 0.35 s + thump |
+| Cop | `kind="stamp"`: kotak garis merah + Montserrat Black merah, hentak 165%→100%, thump |
+| Section | Pita pelekat beige dengan teks mesin taip, dibuka dari kiri |
+| CTA | Sticky note kuning + anak panah merah lukisan tangan |
+- Saiz font libass ≠ PIL: `paper_gfx.libass_scale()` betulkan (Patrick Hand 0.74, Permanent Marker 0.70).
+- Untuk lebih dekat dengan reference: minta user gambar bukti (geran, rekod servis, mileage) untuk
+  dijadikan "dokumen" dengan stabilo; maskot hanya jika user beri watak sendiri (jangan tiru watak orang).

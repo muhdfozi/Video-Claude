@@ -17,6 +17,7 @@ _spec = importlib.util.spec_from_file_location("edl", _edl_path); edl = importli
 SEGMENTS, GRAPHICS, KEYPOINTS = edl.SEGMENTS, edl.GRAPHICS, getattr(edl, "KEYPOINTS", [])
 WORD_FIX, TOKEN_FIX, KEYWORDS = getattr(edl, "WORD_FIX", {}), getattr(edl, "TOKEN_FIX", {}), getattr(edl, "KEYWORDS", set())
 MUSIC = getattr(edl, "MUSIC", None)
+THEME = getattr(edl, "THEME", "clean")      # "clean" (Prelude look) or "paper" (collage look)
 NO_ZOOM = getattr(edl, "NO_ZOOM", False)   # source has burned-in graphics: never crop/zoom
 AUDIO_SRC = getattr(edl, "AUDIO", None)    # optional cleaner audio file with identical timing     # dict(file=..., start=sec, lufs=-27, duck_db=6)
 
@@ -239,7 +240,7 @@ for i, c in enumerate([] if args.keypoints else chunks):
     add(max(t0, 1.3), t1, r"{\an5\pos(540,1300)\fad(0,40)" + POP + "}" + " ".join(parts), layer=5)
 
 sfx_events = []                          # (time_out, name)
-for g in GRAPHICS:
+for g in ([] if THEME == "paper" else GRAPHICS):
     t0 = src2out(g["at"])
     if t0 is None: continue
     d = g.get("dur", 0)
@@ -300,7 +301,11 @@ for g in GRAPHICS:
     elif k == "sfx":
         pass
 
-if args.keypoints:
+if THEME == "paper":
+    import paper_gfx
+    paper_gfx.render(GRAPHICS, KEYPOINTS, src2out, add, TOTAL, C, sfx_events, args.keypoints)
+
+if args.keypoints and THEME != "paper":
     from PIL import ImageFont
     KFS = 58
     kfont = ImageFont.truetype("/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf", KFS)
@@ -392,7 +397,7 @@ if MUSIC:
     gain = np.repeat(g, blk); gain = np.concatenate([gain, np.full(n_total - len(gain), gain[-1] if len(gain) else 1.0)])
     mix += mus * gain[:, None]
 
-GAIN = dict(whoosh=0.20, pop=0.22, cash=0.30, riser=0.20, scratch=0.28, ding=0.25)
+GAIN = dict(whoosh=0.20, pop=0.22, cash=0.30, riser=0.20, scratch=0.28, ding=0.25, thump=0.38, paper=0.16)
 for t0, name in sfx_events:
     base = "riser" if name == "riser_in" else name
     x = read_wav(os.path.join(args.sfx, base + ".wav"))
