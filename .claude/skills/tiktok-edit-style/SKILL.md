@@ -228,3 +228,5 @@ Jangan biar kaca > ~60% durasi; selang-seli dengan presenter supaya muka masih j
 - **Nasihat upload untuk user:** hidupkan "Upload HD"/kualiti tinggi, Data saver off, upload guna Wi-Fi,
   jangan tambah teks/filter dalam editor TikTok, upload fail asal (bukan dari WhatsApp/Telegram).
   Tiada cara "bypass" compression TikTok — jangan janji.
+
+- **"style rentak"** = gaya sendiri user (110 BPM, arang/krim/oren, word slam, ledger, HUD) → skill `style-rentak`.

@@ -206,6 +206,35 @@ for w in kept:
     cur.append(w)
 if cur: chunks.append(cur)
 
+# ---------------------------------------------------------------- beat grid (THEME "rentak": speed rule)
+BEATS = []
+RENTAK = getattr(edl, "RENTAK", None)
+if THEME == "rentak" and RENTAK:
+    BPM = RENTAK.get("bpm", 110); beat = 60.0 / BPM
+    cuts = [s["o0"] for s in subs]
+    def _hits(ph):
+        return sum(1 for c in cuts if min((c - ph) % beat, beat - (c - ph) % beat) < 0.06)
+    phase = max(np.arange(0, beat, 0.005), key=_hits)
+    BEATS = [float(x) for x in np.arange(phase, TOTAL + beat, beat)]
+    if MUSIC:
+        import librosa
+        _tw = os.path.join(args.work, "_music_tempo.wav")
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(MUSIC["start"]), "-t", "120", "-i", MUSIC["file"], "-vn",
+                        "-ac", "1", "-ar", "22050", _tw], check=True)
+        _y, _sr = librosa.load(_tw, sr=22050)
+        _tempo, _bf = librosa.beat.beat_track(y=_y, sr=_sr)
+        _t = float(np.atleast_1d(_tempo)[0])
+        while _t < BPM * 0.75: _t *= 2
+        while _t > BPM * 1.5: _t /= 2
+        at = BPM / _t
+        _bt = librosa.frames_to_time(_bf, sr=_sr)
+        b0 = float(_bt[0]) if len(_bt) else 0.0
+        # trim the music start so its (stretched) beats land on our phase
+        x = (b0 - at * phase) % (beat * at)
+        MUSIC["start"] = MUSIC["start"] + x
+        MUSIC["atempo"] = at
+        print(f"rentak: {BPM} bpm grid, phase {phase:.3f}s ({_hits(phase)}/{len(cuts)} cuts on beat), music {_t:.1f}->{BPM} bpm (atempo {at:.3f})")
+
 # ---------------------------------------------------------------- ASS
 GFX_GAIN = 0.80 if args.hdr else 1.0     # HLG: graphics white ~75-80% signal (BT.2408 ref white), not 100%
 def C(hexrgb):
@@ -310,6 +339,9 @@ if THEME == "paper":
     paper_gfx.render(GRAPHICS, KEYPOINTS, src2out, add, TOTAL, C, sfx_events, args.keypoints)
 
 GLASS_WIN = []
+if THEME == "rentak":
+    import rentak_gfx
+    rentak_gfx.render(RENTAK or {}, src2out, add, TOTAL, C, sfx_events, FPS, BEATS, getattr(edl, "ACCENT", "FF5A1F"))
 if THEME == "glass":
     import glass_gfx
     GLASS_WIN = glass_gfx.render(getattr(edl, "GLASS", []), getattr(edl, "OVERLAYS", []), src2out, add, TOTAL, C,
@@ -388,8 +420,9 @@ if len(mix) < n_total: mix = np.vstack([mix, np.zeros((n_total - len(mix), 2), n
 if MUSIC:
     mpath = os.path.join(args.work, "music_bed.wav")
     fade_out = MUSIC.get("fade_out", 1.5)
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(MUSIC["start"]), "-t", f"{TOTAL:.3f}", "-i", MUSIC["file"], "-vn",
-                    "-af", f"loudnorm=I={MUSIC.get('lufs', -27)}:TP=-3:LRA=11,afade=t=in:d=0.25,"
+    _at = MUSIC.get("atempo", 1.0)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(MUSIC["start"]), "-t", f"{TOTAL * _at + 0.5:.3f}", "-i", MUSIC["file"], "-vn",
+                    "-af", (f"atempo={_at:.5f}," if abs(_at - 1) > 1e-3 else "") + f"loudnorm=I={MUSIC.get('lufs', -27)}:TP=-3:LRA=11,afade=t=in:d=0.25,"
                            f"afade=t=out:st={max(0, TOTAL - fade_out):.3f}:d={fade_out}",
                     "-ac", "2", "-ar", str(SR), mpath], check=True)
     mus = read_wav(mpath)[:n_total]
