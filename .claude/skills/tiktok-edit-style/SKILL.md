@@ -181,3 +181,28 @@ kertas di ruang bawah (y ≈ 1075–1560). Guna untuk **talking head selfie** (m
 ini kad pasti tutup dagu/mulut. Zoom keys masih berfungsi (relatif kepada gambar). Pastikan ruang bawah
 sentiasa ada satu elemen (kad/keypoint/cop) — reference tak pernah biar kertas kosong > ~2 s.
 Contoh: `projects/gr86-gaji/edl.py`.
+
+## 13. Tema "glass" (kaca kabur minimalis) — dikaji, belum diguna
+
+Sumber: TikTok case study BJAK (89 s, talking head di pejabat). Gaya Apple-keynote: tenang, premium,
+data-driven. Pemerhatian (contact sheet 1 fps, frame 8 fps pada kaunter & transisi, frame penuh):
+
+| Aspek | Apa dia buat | Kenapa |
+|---|---|---|
+| Struktur | Hook soalan + nombor ("Macam mana dapatkan 9 juta user dalam 7 tahun?") → kad tajuk "BJAK CASE STUDY" (s 12) → bab: model bisnes, nombor, kenapa berjaya, expansion → "Apa yang kita boleh belajar?" 3 poin → CTA soalan kepada penonton | Format case study: janji pelajaran di awal, ringkasan di hujung |
+| Dua mod visual | (a) presenter penuh skrin; (b) **panel kaca kabur**: footage presenter yang sama di-blur kuat + dicuci putih (~80%) jadi latar, kandungan tajam di atas | Tukar mod = tukar "bab"; penonton tahu masa untuk baca data |
+| Transisi | Presenter → blur naik + putih fade dalam ~0.4 s → elemen muncul; balik: blur turun | Lembut, tiada whoosh/cut kasar |
+| Kaunter nombor | Nombor besar berguling naik (954,144 → 9,000,000 dalam ~1.2 s, ease-out), label kecil huruf besar jarang di atas ("USERS"), sama ada atas pill gelap lut sinar di dada presenter, atau tengah panel kaca | Nombor yang "bergerak" lebih diingati |
+| Tipografi | Sans bersih (Inter/SF), nombor separa tebal besar, label kecil huruf besar spasi lebar + garis pendek bawah ("THE NUMBERS", "CASE STUDY · BJAK"), kelabu lembut; aksen tunggal (biru brand / merah marun) | Hierarki jelas, nampak mahal |
+| Kad | Kad putih bucu bulat, bayang halus, "01 · PROBLEM" kecil + ayat tebal; kad baru masuk, kad lama jadi pudar (kelabu) | Fokus pada poin semasa, konteks kekal |
+| Senarai/timeline | Titik + garis menegak (Malaysia → Taiwan → Thailand → Jepun → UK & Europe), baris muncul satu-satu | Tunjuk progres/ekspansi |
+| Gambar | Mockup app / foto acara dalam bingkai bucu bulat atas panel kaca, kadang dengan chip logo | Bukti visual |
+| Subtitle | Ada: 1 baris kecil, sentence case, kata kunci gelap/aksen, yang lain kelabu (TIDAK diguna: user tak mahu subtitle) | — |
+| Pacing | Elemen baru setiap 1–3 s ikut ayat; banyak ruang kosong | Tenang tapi tak statik |
+
+Cara laksana (bila diminta): `THEME = "glass"`:
+- Latar panel: frame source → GaussianBlur besar (σ≈40 pada 1080) → campur putih 0.78; transisi = interpolasi σ & campuran.
+- Kaunter: event ASS per frame (atau per 1/30 s) dengan nilai ease-out; font Inter Display SemiBold.
+- Kad & label: ASS drawing bucu bulat, Inter; aksen satu warna (tanya user warna brand).
+- Keypoint user (tanpa subtitle) jadi kad kaca / label nombor.
+Sesuai untuk: video kira-kira (GR86 gaji), case study, perbandingan spec. Kurang sesuai untuk walkaround luar (latar kabur hilang konteks kereta).
