@@ -229,4 +229,4 @@ Jangan biar kaca > ~60% durasi; selang-seli dengan presenter supaya muka masih j
   jangan tambah teks/filter dalam editor TikTok, upload fail asal (bukan dari WhatsApp/Telegram).
   Tiada cara "bypass" compression TikTok — jangan janji.
 
-- **"style rentak"** = gaya sendiri user (110 BPM, arang/krim/oren, word slam, ledger, HUD) → skill `style-rentak`.
+- **"poji hebat"** = gaya sendiri user (110 BPM, arang/krim/oren, word slam, ledger, HUD) → skill `poji-hebat`.

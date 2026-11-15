@@ -1,13 +1,13 @@
 ---
-name: style-rentak
-description: Preset editing "style rentak" — gaya SENDIRI user (inspirasi dari 4 reference TikTok, bukan tiru): speed rule 110 BPM (setiap elemen jatuh tepat atas beat), palet arang + krim + aksen oren, font Anton / Instrument Serif Italic / JetBrains Mono, HUD REC + progress bab, word slam, ledger mono, counter berguling, bracket viewfinder. Guna TERUS bila user sebut "style rentak" (atau "rentak").
+name: poji-hebat
+description: Preset editing "poji hebat" — gaya SENDIRI user (inspirasi dari 4 reference TikTok, bukan tiru): speed rule 110 BPM (setiap elemen jatuh tepat atas beat), palet arang + krim + aksen oren, font Anton / Instrument Serif Italic / JetBrains Mono, HUD REC + progress bab, word slam, ledger mono, counter berguling, bracket viewfinder. Guna TERUS bila user sebut "poji hebat" (dulu dipanggil "style rentak").
 ---
 
-# Style Rentak
+# Poji Hebat
 
 Gaya milik user. Diinspirasi (tidak ditiru) daripada 4 reference TikTok yang dikaji frame demi frame
 (@akidahmad GrabMaps & "Claude Video for Dummies", @abdmateenhashim pakar.io, @tenfoldmarc 17 video effects).
-Demo approved/rujukan: `exports/GR86-Gaji-Layak-RENTAK.mp4`, EDL `projects/gr86-rentak/edl.py`,
+Demo (preview) rujukan: EDL `projects/gr86-rentak/edl.py`,
 grafik `projects/honda-prelude/rentak_gfx.py`. Peraturan umum (export TikTok, tiada subtitle, warna asal,
 jumlah kira sebenar, hantar GitHub) ikut `.claude/skills/tiktok-edit-style/SKILL.md` + `style-kira-detail`.
 
@@ -20,7 +20,7 @@ jumlah kira sebenar, hantar GitHub) ikut `.claude/skills/tiktok-edit-style/SKILL
 | 17 video effects | penomboran "01/17", ritma senarai, kontras tajuk tebal | kuning, grade gelap |
 Kadar cakap reference 165–208 wpm, jeda > 0.3 s hampir tiada → potong semua jeda.
 
-## Identiti Rentak
+## Identiti Poji Hebat
 - **Speed rule:** grid **110 BPM**. Muzik di-time-stretch ke 110 BPM (librosa kesan tempo asal → `atempo`),
   fasa grid dipilih supaya paling banyak cut jatuh atas beat, permulaan muzik dianjak supaya beat muzik = beat grid.
   Setiap elemen grafik di-*snap* ke beat terdekat (±0.22 s). Word slam: **satu perkataan setiap beat**.
@@ -50,4 +50,4 @@ Kadar cakap reference 165–208 wpm, jeda > 0.3 s hampir tiada → potong semua 
    nombor penting atas muka → `brackets` + `counter`.
 5. Jawapan/payoff → `slam` "JAWAPAN" → `counter` aksen sampai hujung.
 6. Render: `python3 projects/honda-prelude/build.py final --keypoints --edl projects/<projek>/edl.py ...`
-   (export TikTok standard automatik). Terus render, hantar link GitHub.
+   (export TikTok standard automatik). Tunjuk PREVIEW dulu (artifact page) — render final hanya bila user minta.
