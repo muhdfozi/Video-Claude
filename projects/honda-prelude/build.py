@@ -419,6 +419,17 @@ write_wav(mix_path, mix)
 final_audio = os.path.join(args.work, "mix_lim.wav")
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", mix_path, "-af", "alimiter=limit=0.89:level=false",
                 "-ar", str(SR), final_audio], check=True)
+if args.mode == "final":
+    # TikTok export standard: two-pass linear loudnorm to -14 LUFS / -1 dBTP
+    _m = subprocess.run(["ffmpeg", "-hide_banner", "-i", final_audio, "-af", "loudnorm=I=-14:TP=-1.0:LRA=11:print_format=json",
+                         "-f", "null", "-"], capture_output=True, text=True).stderr
+    _j = json.loads(_m[_m.rindex("{"):_m.rindex("}") + 1])
+    _ln = os.path.join(args.work, "mix_tiktok.wav")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", final_audio, "-af",
+                    f"loudnorm=I=-14:TP=-1.0:LRA=11:measured_I={_j['input_i']}:measured_TP={_j['input_tp']}:"
+                    f"measured_LRA={_j['input_lra']}:measured_thresh={_j['input_thresh']}:offset={_j['target_offset']}:linear=true",
+                    "-ar", str(SR), _ln], check=True)
+    final_audio = _ln
 
 # ---------------------------------------------------------------- video render
 probe = json.loads(subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
@@ -440,17 +451,19 @@ if args.hdr:
            "-c:a", "aac", "-b:a", "320k"]
     VF_OUT = "scale=out_color_matrix=bt2020:out_range=tv,format=yuv420p10le"
 elif args.mode == "final":
-    enc = ["-c:v", "libx264", "-preset", "slow", "-crf", "16", "-maxrate", "11000k", "-bufsize", "22000k", "-profile:v", "high", "-c:a", "aac", "-b:a", "320k"]
+    enc = ["-c:v", "libx264", "-preset", "fast", "-crf", "12", "-c:a", "pcm_s16le"]       # intermediate (TikTok 2-pass below)
 else:
     enc = ["-c:v", "libx264", "-preset", "veryfast", "-crf", "22", "-c:a", "aac", "-b:a", "192k"]
 if not args.hdr:
     enc += ["-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709"]
     VF_OUT = "scale=out_color_matrix=bt709:out_range=tv,format=yuv420p"
 fontsdir = os.path.join(HERE, "fonts")
+TIKTOK = args.mode == "final" and not args.hdr          # standard TikTok upload export
+OUT_STAGE = os.path.join(args.work, "_master_tmp.mkv") if TIKTOK else args.out
 writer = subprocess.Popen(
     ["ffmpeg", "-v", "error", "-y", "-f", "rawvideo", "-pix_fmt", PIX, "-s", f"{OW}x{OH}", "-r", str(FPS), "-i", "-",
      "-i", final_audio, "-vf", f"ass={ass_path}:fontsdir={fontsdir}," + VF_OUT,
-     *enc, "-movflags", "+faststart", "-shortest", args.out], stdin=subprocess.PIPE)
+     *enc, *(["-movflags", "+faststart"] if not TIKTOK else []), "-shortest", OUT_STAGE], stdin=subprocess.PIPE)
 
 base = OW / SW
 
@@ -478,6 +491,7 @@ def apply_glass(img, lv):
     out = img.astype(np.float32) * (1 - a) + blur * a
     wsh = 0.80 * lv
     out = out * (1 - wsh) + WHITE_VAL * wsh
+    out += np.random.standard_normal(out.shape[:2]).astype(np.float32)[:, :, None] * (0.9 * lv * (257 if args.hdr else 1))
     if GLASS_TOP:                                   # keep a burned-in header sharp: glass only below it, feathered
         m = GLASS_MASK[:, :, None] if out.ndim == 3 else GLASS_MASK
         out = img.astype(np.float32) * (1 - m) + out * m
@@ -493,7 +507,7 @@ if LAYOUT and LAYOUT.get("kind") == "inset":
     paper = np.array([242, 236, 223], np.float32) / 255.0
     lo = cv2.resize(rng.standard_normal((24, 14)).astype(np.float32), (OW, OH), interpolation=cv2.INTER_CUBIC)
     grain = rng.standard_normal((OH, OW)).astype(np.float32)
-    lum = 1.0 + 0.018 * lo + 0.012 * grain
+    lum = 1.0 + 0.018 * lo + 0.006 * grain
     bg = paper[None, None, :] * lum[:, :, None]
     # soft drop shadow under the photo
     sh = np.zeros((OH, OW), np.float32)
@@ -519,6 +533,8 @@ for s in subs:
     off = first / FPS - s["o0"]
     rd = subprocess.Popen(["ffmpeg", "-v", "quiet", "-ss", f"{s['v0'] + off:.4f}", "-i", args.src, "-an",
                            "-frames:v", str(cnt + 2), "-vf",
+                           (f"fps={FPS},colorspace=all=bt709:iall=bt2020:itrc=bt709:fast=0:format=yuv420p,"
+                            f"scale=in_color_matrix=bt709:in_range=tv,format=" + PIX) if (SRC_MATRIX == "bt2020" and not args.hdr) else
                            f"fps={FPS},scale=in_color_matrix={SRC_MATRIX}:in_range=tv,format=" + PIX,
                            "-f", "rawvideo", "-"], stdout=subprocess.PIPE)
     fsz = SW * SH * BPP
@@ -527,6 +543,8 @@ for s in subs:
         b = rd.stdout.read(fsz)
         if len(b) == fsz:
             frame = np.frombuffer(b, NP).reshape(SH, SW, 3)
+        if TIKTOK and len(b) == fsz:                      # light unsharp on footage only (graphics stay crisp)
+            frame = cv2.addWeighted(frame, 1.30, cv2.GaussianBlur(frame, (0, 0), 1.4), -0.30, 0)
         tv = s["v0"] + off + j / FPS
         z, cx, cy = zoom_at(s["seg"], tv, s["punch"])
         if PANEL:
@@ -553,4 +571,18 @@ for s in subs:
     rd.stdout.close(); rd.kill(); rd.wait()
     print(f"\r{fi}/{n_frames} frames", end="", flush=True)
 writer.stdin.close(); writer.wait()
+if TIKTOK:
+    # TikTok upload standard: H.264 High, 1080x1920, source fps, SDR BT.709, 2-pass VBR sized to stay < 95 MB
+    # (GitHub delivery) and <= 16 Mbps, GOP 2 s, AQ mode 3 (protects flat/dark gradients), AAC 320k 48 kHz.
+    vk = int(min(16000, ((95e6 * 8 / TOTAL) - 330e3) / 1000 * 0.97))
+    common = ["-c:v", "libx264", "-preset", "slow", "-profile:v", "high", "-level", "4.2", "-pix_fmt", "yuv420p",
+              "-b:v", f"{vk}k", "-maxrate", f"{int(vk * 1.6)}k", "-bufsize", f"{int(vk * 2)}k",
+              "-g", str(FPS * 2), "-keyint_min", str(FPS), "-bf", "2", "-x264-params", "aq-mode=3",
+              "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709", "-color_range", "tv"]
+    plog = os.path.join(args.work, "_x264_2pass")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", OUT_STAGE, *common, "-pass", "1", "-passlogfile", plog, "-an", "-f", "mp4", "/dev/null"], check=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", OUT_STAGE, *common, "-pass", "2", "-passlogfile", plog,
+                    "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-movflags", "+faststart", args.out], check=True)
+    os.remove(OUT_STAGE)
+    print(f"\nTikTok export: H.264 {vk} kbps, {FPS} fps, -14 LUFS")
 print("\ndone", args.out, f"{TOTAL:.2f}s")

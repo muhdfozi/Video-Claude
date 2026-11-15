@@ -213,3 +213,18 @@ Jangan biar kaca > ~60% durasi; selang-seli dengan presenter supaya muka masih j
 
 ## 14. Preset bernama
 - **"style kira detail"** = tema glass seperti `projects/gr86-glass` → lihat skill `style-kira-detail`. Bila user sebut nama ini, terus guna tanpa tanya.
+
+## Standard export TikTok (default untuk SEMUA final) — user rule
+`build.py final` (tanpa `--hdr`) kini terus hasilkan versi upload TikTok:
+- **Video:** H.264 High@4.2, 1080×1920, yuv420p, **SDR BT.709**, fps ikut source (60/30), GOP 2 s,
+  2-pass VBR ≤ 16 Mbps dan saiz < 95 MB (penghantaran GitHub), `aq-mode=3` (lindungi gradient gelap/rata).
+- **Warna:** source HDR iPhone → SDR dengan penukaran gamut BT.2020→BT.709 yang betul
+  (`colorspace=all=bt709:iall=bt2020:itrc=bt709`) — tiada grade, paling dekat dengan rupa asal.
+  (TikTok tak konsisten dengan HDR; SDR = rupa sama di semua telefon.) Source SDR kekal SDR.
+- **Kualiti tahan compression:** sharpen ringan pada footage sahaja (grafik tak disentuh), dither halus
+  pada panel kaca (elak banding), butiran kertas dikurangkan.
+- **Audio:** AAC 320k 48 kHz, loudnorm 2-pass **−14 LUFS / −1 dBTP** (sasaran normalisasi TikTok).
+- Master HDR (arkib) hanya bila diminta: `--hdr`.
+- **Nasihat upload untuk user:** hidupkan "Upload HD"/kualiti tinggi, Data saver off, upload guna Wi-Fi,
+  jangan tambah teks/filter dalam editor TikTok, upload fail asal (bukan dari WhatsApp/Telegram).
+  Tiada cara "bypass" compression TikTok — jangan janji.
