@@ -463,6 +463,10 @@ def glass_level(T, ramp=0.35):
             x = max(0.0, min(up, dn)); lv = max(lv, x * x * (3 - 2 * x))
     return lv
 
+GLASS_TOP = getattr(edl, "GLASS_TOP", 0)
+if GLASS_TOP:
+    _y0 = int(GLASS_TOP * OH / 1920); _f = int(70 * OH / 1920)
+    GLASS_MASK = np.clip((np.arange(OH, dtype=np.float32) - _y0) / _f, 0, 1)[:, None] * np.ones((1, OW), np.float32)
 WHITE_VAL = (65535 if args.hdr else 255) * (0.80 if args.hdr else 0.96)
 def apply_glass(img, lv):
     """Frosted glass: strong blur (via 1/8 downscale) + wash to white, both scaled by lv (0..1)."""
@@ -474,6 +478,9 @@ def apply_glass(img, lv):
     out = img.astype(np.float32) * (1 - a) + blur * a
     wsh = 0.80 * lv
     out = out * (1 - wsh) + WHITE_VAL * wsh
+    if GLASS_TOP:                                   # keep a burned-in header sharp: glass only below it, feathered
+        m = GLASS_MASK[:, :, None] if out.ndim == 3 else GLASS_MASK
+        out = img.astype(np.float32) * (1 - m) + out * m
     return out.astype(img.dtype)
 PANEL = None
 if LAYOUT and LAYOUT.get("kind") == "inset":

@@ -38,6 +38,12 @@ EDL `projects/gr86-glass/edl.py`. Skill penuh (teknik, pipeline): `.claude/skill
    --src <raw> --audio <audio48k.wav> --words <transcript.json> --sfx <sfxdir> --out <out.mp4>`.
    Semak frame (kad tak tutup muka, nombor betul), loudness ~−15 LUFS, saiz < 100 MB, kemudian push.
 
+## Sumber dengan header tertanam (dari app lain)
+Kalau fail dalam `Raw Video` dah ada header/teks tetap (contoh "TOYOTA ALPHARD Z 2023 RM245,000"):
+`NO_ZOOM = True`, `GLASS_TOP = 780` (kaca hanya bawah header, header kekal tajam), semua elemen kaca y ≥ ~880,
+warna ikut fail (biasanya SDR → tanpa `--hdr`), audio dari raw jika lag 0. Contoh: `projects/alphard-z/edl.py`.
+Video walkaround: susun semula → hook soalan → kereta + harga → features (pill laju) → kira-kira → jawapan + CTA.
+
 ## Templat EDL ringkas
 ```python
 THEME = "glass"; ACCENT = "C8102E"; FACE = (0.47, 0.40)

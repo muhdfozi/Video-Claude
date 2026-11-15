@@ -143,8 +143,12 @@ def render(GLASS, OVERLAYS, src2out, add, TOTAL, C, sfx_events, FPS, accent="C81
             elif k == "cards": cards(st, b, it["items"], it.get("y", 640))
 
     # ---- overlays on the full-screen presenter
+    starts = sorted(src2out(o["at"]) for o in OVERLAYS if o["kind"] == "pill")
     for o in OVERLAYS:
         t0 = src2out(o["at"]); t1 = min(t0 + o.get("dur", 2.0), TOTAL)
+        if o["kind"] == "pill":                     # never let rapid-fire pills overlap
+            later = [x for x in starts if x > t0 + 1e-3]
+            if later: t1 = min(t1, later[0] - 0.04)
         k = o["kind"]
         if k == "counter_pill":
             counter(t0, t1, o["to"], o.get("frm", 0), o.get("dur_roll", 1.2), o.get("y", 1430), o.get("lab"), o.get("sub"),
