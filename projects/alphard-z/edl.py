@@ -4,6 +4,7 @@ header "TOYOTA ALPHARD Z 2023 RM245,000" (y ~290-750). Rules for this source:
 - NO_ZOOM (header in pixels); colour exactly as the file (SDR, no grade).
 - Glass only below the header (GLASS_TOP), every glass element placed below y ~860.
 - Audio: identical timing to raw IMG_1340 (lag 0) -> cleaner raw audio + its transcript.
+Calculated totals are shown exactly (user rule), not the rounded spoken figures.
 Order rearranged: hook question -> car + price -> features -> the maths -> answer to the end -> CTA.
 Times are SOURCE seconds.
 """
@@ -43,7 +44,7 @@ GLASS = [
     ]),
     dict(win=(46.05, 51.35), items=[
         dict(kind="label", text="Jumlah", y=880),
-        dict(kind="counter", at=48.50, to=252000, frm=0, dur=1.3, lab="On the road", sub="harga + road tax + insurans + fee", accent=True, y=1180),
+        dict(kind="counter", at=48.50, to=252140, frm=0, dur=1.3, lab="On the road", sub="245,000 + 840 + 3,500 + 2,800", accent=True, y=1180),
     ]),
     dict(win=(51.55, 57.45), items=[
         dict(kind="card", title="Kira loan", y=1000, rows=[(53.12, "Tempoh loan", "9 tahun"),
@@ -54,16 +55,16 @@ GLASS = [
         dict(kind="label", text="Rule 1/3 gaji", y=880),
         dict(kind="cards", y=960, items=[(59.24, "01 · Rule", "Ansuran ≤ 1/3 gaji"),
                                          (62.06, "02 · Kira", "RM2,800 × 3"),
-                                         (64.18, "03 · Hasil", "RM8,000 lebih sebulan")]),
+                                         (64.18, "03 · Hasil", "RM8,400 sebulan")]),
     ]),
     dict(win=(65.75, 999), items=[
         dict(kind="label", text="Jawapan", y=880),
-        dict(kind="counter", at=66.30, to=8000, frm=0, dur=1.4, lab="Gaji layak", sub="RM8,000 lebih sebulan", accent=True, y=1180),
+        dict(kind="counter", at=66.30, to=8400, frm=0, dur=1.4, lab="Gaji layak", sub="RM2,800 × 3 = RM8,400 sebulan", accent=True, y=1180),
     ]),
 ]
 
 OVERLAYS = [
-    dict(kind="counter_pill", at=16.22, dur=4.6, to=252000, frm=0, dur_roll=1.4, lab="Alphard Z · on the road", sub="Gaji berapa layak?"),
+    dict(kind="counter_pill", at=16.22, dur=4.6, to=252140, frm=0, dur_roll=1.4, lab="Alphard Z · on the road", sub="Gaji berapa layak?"),
     dict(kind="pill", at=4.18, dur=2.2, text="Grade *4.5*"),
     dict(kind="pill", at=6.72, dur=2.4, text="Mileage *25,000 km*"),
     dict(kind="pill", at=11.72, dur=3.4, text="RM245,000 · *belum on the road*"),

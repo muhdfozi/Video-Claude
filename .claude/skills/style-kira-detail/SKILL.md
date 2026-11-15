@@ -14,6 +14,10 @@ EDL `projects/gr86-glass/edl.py`. Skill penuh (teknik, pipeline): `.claude/skill
 - **Warna asal**: footage HDR iPhone kekal HLG BT.2020 10-bit (`--hdr`); SDR kekal SDR. Jangan grade.
 - Frame rate ikut source.
 - Muzik: fail dalam folder Drive `Music` (bed −28 LUFS, ducking −8 dB bawah suara). Kalau tiada, tanya.
+- **Jumlah kira-kira = nilai sebenar** (user rule): kira sendiri jumlah/hasil darab daripada nombor yang
+  presenter sebut (contoh 245,000 + 840 + 3,500 + 2,800 = **RM252,140**, bukan "252,000 lebih";
+  2,800 × 3 = **RM8,400**, bukan "8,000 lebih"). Tunjuk formula kecil di bawah nombor. Nombor yang memang
+  anggaran presenter (bulanan loan tanpa kadar faedah) kekal sebagai "±" dan dilabel anggaran.
 - Hantar melalui GitHub (`exports/`, < 100 MB) + link "Download raw file". App Claude tak boleh download file card.
 
 ## Resipi
