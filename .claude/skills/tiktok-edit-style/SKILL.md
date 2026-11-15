@@ -210,3 +210,6 @@ Pelaksanaan glass: `GLASS = [dict(win=(src_a, src_b), items=[label|counter|card|
 `OVERLAYS = [counter_pill|title|pill]` (atas presenter penuh skrin). `ACCENT` = satu warna aksen.
 Panel kaca = frame 1/8 → blur → besar semula + putih 80% (HDR: putih pada 80% HLG), ramp 0.35 s.
 Jangan biar kaca > ~60% durasi; selang-seli dengan presenter supaya muka masih jadi "hos".
+
+## 14. Preset bernama
+- **"style kira detail"** = tema glass seperti `projects/gr86-glass` → lihat skill `style-kira-detail`. Bila user sebut nama ini, terus guna tanpa tanya.
