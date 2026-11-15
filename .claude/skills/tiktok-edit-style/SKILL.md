@@ -182,7 +182,7 @@ ini kad pasti tutup dagu/mulut. Zoom keys masih berfungsi (relatif kepada gambar
 sentiasa ada satu elemen (kad/keypoint/cop) — reference tak pernah biar kertas kosong > ~2 s.
 Contoh: `projects/gr86-gaji/edl.py`.
 
-## 13. Tema "glass" (kaca kabur minimalis) — dikaji, belum diguna
+## 13. Tema "glass" (kaca kabur minimalis) — dilaksana (`THEME = "glass"`, `glass_gfx.py`), contoh `projects/gr86-glass/edl.py`
 
 Sumber: TikTok case study BJAK (89 s, talking head di pejabat). Gaya Apple-keynote: tenang, premium,
 data-driven. Pemerhatian (contact sheet 1 fps, frame 8 fps pada kaunter & transisi, frame penuh):
@@ -206,3 +206,7 @@ Cara laksana (bila diminta): `THEME = "glass"`:
 - Kad & label: ASS drawing bucu bulat, Inter; aksen satu warna (tanya user warna brand).
 - Keypoint user (tanpa subtitle) jadi kad kaca / label nombor.
 Sesuai untuk: video kira-kira (GR86 gaji), case study, perbandingan spec. Kurang sesuai untuk walkaround luar (latar kabur hilang konteks kereta).
+Pelaksanaan glass: `GLASS = [dict(win=(src_a, src_b), items=[label|counter|card|timeline|cards])]` (bab kaca) dan
+`OVERLAYS = [counter_pill|title|pill]` (atas presenter penuh skrin). `ACCENT` = satu warna aksen.
+Panel kaca = frame 1/8 → blur → besar semula + putih 80% (HDR: putih pada 80% HLG), ramp 0.35 s.
+Jangan biar kaca > ~60% durasi; selang-seli dengan presenter supaya muka masih jadi "hos".

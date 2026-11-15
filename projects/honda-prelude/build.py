@@ -244,7 +244,7 @@ for i, c in enumerate([] if args.keypoints else chunks):
     add(max(t0, 1.3), t1, r"{\an5\pos(540,1300)\fad(0,40)" + POP + "}" + " ".join(parts), layer=5)
 
 sfx_events = []                          # (time_out, name)
-for g in ([] if THEME == "paper" else GRAPHICS):
+for g in (GRAPHICS if THEME == "clean" else []):
     t0 = src2out(g["at"])
     if t0 is None: continue
     d = g.get("dur", 0)
@@ -309,7 +309,13 @@ if THEME == "paper":
     import paper_gfx
     paper_gfx.render(GRAPHICS, KEYPOINTS, src2out, add, TOTAL, C, sfx_events, args.keypoints)
 
-if args.keypoints and THEME != "paper":
+GLASS_WIN = []
+if THEME == "glass":
+    import glass_gfx
+    GLASS_WIN = glass_gfx.render(getattr(edl, "GLASS", []), getattr(edl, "OVERLAYS", []), src2out, add, TOTAL, C,
+                                 sfx_events, FPS, getattr(edl, "ACCENT", "C8102E"))
+
+if args.keypoints and THEME == "clean":
     from PIL import ImageFont
     KFS = 58
     kfont = ImageFont.truetype("/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf", KFS)
@@ -401,13 +407,13 @@ if MUSIC:
     gain = np.repeat(g, blk); gain = np.concatenate([gain, np.full(n_total - len(gain), gain[-1] if len(gain) else 1.0)])
     mix += mus * gain[:, None]
 
-GAIN = dict(whoosh=0.20, pop=0.22, cash=0.30, riser=0.20, scratch=0.28, ding=0.25, thump=0.38, paper=0.16, click=0.30)
+GAIN = dict(whoosh=0.20, pop=0.22, cash=0.30, riser=0.20, scratch=0.28, ding=0.25, thump=0.38, paper=0.16, click=0.30, soft=0.09)
 for t0, name in sfx_events:
-    base = "riser" if name == "riser_in" else name
+    base = {"riser_in": "riser", "soft": "whoosh"}.get(name, name)
     x = read_wav(os.path.join(args.sfx, base + ".wav"))
     start = t0 - (len(x) / SR if name == "riser_in" else 0.20 if base == "whoosh" else 0)
     i = max(0, int(start * SR)); x = x[: max(0, n_total - i)]
-    mix[i:i + len(x)] += x * GAIN[base]
+    mix[i:i + len(x)] += x * GAIN.get(name, GAIN.get(base, 0.2))
 mix_path = os.path.join(args.work, "mix.wav")
 write_wav(mix_path, mix)
 final_audio = os.path.join(args.work, "mix_lim.wav")
@@ -447,6 +453,28 @@ writer = subprocess.Popen(
      *enc, "-movflags", "+faststart", "-shortest", args.out], stdin=subprocess.PIPE)
 
 base = OW / SW
+
+def glass_level(T, ramp=0.35):
+    lv = 0.0
+    for a, b in GLASS_WIN:
+        if a - ramp < T < b + ramp:
+            up = min(1.0, (T - a + ramp) / ramp) if T < a else 1.0
+            dn = min(1.0, (b + ramp - T) / ramp) if T > b else 1.0
+            x = max(0.0, min(up, dn)); lv = max(lv, x * x * (3 - 2 * x))
+    return lv
+
+WHITE_VAL = (65535 if args.hdr else 255) * (0.80 if args.hdr else 0.96)
+def apply_glass(img, lv):
+    """Frosted glass: strong blur (via 1/8 downscale) + wash to white, both scaled by lv (0..1)."""
+    h, w = img.shape[:2]
+    small = cv2.resize(img, (w // 8, h // 8), interpolation=cv2.INTER_AREA).astype(np.float32)
+    small = cv2.GaussianBlur(small, (0, 0), 1.0 + 6.0 * lv)
+    blur = cv2.resize(small, (w, h), interpolation=cv2.INTER_LINEAR)
+    a = min(1.0, lv * 1.6)
+    out = img.astype(np.float32) * (1 - a) + blur * a
+    wsh = 0.80 * lv
+    out = out * (1 - wsh) + WHITE_VAL * wsh
+    return out.astype(img.dtype)
 PANEL = None
 if LAYOUT and LAYOUT.get("kind") == "inset":
     sc = OW / 1080
@@ -510,7 +538,10 @@ for s in subs:
             img = cv2.resize(frame, (rw, rh), interpolation=cv2.INTER_AREA if k < 1 else cv2.INTER_LINEAR)
             x0 = int(round(min(max(cx * rw - OW / 2, 0), rw - OW)))
             y0 = int(round(min(max(cy * rh - OH / 2, 0), rh - OH)))
-            writer.stdin.write(np.ascontiguousarray(img[y0:y0 + OH, x0:x0 + OW]).tobytes())
+            out = img[y0:y0 + OH, x0:x0 + OW]
+            lv = glass_level(fi / FPS) if GLASS_WIN else 0.0
+            if lv > 0.001: out = apply_glass(out, lv)
+            writer.stdin.write(np.ascontiguousarray(out).tobytes())
         fi += 1
     rd.stdout.close(); rd.kill(); rd.wait()
     print(f"\r{fi}/{n_frames} frames", end="", flush=True)
