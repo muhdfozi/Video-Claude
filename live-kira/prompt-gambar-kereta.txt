@@ -1,0 +1,41 @@
+PROMPT GAMBAR KERETA - LIVE KIRA
+Gaya sama macam 29 gambar di profpojikira.netlify.app.
+Satu prompt = satu gambar. Simpan setiap gambar dengan nama fail yang ditulis.
+
+---------------------------------------------------------------
+TEMPLATE (tukar [MODEL] sahaja)
+---------------------------------------------------------------
+Photorealistic studio product photo of a white [MODEL], front three-quarter view,
+car facing left (front of the car on the left side of the frame), full car visible
+and centered, plain warm off-white seamless background (hex #F6F2ED), soft even
+studio lighting, soft natural shadow under the car, Japanese-market version,
+no text, no logo watermark, no number plate text, no people, 16:9 landscape.
+
+---------------------------------------------------------------
+17 GAMBAR (Odyssey 2 versi kongsi satu gambar)
+---------------------------------------------------------------
+taft.webp          2021 Daihatsu Taft G Turbo (small kei crossover SUV)
+tank.webp          2020 Toyota Tank Custom G-T (compact tall wagon with sliding doors)
+canbus.webp        2023 Daihatsu Move Canbus (kei car with sliding doors, two-tone stripes)
+tanto.webp         2023 Daihatsu Tanto Funcross (tall kei wagon, roof rails)
+corollasport.webp  2022 Toyota Corolla Sport hatchback
+roadster.webp      2022 Mazda Roadster RF (MX-5 RF, retractable fastback roof closed)
+levorg.webp        2022 Subaru Levorg STI Sport (sport wagon)
+odyssey.webp       2021 Honda Odyssey Absolute (MPV, RC1 facelift)
+ux200.webp         2022 Lexus UX200 (compact crossover)
+mini.webp          2022 MINI Cooper S 3-door hatch
+gryaris.webp       2022 Toyota GR Yaris RZ (3-door hot hatch)
+420i.webp          2022 BMW 420i M Sport Coupe (G22, 2-door)
+c200.webp          2022 Mercedes-Benz C200 AMG Line sedan (W206)
+crownsport.webp    2023 Toyota Crown Sport (crossover)
+velar.webp         2020 Range Rover Velar R-Dynamic
+lbx.webp           2025 Lexus LBX (compact crossover)
+macan.webp         2022 Porsche Macan
+
+---------------------------------------------------------------
+LEPAS SIAP
+---------------------------------------------------------------
+Hantar semua gambar kepada Claude dalam chat. Claude akan kecilkan saiz,
+tukar ke .webp, dan masukkan ke folder cars/. Laman Live Kira akan terus
+padankan gambar ikut nama model; tiada tetapan lain perlu diubah.
+Format asal tak penting (PNG/JPG/WEBP semua boleh).
