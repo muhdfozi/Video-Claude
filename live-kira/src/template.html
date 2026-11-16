@@ -5,7 +5,7 @@
 <style>
 /* Layout: iPad landscape console. Left = operator input (keypad), right = broadcast stage viewers read on TikTok Live. */
 :root{
-  --navy:#0A1A33; --navy-2:#102445; --navy-3:#1a3360; --line:#26406e;
+  --navy:#0A1A33; --pic-bg:#F6F2ED; --navy-2:#102445; --navy-3:#1a3360; --line:#26406e;
   --ink:#F4F6FA; --muted:#9AA8C2; --red:#E10600; --red-soft:#ff3b30;
   --ok:#22C55E; --ok-bg:rgba(34,197,94,.14); --warn:#F5B300; --warn-bg:rgba(245,179,0,.14); --hot:#FF5A4F; --hot-bg:rgba(255,90,79,.14);
   --f-display:"Russo One","Arial Black",system-ui,sans-serif;
@@ -78,12 +78,15 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;align-content:start}
 .car{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;animation:pop .35s both}
 @keyframes pop{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.car .tier{position:absolute;top:12px;right:12px;font:800 13px var(--f-label);letter-spacing:1.5px;padding:3px 9px;border-radius:999px}
-.t-selesa{background:var(--ok-bg);color:var(--ok)}
-.t-sesuai{background:var(--warn-bg);color:var(--warn)}
-.t-max{background:var(--hot-bg);color:var(--hot)}
-.car .sil{height:46px;width:auto;color:var(--muted);opacity:.9}
-.car .nm{font:700 18px var(--f-body);line-height:1.2;padding-right:70px;min-width:0}
+.car .tier{position:absolute;top:20px;right:20px;z-index:1;box-shadow:0 2px 8px rgba(0,0,0,.25);font:800 13px var(--f-label);letter-spacing:1.5px;padding:3px 9px;border-radius:999px}
+.t-selesa{background:var(--ok);color:#06240f}
+.t-sesuai{background:var(--warn);color:#2b1d00}
+.t-max{background:var(--hot);color:#2a0300}
+.car .pic{aspect-ratio:2/1;max-width:100%;border-radius:10px;overflow:hidden;background:var(--pic-bg);display:grid;place-items:center;margin:-2px -2px 2px}
+.car .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.car .pic.none{background:var(--navy-3)}
+.car .sil{height:52%;width:auto;color:var(--muted);opacity:.9}
+.car .nm{font:700 18px var(--f-body);line-height:1.2;min-width:0}
 .car .meta{display:flex;gap:6px;flex-wrap:wrap;font:600 13px var(--f-label);letter-spacing:1px;color:var(--muted)}
 .car .meta span{border:1px solid var(--line);border-radius:6px;padding:1px 7px}
 .car .meta .jp,.car .meta .uk{color:var(--ink)}
@@ -178,7 +181,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
       <div class="field"><label class="lbl" for="sSes">Sesuai jika ≤ (% gaji)</label><input class="inp num" id="sSes" inputmode="decimal"></div>
     </div>
     <p class="help">Bulanan maksimum = yang lebih rendah antara <b>gaji × had bulanan</b> dan <b>gaji × had DSR − komitmen</b>. Angka ini andaian awal; ubah ikut amalan bank yang anda guna.</p>
-    <div class="field"><label class="lbl" for="sStock">Stok (satu kereta setiap baris: Model | Tahun | JP/UK | Harga | Jenis)</label>
+    <div class="field"><label class="lbl" for="sStock">Stok (satu kereta setiap baris: Model | Tahun | JP/UK | Harga | Jenis | Gambar pilihan)</label>
       <textarea id="sStock" spellcheck="false"></textarea></div>
     <p class="help">Senarai asal ialah <b>harga anggaran kereta recond</b> (dikumpul dari senarai harga dealer, Nov 2026, dibundarkan ke RM5,000 terdekat). Ia bukan stok sebenar; ubah bila harga pasaran berubah. Tetapan disimpan dalam pelayar iPad ini sahaja.</p>
     <div class="acts">
@@ -230,7 +233,13 @@ Land Rover Defender 90 SE | 2023 | UK | 285000 | SUV
 Porsche Macan 2.0 | 2022 | UK | 300000 | SUV
 Lexus RX350 F Sport | 2023 | JP | 305000 | SUV
 Toyota Vellfire Z Premier (Model Baru) | 2024 | JP | 315000 | MPV
-Toyota Land Cruiser 300 ZX | 2023 | JP | 380000 | SUV`;
+Toyota Land Cruiser 300 ZX | 2023 | JP | 380000 | SUV
+BMW 118i M Sport | 2022 | UK | 135000 | Hatchback
+Mercedes-Benz A180 AMG Line | 2022 | UK | 150000 | Hatchback
+BMW M135i xDrive | 2023 | UK | 200000 | Hatchback
+Mercedes-AMG A45 S | 2022 | UK | 265000 | Hatchback
+BMW M2 | 2024 | UK | 375000 | Sport
+Nissan GT-R | 2023 | JP | 755000 | Sport`;
 const DEFAULTS = {rate:2.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
 const store = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let S = Object.assign({}, DEFAULTS, store.get('pp-live-settings-v2') || {});
@@ -243,7 +252,7 @@ const rm = n => 'RM ' + Math.round(n).toLocaleString('en-MY');
 
 function parseStock(t){
   return t.split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(p=>p.length>=4 && +p[3]>0)
-    .map(([model,year,origin,price,type])=>({model,year,origin:(origin||'').toUpperCase(),price:+price,type:type||'Lain'}));
+    .map(([model,year,origin,price,type,img])=>({model,year,origin:(origin||'').toUpperCase(),price:+price,type:type||'Lain',img:img||carImg(model)}));
 }
 function monthly(price){
   const loan = price*(1-S.dep/100), y = S.years;
@@ -260,6 +269,21 @@ const SIL = {
   Kei:'M14 34 L14 20 Q15 15 20 14 L28 13 L34 3 Q36 1 42 1 L94 1 Q102 1 103 8 L106 24 L106 34 Z',
   Sport:'M4 34 L6 28 Q8 24 16 23 L38 21 L56 13 Q62 11 70 11 L84 11 Q92 12 98 18 L108 22 Q116 24 116 30 L116 34 Z'
 };
+/* car photos from profpojikira.netlify.app, matched by model name */
+const CAR_IMG = [
+  [/alphard/i, m => /baru|AGH40|40\b/i.test(m) ? 'alphard40' : 'alphard30'],
+  [/vellfire/i, m => /baru|z premier|40\b/i.test(m) ? 'vellfire40' : 'vellfire30'],
+  [/gr ?86/i,'gr86'], [/gt ?86/i,'gt86'], [/harrier/i,'harrier'], [/land ?cruiser|prado/i,'landcruiser'],
+  [/voxy/i,'voxy'], [/noah/i,'noah'], [/\bnx ?\d/i,'nx250'], [/\brx ?\d/i,'rx350'], [/\bis ?300/i,'is300'],
+  [/step ?wgn/i,'stepwgn'], [/type ?r|fl5/i,'civicfl5'], [/a ?180/i,'a180'], [/a ?35\b/i,'a35'], [/a ?45/i,'a45s'],
+  [/\bcla/i,'cla250'], [/g ?350|g-class/i,'g350'], [/m135i/i,'m135i'], [/\b135i/i,'135i'], [/\b118i/i,'118i'],
+  [/\bm2\b/i,'m2'], [/gt-?r\b/i,'gtr'], [/\bbrz/i,'brz'], [/swift/i,'swift'], [/jimny/i,'jimny'], [/defender/i,'defender']
+];
+function carImg(model){ for(const [rx,k] of CAR_IMG) if(rx.test(model)) return typeof k==='function' ? k(model) : k; return ''; }
+function pic(c){
+  return c.img ? `<div class="pic"><img src="cars/${esc(c.img)}.webp" alt="${esc(c.model)}" loading="lazy" onerror="this.parentNode.classList.add('none');this.replaceWith(document.createRange().createContextualFragment(sil('${esc(c.type)}')))"></div>`
+               : `<div class="pic none">${sil(c.type)}</div>`;
+}
 function sil(type){
   const d = SIL[type] || SIL.Sedan;
   return `<svg class="sil" viewBox="0 0 120 44" aria-hidden="true"><path d="${d}" fill="currentColor" opacity=".35"/><circle cx="30" cy="35" r="7" fill="currentColor"/><circle cx="92" cy="35" r="7" fill="currentColor"/><circle cx="30" cy="35" r="3" fill="var(--navy-2)"/><circle cx="92" cy="35" r="3" fill="var(--navy-2)"/></svg>`;
@@ -314,7 +338,7 @@ function render(){
     <div class="filters">${chipRow(types,st.type,'type')}<span class="sep"></span>${chipRow(['Semua','JP','UK'],st.origin,'origin')}</div>
     ${ok.length ? `<div class="grid">${ok.map((c,i)=>{ const r=c.m/g, [tl,tc,col]=tier(r);
       return `<article class="car" style="animation-delay:${Math.min(i,8)*40}ms">
-        <span class="tier ${tc}">${tl}</span>${sil(c.type)}
+        <span class="tier ${tc}">${tl}</span>${pic(c)}
         <div class="nm">${esc(c.model)}</div>
         <div class="meta"><span>${esc(c.year)}</span><span class="${c.origin==='UK'?'uk':'jp'}">${c.origin==='UK'?'UK':'JEPUN'}</span><span>${esc(c.type)}</span></div>
         <div class="monthly"><b class="num">${rm(c.m)}</b><small>/BULAN</small></div>
