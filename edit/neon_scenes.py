@@ -355,3 +355,291 @@ class Typo:
 
 
 GY = 1130  # ground line for illustrations
+
+
+# ---------------------------------------------------------------------------
+# extra primitives (money / smoking / hot-hatch story)
+# ---------------------------------------------------------------------------
+def hatch(n, cx, gy, s=1.0, a=1.0, draw=1.0, wheel_rot=0.0):
+    """Hot-hatch side profile with a tall rear wing (facing right)."""
+    c = n.c
+    ox = cx - 390 * s
+
+    def P(x, h):
+        return ox + x * s, gy - h * s
+
+    lw = 6 * s
+    c.new_path()
+    c.move_to(*P(60, 40))
+    c.line_to(*P(84, 40))
+    c.arc_negative(*P(170, 72), 90 * s, math.radians(165), math.radians(15))
+    c.line_to(*P(522, 40))
+    c.arc_negative(*P(610, 72), 90 * s, math.radians(165), math.radians(15))
+    c.line_to(*P(745, 40))
+    c.curve_to(*P(768, 42), *P(778, 60), *P(778, 85))      # front bumper
+    c.line_to(*P(772, 130))
+    c.curve_to(*P(766, 150), *P(745, 162), *P(720, 168))   # nose
+    c.line_to(*P(585, 205))                                # long low hood
+    c.line_to(*P(470, 292))                                # windscreen
+    c.curve_to(*P(455, 302), *P(430, 304), *P(400, 304))
+    c.line_to(*P(250, 296))                                # roof
+    c.curve_to(*P(160, 280), *P(90, 230), *P(52, 196))     # fastback hatch
+    c.line_to(*P(36, 150))
+    c.line_to(*P(30, 90))                                  # rear bumper
+    c.curve_to(*P(30, 55), *P(40, 40), *P(60, 40))
+    c.close_path()
+    _reveal(n, a, lw, draw)
+    # glass
+    c.new_path()
+    c.move_to(*P(150, 215))
+    c.curve_to(*P(190, 250), *P(220, 272), *P(255, 282))
+    c.line_to(*P(398, 288))
+    c.line_to(*P(462, 222))
+    c.close_path()
+    _reveal(n, a * 0.85, lw * 0.75, draw)
+    c.new_path()
+    c.move_to(*P(352, 286))
+    c.line_to(*P(352, 218))
+    _reveal(n, a * 0.85, lw * 0.75, draw)
+    # rear wing on stilts
+    c.new_path()
+    c.move_to(*P(70, 210))
+    c.line_to(*P(56, 262))
+    c.move_to(*P(118, 240))
+    c.line_to(*P(108, 266))
+    _reveal(n, a, lw * 0.8, draw)
+    c.new_path()
+    c.move_to(*P(8, 262))
+    c.line_to(*P(150, 272))
+    _reveal(n, a, lw * 1.5, draw)
+    # side skirt, door seam, hood vent, headlight
+    for (x0, h0, x1, h1, k) in ((150, 58, 520, 58, 0.55), (468, 210, 474, 70, 0.6),
+                                (600, 196, 650, 186, 0.8), (700, 160, 760, 140, 1.0)):
+        c.new_path()
+        c.move_to(*P(x0, h0))
+        c.line_to(*P(x1, h1))
+        _reveal(n, a * k, lw * (1.1 if k == 1.0 else 0.6), draw)
+    for wx in (170, 610):
+        x, y = P(wx, 72)
+        c.new_path()
+        c.arc(x, y, 66 * s, 0, 2 * math.pi)
+        _reveal(n, a, lw, draw)
+        c.new_path()
+        c.arc(x, y, 40 * s, 0, 2 * math.pi)
+        _reveal(n, a * 0.7, lw * 0.6, draw)
+        for k in range(10):
+            ang = wheel_rot + k * math.pi / 5
+            c.new_path()
+            c.move_to(x + math.cos(ang) * 12 * s, y + math.sin(ang) * 12 * s)
+            c.line_to(x + math.cos(ang) * 38 * s, y + math.sin(ang) * 38 * s)
+            _reveal(n, a * 0.45, lw * 0.35, draw)
+
+
+def _reveal(n, a, lw, draw):
+    _reveal_stroke(n, a, lw, draw)
+
+
+def cigarette(n, cx, cy, length=520, a=1.0, ember=1.0, burn=0.0, broken=0.0):
+    """Horizontal cigarette, filter on the left, ember on the right.
+    burn: 0..1 shortens it, broken: 0..1 snaps it in two."""
+    c = n.c
+    h = length * 0.13
+    L = length * (1 - 0.35 * burn)
+    x0 = cx - length / 2
+    gap = 60 * broken
+    rot = 0.35 * broken
+    for half in (0, 1):
+        c.save()
+        mid = x0 + L * 0.5
+        if broken > 0:
+            c.translate(mid, cy)
+            c.rotate(-rot if half == 0 else rot)
+            c.translate(-mid + (-gap if half == 0 else gap), -cy)
+        xa, xb = (x0, mid) if half == 0 else (mid, x0 + L)
+        c.new_path()
+        if half == 0:
+            c.move_to(xb, cy - h / 2)
+            c.line_to(xa + h / 2, cy - h / 2)
+            c.arc_negative(xa + h / 2, cy, h / 2, -math.pi / 2, math.pi / 2)
+            c.line_to(xb, cy + h / 2)
+            n.stroke(a, 6)
+            fx = xa + length * 0.27  # filter band
+            c.new_path()
+            c.move_to(fx, cy - h / 2)
+            c.line_to(fx, cy + h / 2)
+            n.stroke(a, 5)
+            for k in range(3):
+                c.new_path()
+                c.arc(xa + 30 + k * 34, cy + (k % 2 - 0.5) * h * 0.35, 4, 0, 6.3)
+                n.fill(a * 0.6)
+        else:
+            c.move_to(xa, cy - h / 2)
+            c.line_to(xb, cy - h / 2)
+            c.line_to(xb, cy + h / 2)
+            c.line_to(xa, cy + h / 2)
+            n.stroke(a, 6)
+            if ember > 0:
+                c.new_path()
+                c.rectangle(xb - 10, cy - h / 2 + 6, 12, h - 12)
+                n.fill(a * ember)
+                c.new_path()
+                c.arc(xb + 6, cy, h * 0.42, 0, 6.3)
+                n.fill(a * ember * 0.35)
+        c.restore()
+    return x0 + L  # ember x
+
+
+def smoke(n, x, y, t, a=1.0, height=330, strands=3):
+    c = n.c
+    for k in range(strands):
+        ph = t * 1.6 + k * 2.1
+        c.new_path()
+        steps = 24
+        for i in range(steps + 1):
+            u = i / steps
+            px = x + math.sin(u * 5 + ph) * (12 + 40 * u) + (k - 1) * 14 * u
+            py = y - u * height
+            if i == 0:
+                c.move_to(px, py)
+            else:
+                c.line_to(px, py)
+        n.stroke(a * 0.5, 4)
+
+
+def bill(n, x, y, s=1.0, a=1.0, rot=0.0):
+    c = n.c
+    c.save()
+    c.translate(x, y)
+    c.rotate(rot)
+    w, h = 150 * s, 76 * s
+    c.new_path()
+    c.rectangle(-w / 2, -h / 2, w, h)
+    n.stroke(a, 5 * s)
+    c.new_path()
+    c.rectangle(-w / 2 + 10 * s, -h / 2 + 10 * s, w - 20 * s, h - 20 * s)
+    n.stroke(a * 0.5, 2.5 * s)
+    c.set_font_size(30 * s)
+    e = c.text_extents("RM")
+    c.move_to(-e.width / 2 - e.x_bearing, -e.height / 2 - e.y_bearing)
+    c.show_text("RM")
+    n.fill(a)
+    c.restore()
+
+
+def coin(n, x, y, r=26, a=1.0):
+    c = n.c
+    c.new_path()
+    c.arc(x, y, r, 0, 6.3)
+    n.stroke(a, 5)
+    c.new_path()
+    c.arc(x, y, r * 0.62, 0, 6.3)
+    n.stroke(a * 0.6, 3)
+
+
+def cig_box(n, cx, cy, s=1.0, a=1.0, label="ROKOK"):
+    c = n.c
+    w, h = 200 * s, 270 * s
+    x0, y0 = cx - w / 2, cy - h / 2
+    for k in range(3):  # cigarettes peeking out
+        c.new_path()
+        c.rectangle(x0 + 38 * s + k * 46 * s, y0 - 46 * s, 30 * s, 60 * s)
+        n.stroke(a * 0.8, 4 * s)
+    c.new_path()
+    c.rectangle(x0, y0, w, h)
+    n.stroke(a, 6 * s)
+    c.new_path()
+    c.move_to(x0, y0 + 70 * s)
+    c.line_to(x0 + w, y0 + 70 * s)
+    n.stroke(a * 0.7, 4 * s)
+    c.set_font_size(36 * s)
+    e = c.text_extents(label)
+    c.move_to(cx - e.width / 2 - e.x_bearing, cy + 40 * s - e.height / 2 - e.y_bearing)
+    c.show_text(label)
+    n.fill(a)
+
+
+def piggy(n, cx, cy, s=1.0, a=1.0):
+    """Piggy-bank (tabung) side view facing right. Returns slot position."""
+    c = n.c
+    c.save()
+    c.translate(cx, cy)
+    c.scale(1.0, 0.78)
+    c.new_path()
+    c.arc(0, 0, 170 * s, 0, 2 * math.pi)
+    c.restore()
+    n.stroke(a, 6 * s)
+    # snout
+    c.new_path()
+    c.save()
+    c.translate(cx + 178 * s, cy + 6 * s)
+    c.scale(0.7, 1.0)
+    c.arc(0, 0, 44 * s, 0, 2 * math.pi)
+    c.restore()
+    n.stroke(a, 6 * s)
+    for dy in (-12, 14):
+        c.new_path()
+        c.arc(cx + 180 * s, cy + (6 + dy) * s, 6 * s, 0, 6.3)
+        n.fill(a)
+    # ear, eye, legs, tail
+    c.new_path()
+    c.move_to(cx + 60 * s, cy - 118 * s)
+    c.line_to(cx + 96 * s, cy - 178 * s)
+    c.line_to(cx + 120 * s, cy - 104 * s)
+    n.stroke(a, 6 * s)
+    c.new_path()
+    c.arc(cx + 112 * s, cy - 40 * s, 8 * s, 0, 6.3)
+    n.fill(a)
+    for lx in (-100, -40, 50, 110):
+        c.new_path()
+        c.move_to(cx + lx * s, cy + 118 * s)
+        c.line_to(cx + lx * s, cy + 168 * s)
+        n.stroke(a, 10 * s)
+    c.new_path()
+    c.move_to(cx - 170 * s, cy - 10 * s)
+    c.curve_to(cx - 215 * s, cy - 30 * s, cx - 215 * s, cy + 30 * s, cx - 190 * s, cy + 18 * s)
+    n.stroke(a, 5 * s)
+    # coin slot
+    c.new_path()
+    c.move_to(cx - 40 * s, cy - 132 * s)
+    c.line_to(cx + 30 * s, cy - 132 * s)
+    n.stroke(a, 8 * s)
+    return cx - 5 * s, cy - 132 * s
+
+
+def calendar(n, cx, cy, s=1.0, a=1.0, text="", sub=""):
+    c = n.c
+    w, h = 260 * s, 250 * s
+    x0, y0 = cx - w / 2, cy - h / 2
+    c.new_path()
+    c.rectangle(x0, y0, w, h)
+    n.stroke(a, 6 * s)
+    c.new_path()
+    c.move_to(x0, y0 + 60 * s)
+    c.line_to(x0 + w, y0 + 60 * s)
+    n.stroke(a, 5 * s)
+    for rx in (-60, 60):
+        c.new_path()
+        c.move_to(cx + rx * s, y0 - 20 * s)
+        c.line_to(cx + rx * s, y0 + 22 * s)
+        n.stroke(a, 8 * s)
+    if text:
+        c.set_font_size(96 * s)
+        e = c.text_extents(text)
+        c.move_to(cx - e.width / 2 - e.x_bearing, cy + 34 * s - e.height / 2 - e.y_bearing)
+        c.show_text(text)
+        n.fill(a)
+    if sub:
+        c.set_font_size(30 * s)
+        e = c.text_extents(sub)
+        c.move_to(cx - e.width / 2 - e.x_bearing, y0 + 30 * s - e.height / 2 - e.y_bearing)
+        c.show_text(sub)
+        n.fill(a)
+
+
+def neon_text(n, cx, cy, text, size, a=1.0):
+    c = n.c
+    c.set_font_size(size)
+    e = c.text_extents(text)
+    c.move_to(cx - e.width / 2 - e.x_bearing, cy - e.height / 2 - e.y_bearing)
+    c.show_text(text)
+    n.fill(a)
