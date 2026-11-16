@@ -35,17 +35,38 @@ def text_path(font, text, size, x, y, tracking=0.0, anchor="start"):
     return pen.getCommands(), width
 
 
-def icon(main=NAVY, accent=RED, cutout=WHITE):
-    """P monogram: stem + speedometer bowl + graduation cap. Box ~ 0..200 x 0..215."""
+VARIANT = "cap"
+APP_T = {"cap": "translate(78 74) scale(1.6)", "shield": "translate(70 40) scale(1.75)"}
+
+
+def icon(main=NAVY, accent=RED, cutout=WHITE, variant=None):
+    """P monogram with speedometer bowl. Variants: cap, clean, tie, key, shield."""
+    variant = variant or VARIANT
+    if variant == "shield":
+        shield = "M100,4 L190,30 V118 Q190,196 100,236 Q10,196 10,118 V30 Z"
+        inner = icon(cutout, accent, main, "clean").replace('<g transform="skewX(-9) translate(18 0)">', '<g>', 1)
+        return (f'<g transform="translate(22 8) scale(0.86) skewX(-6)"><path d="{shield}" fill="{main}"/>'
+                f'<path d="M10,30 L100,4 L190,30" fill="none" stroke="{accent}" stroke-width="8" stroke-linejoin="round"/>'
+                f'<g transform="translate(24 30) scale(0.82)">{inner}</g></g>')
     cx, cy, ro, ri = 100, 122, 58, 40
     parts = []
     # speed streaks
     for i, (y, l) in enumerate([(112, 30), (128, 22), (144, 14)]):
         parts.append(f'<rect x="{26 - l - 6}" y="{y}" width="{l}" height="7" rx="3.5" fill="{accent}"/>')
     # stem + bowl (even-odd hole)
-    bowl = (f"M30,64 H{cx} A{ro},{ro} 0 0 1 {cx},{cy + ro} H54 V206 H30 Z "
+    bowl = (f"M52,64 H{cx} A{ro},{ro} 0 0 1 {cx},{cy + ro} H52 Z "
             f"M54,{cy - ri} V{cy + ri} H{cx} A{ri},{ri} 0 0 0 {cx},{cy - ri} Z")
     parts.append(f'<path d="{bowl}" fill="{main}" fill-rule="evenodd"/>')
+    if variant == "tie":
+        parts.append(f'<path d="M26,62 H58 L52,92 H32 Z" fill="{accent}"/>')
+        parts.append(f'<path d="M32,96 H52 L62,178 L42,210 L22,178 Z" fill="{accent}"/>')
+        parts.append(f'<path d="M30,112 L54,104 M27,140 L57,128 M24,168 L60,154" stroke="{main}" stroke-opacity=".35" stroke-width="5"/>')
+    elif variant == "key":
+        parts.append(f'<path d="M30,64 H54 V210 H42 V198 H30 V186 H38 V174 H30 V162 H38 V150 H30 Z" fill="{main}"/>')
+        parts.append(f'<circle cx="42" cy="82" r="6" fill="{cutout}"/>')
+        parts.append(f'<rect x="58" y="{cy + ro + 6}" width="70" height="6" rx="3" fill="{accent}"/>')
+    else:
+        parts.append(f'<rect x="30" y="64" width="24" height="142" fill="{main}"/>')
     # gauge ticks inside hole
     for k in range(9):
         a = math.radians(-215 + k * (250 / 8))
@@ -69,7 +90,8 @@ def icon(main=NAVY, accent=RED, cutout=WHITE):
     cap.append(f'<circle cx="72" cy="36" r="4" fill="{accent}"/>')
     cap.append(f'<path d="M72,36 L126,44 L126,70" fill="none" stroke="{accent}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>')
     cap.append(f'<path d="M120,68 L132,68 L134,86 L118,86 Z" fill="{accent}"/>')
-    parts.append(f'<g transform="rotate(-8 72 36)">{"".join(cap)}</g>')
+    if variant == "cap":
+        parts.append(f'<g transform="rotate(-8 72 36)">{"".join(cap)}</g>')
     return f'<g transform="skewX(-9) translate(18 0)">{"".join(parts)}</g>'
 
 
@@ -122,6 +144,8 @@ def write(name, content):
         f.write(content)
 
 
+if len(sys.argv) > 3:
+    VARIANT = sys.argv[3]
 h, hw = horizontal()
 write("logo-horizontal.svg", h)
 write("logo-horizontal-dark.svg", horizontal(WHITE, RED, NAVY, "#C9D3E3", NAVY)[0])
@@ -131,5 +155,5 @@ write("logo-stacked-white.svg", stacked(WHITE, RED, NAVY, "#C9D3E3"))
 write("icon.svg", svg(220, 220, f'<g transform="translate(0 4)">{icon()}</g>'))
 write("icon-white.svg", svg(220, 220, f'<g transform="translate(0 4)">{icon(WHITE, RED, NAVY)}</g>'))
 write("icon-app.svg", svg(512, 512, f'<rect width="512" height="512" rx="112" fill="{NAVY}"/>'
-                         f'<g transform="translate(78 74) scale(1.6)">{icon(WHITE, RED, NAVY)}</g>'))
+                         f'<g transform="{APP_T.get(VARIANT, "translate(96 34) scale(1.6)")}">{icon(WHITE, RED, NAVY)}</g>'))
 print("ok", hw)
