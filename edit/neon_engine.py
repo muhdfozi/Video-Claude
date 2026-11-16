@@ -81,6 +81,14 @@ class Project:
     music_src_bpm: float = 97.36
     font: str = "Font Type/Formula1-Bold_web_0.ttf"
     xfade: float = 0.45
+    # voice chain inside the mix; use VO_PREMASTERED when the VO already went through
+    # studio_voice.py so it is not processed twice
+    vo_filter: str = ("aresample=48000,highpass=f=80,"
+                      "acompressor=threshold=-20dB:ratio=3:attack=5:release=120,"
+                      "loudnorm=I=-14:TP=-1.5:LRA=7")
+
+
+VO_PREMASTERED = "aresample=48000,loudnorm=I=-14:TP=-1.5:LRA=7"
 
 
 # ---------------------------------------------------------------------------
@@ -394,8 +402,7 @@ def audio_filter(P: Project):
     ratio = BPM / P.music_src_bpm
     D = P.duration
     return (
-        "[1:a]aresample=48000,highpass=f=80,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,"
-        "loudnorm=I=-14:TP=-1.5:LRA=7,aresample=48000,apad,asplit=2[vo][key];"
+        f"[1:a]{P.vo_filter},aresample=48000,apad,asplit=2[vo][key];"
         f"[2:a]atrim=start={P.music_start}:duration={D * ratio + 1:.3f},"
         f"asetpts=PTS-STARTPTS,aresample=48000,rubberband=tempo={ratio:.5f}:transients=crisp,"
         f"atrim=0:{D},loudnorm=I=-24:TP=-6:LRA=11,aresample=48000,"

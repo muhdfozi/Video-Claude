@@ -643,3 +643,79 @@ def neon_text(n, cx, cy, text, size, a=1.0):
     c.move_to(cx - e.width / 2 - e.x_bearing, cy - e.height / 2 - e.y_bearing)
     c.show_text(text)
     n.fill(a)
+
+
+def tabung_ayam(n, cx, cy, s=1.0, a=1.0, fill=0.0):
+    """Classic Malaysian rooster coin bank (tabung ayam), facing right.
+    fill: 0..1 glowing 'full of money' level inside the body. Returns coin-slot position."""
+    c = n.c
+
+    def P(x, y):
+        return cx + x * s, cy + y * s
+
+    def body_path():
+        c.new_path()
+        c.move_to(*P(-118, 100))                                       # back bottom
+        c.curve_to(*P(-185, 45), *P(-182, -60), *P(-118, -92))        # back
+        c.curve_to(*P(-60, -112), *P(10, -112), *P(52, -128))         # back -> neck
+        c.curve_to(*P(48, -205), *P(150, -238), *P(176, -168))        # head top -> beak base
+        c.line_to(*P(222, -152))                                       # beak
+        c.line_to(*P(172, -134))
+        c.curve_to(*P(198, -60), *P(182, 60), *P(118, 100))           # chest
+        c.close_path()
+
+    if fill > 0:  # money level glow, clipped to the body
+        c.save()
+        body_path()
+        c.clip()
+        top = 100 - 230 * fill
+        c.rectangle(*P(-200, top), 420 * s, (100 - top + 2) * s)
+        n.fill(a * 0.22)
+        c.new_path()
+        for k in range(5):
+            c.new_path()
+            c.arc(*P(-120 + k * 55, top + 18), 16 * s, 0, 6.3)
+            n.stroke(a * 0.7, 3 * s)
+        c.restore()
+    body_path()
+    n.stroke(a, 6 * s)
+    # tail fan (3 feathers)
+    for k, (tx, ty) in enumerate(((-200, -210), (-235, -150), (-240, -80))):
+        c.new_path()
+        c.move_to(*P(-125, -80 + k * 12))
+        c.curve_to(*P(tx + 40, ty - 10), *P(tx, ty + 10), *P(tx + 5, ty + 30))
+        c.curve_to(*P(tx + 30, ty + 40), *P(-150, -40 + k * 15), *P(-150, -30 + k * 18))
+        n.stroke(a * (0.95 - k * 0.12), 5 * s)
+    # comb (3 bumps)
+    c.new_path()
+    for k in range(3):
+        x0 = 60 + k * 34
+        c.arc(*P(x0 + 18, -214 + k * 8), 22 * s, math.pi, 2 * math.pi)
+    n.stroke(a, 5 * s)
+    # wattle, eye, wing
+    c.new_path()
+    c.move_to(*P(176, -136))
+    c.curve_to(*P(196, -110), *P(170, -92), *P(162, -118))
+    n.stroke(a, 5 * s)
+    c.new_path()
+    c.arc(*P(128, -178), 8 * s, 0, 6.3)
+    n.fill(a)
+    c.new_path()
+    c.move_to(*P(-70, -20))
+    c.curve_to(*P(10, -60), *P(95, -10), *P(70, 45))
+    c.curve_to(*P(20, 30), *P(-30, 40), *P(-70, -20))
+    n.stroke(a * 0.8, 5 * s)
+    # base stand
+    c.new_path()
+    c.move_to(*P(-130, 100))
+    c.line_to(*P(130, 100))
+    c.line_to(*P(112, 132))
+    c.line_to(*P(-112, 132))
+    c.close_path()
+    n.stroke(a, 5 * s)
+    # coin slot on the back
+    c.new_path()
+    c.move_to(*P(-60, -111))
+    c.line_to(*P(-5, -114))
+    n.stroke(a, 9 * s)
+    return P(-32, -112)
