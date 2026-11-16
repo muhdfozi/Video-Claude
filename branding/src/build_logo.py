@@ -35,7 +35,7 @@ def text_path(font, text, size, x, y, tracking=0.0, anchor="start"):
     return pen.getCommands(), width
 
 
-VARIANT = "cap"
+VARIANT = "key"
 APP_T = {"cap": "translate(78 74) scale(1.6)", "shield": "translate(70 40) scale(1.75)"}
 
 
@@ -62,9 +62,12 @@ def icon(main=NAVY, accent=RED, cutout=WHITE, variant=None):
         parts.append(f'<path d="M32,96 H52 L62,178 L42,210 L22,178 Z" fill="{accent}"/>')
         parts.append(f'<path d="M30,112 L54,104 M27,140 L57,128 M24,168 L60,154" stroke="{main}" stroke-opacity=".35" stroke-width="5"/>')
     elif variant == "key":
-        parts.append(f'<path d="M30,64 H54 V210 H42 V198 H30 V186 H38 V174 H30 V162 H38 V150 H30 Z" fill="{main}"/>')
-        parts.append(f'<circle cx="42" cy="82" r="6" fill="{cutout}"/>')
-        parts.append(f'<rect x="58" y="{cy + ro + 6}" width="70" height="6" rx="3" fill="{accent}"/>')
+        # key blade with cut teeth on the left, rounded tip
+        parts.append(f'<path d="M30,64 H54 V204 Q54,214 44,214 H40 V202 H30 V190 H40 V180 H30 V168 H40 V158 H30 Z" fill="{main}"/>')
+        parts.append(f'<rect x="45" y="150" width="4" height="56" rx="2" fill="{cutout}" opacity=".9"/>')
+        # keyring hole + red ring
+        parts.append(f'<circle cx="42" cy="82" r="6.5" fill="{cutout}"/>')
+        parts.append(f'<circle cx="24" cy="70" r="14" fill="none" stroke="{accent}" stroke-width="4.5"/>')
     else:
         parts.append(f'<rect x="30" y="64" width="24" height="142" fill="{main}"/>')
     # gauge ticks inside hole
@@ -101,7 +104,7 @@ def wordmark(x, y, size, c1=NAVY, c2=RED):
     return (f'<path d="{d1}" fill="{c1}"/><path d="{d2}" fill="{c2}"/>', w1 + w2 + size * 0.04)
 
 
-def tagline(x, y, size, width, color, text="JAPAN · UK RECOND SPECIALIST"):
+def tagline(x, y, size, width, color, text="YOUR PROFESSIONAL RECOND ADVISOR"):
     # fit tracking so tagline spans `width`
     _, w0 = text_path("Saira_Condensed_wght_500.ttf", text, size, 0, 0)
     tr = (width - w0) / (len(text) - 1)
