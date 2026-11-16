@@ -179,7 +179,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
     <p class="help">Bulanan maksimum = yang lebih rendah antara <b>gaji × had bulanan</b> dan <b>gaji × had DSR − komitmen</b>. Angka ini andaian awal; ubah ikut amalan bank yang anda guna.</p>
     <div class="field"><label class="lbl" for="sStock">Stok (satu kereta setiap baris: Model | Tahun | JP/UK | Harga | Jenis)</label>
       <textarea id="sStock" spellcheck="false"></textarea></div>
-    <p class="help">Senarai asal ialah <b>harga contoh</b> untuk demo. Gantikan dengan stok sebenar anda. Tetapan disimpan dalam pelayar iPad ini sahaja.</p>
+    <p class="help">Senarai asal ialah <b>harga anggaran kereta recond</b> (dikumpul dari senarai harga dealer, Nov 2026, dibundarkan ke RM5,000 terdekat). Ia bukan stok sebenar; ubah bila harga pasaran berubah. Tetapan disimpan dalam pelayar iPad ini sahaja.</p>
     <div class="acts">
       <button class="btn" id="sReset" type="button">Kembali ke contoh</button>
       <button class="btn" id="sClose" type="button">Batal</button>
@@ -189,29 +189,50 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 </div>
 
 <script>
-const SAMPLE_STOCK = `Toyota Aqua 1.5 Hybrid | 2017 | JP | 55000 | Hatchback
-Honda Fit 1.5 Hybrid | 2017 | JP | 58000 | Hatchback
-Nissan Note e-Power | 2018 | JP | 62000 | Hatchback
-Toyota Sienta 1.5 | 2018 | JP | 72000 | MPV
-Honda Freed 1.5 Hybrid | 2018 | JP | 76000 | MPV
-Toyota Prius 1.8 S | 2018 | JP | 85000 | Sedan
-Toyota Raize 1.0 Z | 2021 | JP | 88000 | SUV
-Honda Vezel 1.5 Hybrid Z | 2019 | JP | 95000 | SUV
-Toyota C-HR 1.2T | 2019 | JP | 109000 | SUV
-Nissan Serena e-Power | 2020 | JP | 129000 | MPV
-Toyota Voxy 2.0 ZS | 2019 | JP | 135000 | MPV
-Honda Odyssey 2.4 Absolute | 2019 | JP | 168000 | MPV
-Mini Cooper S 2.0 | 2019 | UK | 175000 | Hatchback
-Volvo XC40 T5 | 2019 | UK | 190000 | SUV
-Toyota Harrier 2.0 Premium | 2020 | JP | 198000 | SUV
-Lexus NX300 F Sport | 2019 | JP | 225000 | SUV
-Toyota Vellfire 2.5 ZG | 2020 | JP | 245000 | MPV
-Range Rover Evoque 2.0 | 2019 | UK | 265000 | SUV
-Toyota Alphard 2.5 SC | 2021 | JP | 330000 | MPV
-Porsche Macan 2.0 | 2018 | UK | 380000 | SUV`;
-const DEFAULTS = {rate:3.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
+const SAMPLE_STOCK = `Daihatsu Taft G Turbo | 2021 | JP | 72000 | Kei
+Toyota Tank Custom G-T | 2020 | JP | 80000 | Kei
+Daihatsu Move Canbus G Turbo | 2023 | JP | 88000 | Kei
+Daihatsu Tanto Funcross Turbo | 2023 | JP | 90000 | Kei
+Suzuki Swift Sport | 2023 | JP | 110000 | Hatchback
+Toyota Corolla Sport GZ | 2022 | JP | 110000 | Hatchback
+Suzuki Jimny JC | 2023 | JP | 138000 | SUV
+Mazda Roadster RF | 2022 | JP | 138000 | Sport
+Subaru Levorg STI Sport | 2022 | JP | 140000 | Hatchback
+Subaru BRZ S | 2022 | JP | 143000 | Sport
+Honda Odyssey 2.4 Absolute EX | 2021 | JP | 150000 | MPV
+Toyota Harrier 2.0 Z | 2022 | JP | 155000 | SUV
+Mini Cooper S | 2022 | UK | 155000 | Hatchback
+Lexus UX200 | 2022 | JP | 155000 | SUV
+Toyota Voxy 2.0 S-Z | 2022 | JP | 155000 | MPV
+Toyota Noah 2.0 S-Z | 2023 | JP | 160000 | MPV
+Honda Odyssey e:HEV Absolute EX | 2022 | JP | 165000 | MPV
+Toyota GR86 RZ | 2022 | JP | 165000 | Sport
+Toyota GR Yaris RZ | 2022 | JP | 170000 | Hatchback
+Toyota Voxy 2.0 S-Z | 2024 | JP | 170000 | MPV
+Toyota Alphard 2.5 SC | 2021 | JP | 175000 | MPV
+Toyota Harrier 2.0 Z | 2024 | JP | 178000 | SUV
+Toyota Alphard 2.5 SC | 2022 | JP | 190000 | MPV
+BMW 420i M Sport Coupe | 2022 | UK | 205000 | Sport
+Mercedes-Benz C200 AMG Line | 2022 | UK | 208000 | Sedan
+Lexus NX250 | 2022 | JP | 212000 | SUV
+Mercedes-AMG A35 | 2022 | UK | 218000 | Hatchback
+Toyota Crown Sport Z | 2023 | JP | 220000 | SUV
+Range Rover Velar R-Dynamic | 2020 | UK | 225000 | SUV
+Honda Civic Type R FL5 | 2023 | JP | 228000 | Hatchback
+Toyota Land Cruiser Prado TX-L | 2023 | JP | 228000 | SUV
+Lexus IS300 F Sport | 2022 | JP | 230000 | Sedan
+Toyota Alphard 2.5 SC | 2023 | JP | 240000 | MPV
+Lexus NX350 F Sport | 2023 | JP | 253000 | SUV
+Toyota Alphard 2.5 Z (Model Baru) | 2024 | JP | 262000 | MPV
+Lexus LBX | 2025 | JP | 270000 | SUV
+Land Rover Defender 90 SE | 2023 | UK | 285000 | SUV
+Porsche Macan 2.0 | 2022 | UK | 300000 | SUV
+Lexus RX350 F Sport | 2023 | JP | 305000 | SUV
+Toyota Vellfire Z Premier (Model Baru) | 2024 | JP | 315000 | MPV
+Toyota Land Cruiser 300 ZX | 2023 | JP | 380000 | SUV`;
+const DEFAULTS = {rate:2.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
 const store = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let S = Object.assign({}, DEFAULTS, store.get('pp-live-settings') || {});
+let S = Object.assign({}, DEFAULTS, store.get('pp-live-settings-v2') || {});
 let st = {nama:'@contoh_penonton', gaji:4500, komit:0, type:'Semua', origin:'Semua'};
 let hist = store.get('pp-live-hist') || [];
 let shown = true;
@@ -234,7 +255,9 @@ const SIL = {
   Hatchback:'M8 34 L10 24 Q12 20 18 19 L34 17 L48 8 Q52 6 58 6 L86 6 Q92 6 96 12 L104 22 Q112 23 113 28 L114 34 Z',
   Sedan:'M6 34 L8 26 Q10 22 18 21 L36 19 L50 10 Q54 8 60 8 L80 8 Q86 8 90 12 L98 19 L110 21 Q115 23 115 28 L115 34 Z',
   SUV:'M7 34 L7 22 Q8 18 14 17 L28 16 L38 6 Q40 4 46 4 L96 4 Q102 4 104 8 L110 18 Q115 20 115 26 L115 34 Z',
-  MPV:'M6 34 L6 22 Q7 16 14 15 L22 14 L32 4 Q34 2 40 2 L104 2 Q112 2 113 10 L115 26 L115 34 Z'
+  MPV:'M6 34 L6 22 Q7 16 14 15 L22 14 L32 4 Q34 2 40 2 L104 2 Q112 2 113 10 L115 26 L115 34 Z',
+  Kei:'M14 34 L14 20 Q15 15 20 14 L28 13 L34 3 Q36 1 42 1 L94 1 Q102 1 103 8 L106 24 L106 34 Z',
+  Sport:'M4 34 L6 28 Q8 24 16 23 L38 21 L56 13 Q62 11 70 11 L84 11 Q92 12 98 18 L108 22 Q116 24 116 30 L116 34 Z'
 };
 function sil(type){
   const d = SIL[type] || SIL.Sedan;
@@ -323,8 +346,8 @@ function chips(el, vals, cur, fmt, set){
   el.innerHTML = vals.map(v=>`<button class="chip" type="button" data-v="${v}" aria-pressed="${v==cur}">${fmt(v)}</button>`).join('');
   el.onclick = e=>{ const b=e.target.closest('button'); if(!b) return; set(+b.dataset.v); el.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed', c===b)); render(); };
 }
-chips($('depChips'), [0,10,20,30], S.dep, v=>v+'%', v=>{S.dep=v; store.set('pp-live-settings',S);});
-chips($('yrChips'), [5,7,9], S.years, v=>v+' tahun', v=>{S.years=v; store.set('pp-live-settings',S);});
+chips($('depChips'), [0,10,20,30], S.dep, v=>v+'%', v=>{S.dep=v; store.set('pp-live-settings-v2',S);});
+chips($('yrChips'), [5,7,9], S.years, v=>v+' tahun', v=>{S.years=v; store.set('pp-live-settings-v2',S);});
 $('komit').addEventListener('input', e=>{ st.komit = +e.target.value.replace(/\D/g,'') || 0; if(shown) render(); });
 $('nama').addEventListener('input', e=>{ st.nama = e.target.value.trim(); if(shown) render(); });
 $('go').addEventListener('click', ()=>{
@@ -349,7 +372,7 @@ $('sClose').addEventListener('click', ()=>$('sheet').hidden=true);
 $('sReset').addEventListener('click', ()=>{ $('sStock').value = SAMPLE_STOCK; for(const [id,k] of Object.entries(fields)) $(id).value = DEFAULTS[k]; });
 $('sSave').addEventListener('click', ()=>{
   for(const [id,k] of Object.entries(fields)){ const v=parseFloat($(id).value); if(!isNaN(v)) S[k]=v; }
-  S.stock = $('sStock').value; store.set('pp-live-settings', S); $('sheet').hidden=true; render();
+  S.stock = $('sStock').value; store.set('pp-live-settings-v2', S); $('sheet').hidden=true; render();
 });
 
 $('nama').value = st.nama; drawGaji(); drawHist(); render();
