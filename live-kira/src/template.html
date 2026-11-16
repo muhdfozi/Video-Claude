@@ -1,0 +1,356 @@
+<title>ProfPoji Live Kira</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Saira+Condensed:wght@500;600;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: iPad landscape console. Left = operator input (keypad), right = broadcast stage viewers read on TikTok Live. */
+:root{
+  --navy:#0A1A33; --navy-2:#102445; --navy-3:#1a3360; --line:#26406e;
+  --ink:#F4F6FA; --muted:#9AA8C2; --red:#E10600; --red-soft:#ff3b30;
+  --ok:#22C55E; --ok-bg:rgba(34,197,94,.14); --warn:#F5B300; --warn-bg:rgba(245,179,0,.14); --hot:#FF5A4F; --hot-bg:rgba(255,90,79,.14);
+  --f-display:"Russo One","Arial Black",system-ui,sans-serif;
+  --f-label:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--navy);color:var(--ink);font-family:var(--f-body);font-size:15px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--red-soft);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+.app{display:grid;grid-template-rows:auto 1fr auto;gap:12px;height:100%;min-height:600px}
+/* top bar */
+.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top .logo{height:38px;width:auto;display:block}
+.live{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 10px;border-radius:999px;background:var(--red);font:800 15px var(--f-label);letter-spacing:2px}
+.live i{width:9px;height:9px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.top .sp{flex:1}
+.tbtn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;background:var(--navy-2);border:1px solid var(--line);font:600 15px var(--f-label);letter-spacing:1px;color:var(--muted)}
+.tbtn[aria-pressed="true"]{color:var(--ink);border-color:var(--red)}
+
+.main{display:grid;grid-template-columns:minmax(300px,34%) 1fr;gap:12px;min-height:0}
+.app.full .main{grid-template-columns:1fr}
+.app.full .op{display:none}
+
+/* operator panel */
+.op{background:var(--navy-2);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto}
+.lbl{font:600 13px var(--f-label);letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.field{display:flex;flex-direction:column;gap:6px}
+.inp{width:100%;background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);font:500 17px var(--f-body)}
+.gaji{display:flex;align-items:baseline;justify-content:space-between;gap:8px;background:var(--navy);border:2px solid var(--red);border-radius:12px;padding:8px 14px}
+.gaji .rm{font:800 22px var(--f-label);color:var(--muted)}
+.gaji .v{font:44px var(--f-display);letter-spacing:1px;line-height:1.1}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.keys button{height:54px;border-radius:12px;background:var(--navy-3);font:26px var(--f-display);transition:transform .05s}
+.keys button:active{transform:scale(.96);background:var(--line)}
+.keys .fn{font:700 18px var(--f-label);letter-spacing:1px;color:var(--muted)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{padding:8px 12px;border-radius:999px;background:var(--navy);border:1px solid var(--line);font:600 15px var(--f-label);letter-spacing:.5px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--navy);border-color:var(--ink)}
+.go{height:62px;border-radius:14px;background:var(--red);font:22px var(--f-display);letter-spacing:1px;box-shadow:0 8px 24px rgba(225,6,0,.35)}
+.go:active{transform:translateY(1px)}
+.hist{display:flex;gap:6px;flex-wrap:wrap}
+.hist button{padding:6px 10px;border-radius:8px;background:var(--navy);border:1px dashed var(--line);font:500 13px var(--f-body);color:var(--muted)}
+
+/* stage */
+.stage{background:linear-gradient(180deg,var(--navy-2),var(--navy) 60%);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:0;overflow:auto;position:relative}
+.hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.who{font:700 20px var(--f-body);color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.who b{color:var(--ink)}
+.salary{font:800 20px var(--f-label);letter-spacing:2px;color:var(--muted);margin-top:4px}
+.salary b{font:40px var(--f-display);color:var(--ink);letter-spacing:1px;margin-left:6px}
+.maxline{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
+.maxline .k{font:600 15px var(--f-label);letter-spacing:2px;color:var(--muted)}
+.maxline .big{font:34px var(--f-display);color:var(--red-soft)}
+.maxline .count{font:800 20px var(--f-label);letter-spacing:1px;background:var(--ink);color:var(--navy);padding:2px 12px;border-radius:8px}
+.gauge{width:200px;height:auto;display:block}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filters .sep{width:1px;height:24px;background:var(--line);margin:0 4px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;align-content:start}
+.car{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;animation:pop .35s both}
+@keyframes pop{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.car .tier{position:absolute;top:12px;right:12px;font:800 13px var(--f-label);letter-spacing:1.5px;padding:3px 9px;border-radius:999px}
+.t-selesa{background:var(--ok-bg);color:var(--ok)}
+.t-sesuai{background:var(--warn-bg);color:var(--warn)}
+.t-max{background:var(--hot-bg);color:var(--hot)}
+.car .sil{height:46px;width:auto;color:var(--muted);opacity:.9}
+.car .nm{font:700 18px var(--f-body);line-height:1.2;padding-right:70px;min-width:0}
+.car .meta{display:flex;gap:6px;flex-wrap:wrap;font:600 13px var(--f-label);letter-spacing:1px;color:var(--muted)}
+.car .meta span{border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+.car .meta .jp,.car .meta .uk{color:var(--ink)}
+.car .price{font:600 14px var(--f-body);color:var(--muted)}
+.car .monthly{display:flex;align-items:baseline;gap:6px}
+.car .monthly b{font:30px var(--f-display);letter-spacing:.5px}
+.car .monthly small{font:600 15px var(--f-label);color:var(--muted);letter-spacing:1px}
+.bar{height:6px;border-radius:999px;background:var(--navy);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px}
+.car .pct{font:500 12px var(--f-body);color:var(--muted)}
+
+.near h3{margin:4px 0 8px;font:800 16px var(--f-label);letter-spacing:2px;color:var(--muted)}
+.near ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.near li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:10px;border:1px dashed var(--line);font:500 14px var(--f-body);color:var(--muted)}
+.near li b{color:var(--ink);font-weight:600}
+.empty{padding:28px;text-align:center;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font:500 16px var(--f-body)}
+.empty b{display:block;font:24px var(--f-display);color:var(--ink);margin-bottom:6px}
+
+/* bottom ticker */
+.cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--red);border-radius:14px;padding:10px 16px}
+.cta .say{font:800 20px var(--f-label);letter-spacing:1.5px;flex:1;min-width:0}
+.cta .ph{font:22px var(--f-display);letter-spacing:1px;user-select:all}
+.cta .tag{font:800 18px var(--f-label);letter-spacing:1px;background:var(--navy);padding:4px 10px;border-radius:8px}
+.note{font:500 12px var(--f-body);color:var(--muted)}
+
+/* settings */
+.sheet{position:fixed;inset:0;background:rgba(3,8,18,.7);display:grid;place-items:center;padding:16px;z-index:20}
+.sheet .box{background:var(--navy-2);border:1px solid var(--line);border-radius:16px;width:min(760px,100%);max-height:90%;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.sheet h2{margin:0;font:24px var(--f-display)}
+.sheet .g2{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sheet textarea{width:100%;min-height:220px;background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:10px;color:var(--ink);font:13px/1.5 ui-monospace,Menlo,Consolas,monospace}
+.sheet .acts{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.btn{padding:10px 16px;border-radius:10px;background:var(--navy-3);font:700 16px var(--f-label);letter-spacing:1px}
+.btn.red{background:var(--red)}
+.help{font:400 13px/1.5 var(--f-body);color:var(--muted);margin:0}
+
+@media (max-width:900px){
+  .main{grid-template-columns:1fr}
+  .app{height:auto}
+  .hero{grid-template-columns:1fr}
+  .gauge{width:170px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="app" id="app">
+  <header class="top">
+    <!--LOGO-->
+    <span class="live"><i></i>LIVE KIRA</span>
+    <span class="sp"></span>
+    <button class="tbtn" id="btnFull" aria-pressed="false" type="button">⤢ Paparan Penuh</button>
+    <button class="tbtn" id="btnSet" type="button">⚙ Tetapan &amp; Stok</button>
+  </header>
+
+  <div class="main">
+    <section class="op" aria-label="Panel input">
+      <div class="field"><label class="lbl" for="nama">Nama penonton</label>
+        <input class="inp" id="nama" placeholder="@nama_tiktok" autocomplete="off"></div>
+      <div class="field"><span class="lbl">Gaji bersih sebulan</span>
+        <div class="gaji"><span class="rm">RM</span><span class="v num" id="gajiV">0</span></div></div>
+      <div class="keys" id="keys">
+        <button type="button">1</button><button type="button">2</button><button type="button">3</button>
+        <button type="button">4</button><button type="button">5</button><button type="button">6</button>
+        <button type="button">7</button><button type="button">8</button><button type="button">9</button>
+        <button type="button" class="fn" data-k="C">PADAM</button><button type="button">0</button><button type="button" class="fn" data-k="B">⌫</button>
+      </div>
+      <div class="field"><label class="lbl" for="komit">Komitmen bulanan lain (RM)</label>
+        <input class="inp num" id="komit" inputmode="numeric" placeholder="0 · PTPTN, rumah, kad kredit"></div>
+      <div class="field"><span class="lbl">Deposit</span><div class="row" id="depChips"></div></div>
+      <div class="field"><span class="lbl">Tempoh pinjaman</span><div class="row" id="yrChips"></div></div>
+      <button class="go" id="go" type="button">PAPAR KERETA LAYAK</button>
+      <div class="field"><span class="lbl">Penonton tadi</span><div class="hist" id="hist"></div></div>
+    </section>
+
+    <section class="stage" aria-live="polite" id="stage"></section>
+  </div>
+
+  <footer class="cta">
+    <span class="say">BERKENAN? KOMEN "NAK" + MODEL · WHATSAPP</span>
+    <span class="ph">018-777 3474</span>
+    <span class="tag">#trustedSAever</span>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="box" role="dialog" aria-labelledby="setT">
+    <h2 id="setT">Tetapan &amp; Stok</h2>
+    <div class="g2">
+      <div class="field"><label class="lbl" for="sRate">Kadar faedah rata (%)</label><input class="inp num" id="sRate" inputmode="decimal"></div>
+      <div class="field"><label class="lbl" for="sMax">Had bulanan (% gaji)</label><input class="inp num" id="sMax" inputmode="decimal"></div>
+      <div class="field"><label class="lbl" for="sDsr">Had DSR (% gaji)</label><input class="inp num" id="sDsr" inputmode="decimal"></div>
+      <div class="field"><label class="lbl" for="sSel">Selesa jika ≤ (% gaji)</label><input class="inp num" id="sSel" inputmode="decimal"></div>
+      <div class="field"><label class="lbl" for="sSes">Sesuai jika ≤ (% gaji)</label><input class="inp num" id="sSes" inputmode="decimal"></div>
+    </div>
+    <p class="help">Bulanan maksimum = yang lebih rendah antara <b>gaji × had bulanan</b> dan <b>gaji × had DSR − komitmen</b>. Angka ini andaian awal; ubah ikut amalan bank yang anda guna.</p>
+    <div class="field"><label class="lbl" for="sStock">Stok (satu kereta setiap baris: Model | Tahun | JP/UK | Harga | Jenis)</label>
+      <textarea id="sStock" spellcheck="false"></textarea></div>
+    <p class="help">Senarai asal ialah <b>harga contoh</b> untuk demo. Gantikan dengan stok sebenar anda. Tetapan disimpan dalam pelayar iPad ini sahaja.</p>
+    <div class="acts">
+      <button class="btn" id="sReset" type="button">Kembali ke contoh</button>
+      <button class="btn" id="sClose" type="button">Batal</button>
+      <button class="btn red" id="sSave" type="button">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SAMPLE_STOCK = `Toyota Aqua 1.5 Hybrid | 2017 | JP | 55000 | Hatchback
+Honda Fit 1.5 Hybrid | 2017 | JP | 58000 | Hatchback
+Nissan Note e-Power | 2018 | JP | 62000 | Hatchback
+Toyota Sienta 1.5 | 2018 | JP | 72000 | MPV
+Honda Freed 1.5 Hybrid | 2018 | JP | 76000 | MPV
+Toyota Prius 1.8 S | 2018 | JP | 85000 | Sedan
+Toyota Raize 1.0 Z | 2021 | JP | 88000 | SUV
+Honda Vezel 1.5 Hybrid Z | 2019 | JP | 95000 | SUV
+Toyota C-HR 1.2T | 2019 | JP | 109000 | SUV
+Nissan Serena e-Power | 2020 | JP | 129000 | MPV
+Toyota Voxy 2.0 ZS | 2019 | JP | 135000 | MPV
+Honda Odyssey 2.4 Absolute | 2019 | JP | 168000 | MPV
+Mini Cooper S 2.0 | 2019 | UK | 175000 | Hatchback
+Volvo XC40 T5 | 2019 | UK | 190000 | SUV
+Toyota Harrier 2.0 Premium | 2020 | JP | 198000 | SUV
+Lexus NX300 F Sport | 2019 | JP | 225000 | SUV
+Toyota Vellfire 2.5 ZG | 2020 | JP | 245000 | MPV
+Range Rover Evoque 2.0 | 2019 | UK | 265000 | SUV
+Toyota Alphard 2.5 SC | 2021 | JP | 330000 | MPV
+Porsche Macan 2.0 | 2018 | UK | 380000 | SUV`;
+const DEFAULTS = {rate:3.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
+const store = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let S = Object.assign({}, DEFAULTS, store.get('pp-live-settings') || {});
+let st = {nama:'@contoh_penonton', gaji:4500, komit:0, type:'Semua', origin:'Semua'};
+let hist = store.get('pp-live-hist') || [];
+let shown = true;
+
+const $ = id => document.getElementById(id);
+const rm = n => 'RM ' + Math.round(n).toLocaleString('en-MY');
+
+function parseStock(t){
+  return t.split('\n').map(l=>l.split('|').map(x=>x.trim())).filter(p=>p.length>=4 && +p[3]>0)
+    .map(([model,year,origin,price,type])=>({model,year,origin:(origin||'').toUpperCase(),price:+price,type:type||'Lain'}));
+}
+function monthly(price){
+  const loan = price*(1-S.dep/100), y = S.years;
+  return (loan + loan*(S.rate/100)*y)/(y*12);
+}
+function maxMonthly(g,k){ return Math.max(0, Math.min(g*S.maxPct/100, g*S.dsr/100 - k)); }
+
+/* silhouettes: simple side profiles, 120x44 */
+const SIL = {
+  Hatchback:'M8 34 L10 24 Q12 20 18 19 L34 17 L48 8 Q52 6 58 6 L86 6 Q92 6 96 12 L104 22 Q112 23 113 28 L114 34 Z',
+  Sedan:'M6 34 L8 26 Q10 22 18 21 L36 19 L50 10 Q54 8 60 8 L80 8 Q86 8 90 12 L98 19 L110 21 Q115 23 115 28 L115 34 Z',
+  SUV:'M7 34 L7 22 Q8 18 14 17 L28 16 L38 6 Q40 4 46 4 L96 4 Q102 4 104 8 L110 18 Q115 20 115 26 L115 34 Z',
+  MPV:'M6 34 L6 22 Q7 16 14 15 L22 14 L32 4 Q34 2 40 2 L104 2 Q112 2 113 10 L115 26 L115 34 Z'
+};
+function sil(type){
+  const d = SIL[type] || SIL.Sedan;
+  return `<svg class="sil" viewBox="0 0 120 44" aria-hidden="true"><path d="${d}" fill="currentColor" opacity=".35"/><circle cx="30" cy="35" r="7" fill="currentColor"/><circle cx="92" cy="35" r="7" fill="currentColor"/><circle cx="30" cy="35" r="3" fill="var(--navy-2)"/><circle cx="92" cy="35" r="3" fill="var(--navy-2)"/></svg>`;
+}
+/* speedometer gauge echoing the logo: needle = max monthly as % of salary */
+function gauge(pct){
+  const cx=100, cy=100, r=78, a0=-210, a1=30, span=a1-a0, lim=60;
+  const ang = v => (a0 + span*Math.min(v,lim)/lim)*Math.PI/180;
+  const pt = (v,rr) => [cx+rr*Math.cos(ang(v)), cy+rr*Math.sin(ang(v))];
+  const arc = (v0,v1,col) => { const [x0,y0]=pt(v0,r),[x1,y1]=pt(v1,r); const large=(span*(v1-v0)/lim)>180?1:0;
+    return `<path d="M${x0} ${y0} A${r} ${r} 0 ${large} 1 ${x1} ${y1}" stroke="${col}" stroke-width="12" fill="none" stroke-linecap="butt"/>`; };
+  let ticks=''; for(let v=0; v<=lim; v+=10){ const [x0,y0]=pt(v,r-18),[x1,y1]=pt(v,r-10); const [tx,ty]=pt(v,r-30);
+    ticks+=`<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/><text x="${tx}" y="${ty+4}" fill="var(--muted)" font-size="11" text-anchor="middle" font-family="Saira Condensed, sans-serif" font-weight="600">${v}%</text>`; }
+  const [nx,ny]=pt(pct,r-40);
+  return `<svg class="gauge" viewBox="0 0 200 150" role="img" aria-label="Bulanan maksimum ${Math.round(pct)} peratus daripada gaji">
+    ${arc(0,S.selesa,'var(--ok)')}${arc(S.selesa,S.sesuai,'var(--warn)')}${arc(S.sesuai,lim,'var(--hot)')}${ticks}
+    <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="var(--red-soft)" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="9" fill="var(--ink)"/><circle cx="${cx}" cy="${cy}" r="3.5" fill="var(--navy)"/>
+    <text x="${cx}" y="138" fill="var(--ink)" font-size="22" text-anchor="middle" font-family="Russo One, sans-serif">${Math.round(pct)}%</text>
+    <text x="${cx}" y="150" fill="var(--muted)" font-size="10" text-anchor="middle" font-family="Saira Condensed, sans-serif" letter-spacing="1.5">DARIPADA GAJI</text></svg>`;
+}
+
+function render(){
+  const stage = $('stage');
+  if(!shown || !st.gaji){
+    stage.innerHTML = `<div class="empty"><b>Sedia untuk penonton seterusnya</b>Masukkan gaji bersih, kemudian tekan <b style="display:inline;font:inherit;color:var(--red-soft)">PAPAR KERETA LAYAK</b>.</div>`;
+    return;
+  }
+  const g = st.gaji, k = st.komit, mx = maxMonthly(g,k);
+  const cars = parseStock(S.stock).map(c=>({...c, m:monthly(c.price)}));
+  const types = ['Semua', ...new Set(cars.map(c=>c.type))];
+  const pass = c => (st.type==='Semua'||c.type===st.type) && (st.origin==='Semua'||c.origin===st.origin);
+  const ok = cars.filter(c=>c.m<=mx && pass(c)).sort((a,b)=>b.price-a.price);
+  const yMo = S.years*12, lMax = mx*yMo/(1+S.rate/100*S.years);
+  const near = cars.filter(c=>c.m>mx && c.m<=mx*1.2 && pass(c)).sort((a,b)=>a.price-b.price).slice(0,3)
+    .map(c=>({...c, needDep: c.price - lMax}));
+  const tier = r => r<=S.selesa/100 ? ['SELESA','t-selesa','var(--ok)'] : r<=S.sesuai/100 ? ['SESUAI','t-sesuai','var(--warn)'] : ['MAKSIMUM','t-max','var(--hot)'];
+  const chipRow = (list,cur,key) => list.map(v=>`<button class="chip" type="button" data-f="${key}" data-v="${v}" aria-pressed="${v===cur}">${v}</button>`).join('');
+
+  stage.innerHTML = `
+    <div class="hero">
+      <div style="min-width:0">
+        <div class="who">Untuk <b>${esc(st.nama||'penonton')}</b></div>
+        <div class="salary">GAJI BERSIH <b class="num">${rm(g)}</b></div>
+        <div class="maxline">
+          <span class="k">BULANAN MAKSIMUM</span><span class="big num">${rm(mx)}</span>
+          <span class="count num">${ok.length} KERETA LAYAK</span>
+        </div>
+        <div class="note" style="margin-top:6px">Deposit ${S.dep}% · ${S.years} tahun · kadar rata ${S.rate}%${k?` · komitmen ${rm(k)}`:''}</div>
+      </div>
+      ${gauge(g? mx/g*100 : 0)}
+    </div>
+    <div class="filters">${chipRow(types,st.type,'type')}<span class="sep"></span>${chipRow(['Semua','JP','UK'],st.origin,'origin')}</div>
+    ${ok.length ? `<div class="grid">${ok.map((c,i)=>{ const r=c.m/g, [tl,tc,col]=tier(r);
+      return `<article class="car" style="animation-delay:${Math.min(i,8)*40}ms">
+        <span class="tier ${tc}">${tl}</span>${sil(c.type)}
+        <div class="nm">${esc(c.model)}</div>
+        <div class="meta"><span>${esc(c.year)}</span><span class="${c.origin==='UK'?'uk':'jp'}">${c.origin==='UK'?'UK':'JEPUN'}</span><span>${esc(c.type)}</span></div>
+        <div class="monthly"><b class="num">${rm(c.m)}</b><small>/BULAN</small></div>
+        <div class="bar"><i style="width:${Math.min(100,r/(S.maxPct/100)*100)}%;background:${col}"></i></div>
+        <div class="price num">Harga ${rm(c.price)} · ${Math.round(r*100)}% gaji</div>
+      </article>`;}).join('')}</div>`
+      : `<div class="empty"><b>Belum ada yang ngam dengan bajet ini</b>Cuba tambah deposit, panjangkan tempoh, atau kurangkan komitmen.</div>`}
+    ${near.length ? `<div class="near"><h3>HAMPIR LAYAK · TAMBAH DEPOSIT</h3><ul>${near.map(c=>`<li><span><b>${esc(c.model)}</b> ${esc(c.year)}</span><span class="num">Deposit ${rm(Math.max(c.needDep, c.price*S.dep/100))}</span></li>`).join('')}</ul></div>`:''}
+    <div class="note">Simulasi kadar rata untuk rujukan sahaja. Kelulusan, kadar dan tempoh sebenar tertakluk kepada bank dan umur kereta.</div>`;
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+/* operator controls */
+function drawGaji(){ $('gajiV').textContent = st.gaji ? st.gaji.toLocaleString('en-MY') : '0'; }
+$('keys').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  const k = b.dataset.k;
+  if(k==='C') st.gaji = 0; else if(k==='B') st.gaji = Math.floor(st.gaji/10);
+  else if(String(st.gaji).length < 6) st.gaji = st.gaji*10 + (+b.textContent);
+  shown = false; drawGaji(); render();
+});
+document.addEventListener('keydown', e=>{
+  if(e.target.matches('input,textarea') || !$('sheet').hidden) return;
+  if(/^\d$/.test(e.key)){ if(String(st.gaji).length<6) st.gaji = st.gaji*10 + +e.key; shown=false; drawGaji(); render(); }
+  else if(e.key==='Backspace'){ st.gaji=Math.floor(st.gaji/10); shown=false; drawGaji(); render(); }
+  else if(e.key==='Enter'){ $('go').click(); }
+});
+function chips(el, vals, cur, fmt, set){
+  el.innerHTML = vals.map(v=>`<button class="chip" type="button" data-v="${v}" aria-pressed="${v==cur}">${fmt(v)}</button>`).join('');
+  el.onclick = e=>{ const b=e.target.closest('button'); if(!b) return; set(+b.dataset.v); el.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed', c===b)); render(); };
+}
+chips($('depChips'), [0,10,20,30], S.dep, v=>v+'%', v=>{S.dep=v; store.set('pp-live-settings',S);});
+chips($('yrChips'), [5,7,9], S.years, v=>v+' tahun', v=>{S.years=v; store.set('pp-live-settings',S);});
+$('komit').addEventListener('input', e=>{ st.komit = +e.target.value.replace(/\D/g,'') || 0; if(shown) render(); });
+$('nama').addEventListener('input', e=>{ st.nama = e.target.value.trim(); if(shown) render(); });
+$('go').addEventListener('click', ()=>{
+  if(!st.gaji) return;
+  shown = true; render();
+  hist = [{n:st.nama||'penonton', g:st.gaji, k:st.komit}, ...hist.filter(h=>!(h.n===st.nama && h.g===st.gaji))].slice(0,8);
+  store.set('pp-live-hist', hist); drawHist();
+});
+function drawHist(){
+  $('hist').innerHTML = hist.length ? hist.map((h,i)=>`<button type="button" data-i="${i}">${esc(h.n)} · ${rm(h.g)}</button>`).join('') : '<span class="note">Belum ada.</span>';
+}
+$('hist').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; const h=hist[+b.dataset.i];
+  st.nama=h.n; st.gaji=h.g; st.komit=h.k; $('nama').value=h.n; $('komit').value=h.k||''; drawGaji(); shown=true; render(); });
+$('stage').addEventListener('click', e=>{ const b=e.target.closest('[data-f]'); if(!b) return; st[b.dataset.f]=b.dataset.v; render(); });
+$('btnFull').addEventListener('click', e=>{ const on = !$('app').classList.contains('full'); $('app').classList.toggle('full', on); e.currentTarget.setAttribute('aria-pressed', on); });
+
+/* settings */
+const fields = {sRate:'rate', sMax:'maxPct', sDsr:'dsr', sSel:'selesa', sSes:'sesuai'};
+function openSet(){ for(const [id,k] of Object.entries(fields)) $(id).value = S[k]; $('sStock').value = S.stock; $('sheet').hidden=false; }
+$('btnSet').addEventListener('click', openSet);
+$('sClose').addEventListener('click', ()=>$('sheet').hidden=true);
+$('sReset').addEventListener('click', ()=>{ $('sStock').value = SAMPLE_STOCK; for(const [id,k] of Object.entries(fields)) $(id).value = DEFAULTS[k]; });
+$('sSave').addEventListener('click', ()=>{
+  for(const [id,k] of Object.entries(fields)){ const v=parseFloat($(id).value); if(!isNaN(v)) S[k]=v; }
+  S.stock = $('sStock').value; store.set('pp-live-settings', S); $('sheet').hidden=true; render();
+});
+
+$('nama').value = st.nama; drawGaji(); drawHist(); render();
+</script>
