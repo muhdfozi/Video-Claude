@@ -292,7 +292,10 @@ const CAR_IMG = [
   [/voxy/i,'voxy'], [/noah/i,'noah'], [/\bnx ?\d/i,'nx250'], [/\brx ?\d/i,'rx350'], [/\bis ?300/i,'is300'],
   [/step ?wgn/i,'stepwgn'], [/type ?r|fl5/i,'civicfl5'], [/a ?180/i,'a180'], [/a ?35\b/i,'a35'], [/a ?45/i,'a45s'],
   [/\bcla/i,'cla250'], [/g ?350|g-class/i,'g350'], [/m135i/i,'m135i'], [/\b135i/i,'135i'], [/\b118i/i,'118i'],
-  [/\bm2\b/i,'m2'], [/gt-?r\b/i,'gtr'], [/\bbrz/i,'brz'], [/swift/i,'swift'], [/jimny/i,'jimny'], [/defender/i,'defender']
+  [/\bm2\b/i,'m2'], [/gt-?r\b/i,'gtr'], [/\bbrz/i,'brz'], [/swift/i,'swift'], [/jimny/i,'jimny'], [/defender/i,'defender'],
+  [/taft/i,'taft'], [/\btank\b/i,'tank'], [/canbus/i,'canbus'], [/tanto/i,'tanto'], [/corolla sport/i,'corollasport'], [/roadster|mx-?5/i,'roadster'],
+  [/levorg/i,'levorg'], [/odyssey/i,'odyssey'], [/\bux ?\d/i,'ux200'], [/\bmini\b|cooper/i,'mini'], [/gr ?yaris/i,'gryaris'], [/420i|4 series/i,'420i'],
+  [/\bc ?200|c-class/i,'c200'], [/crown/i,'crownsport'], [/velar/i,'velar'], [/\blbx/i,'lbx'], [/macan/i,'macan']
 ];
 function carImg(model){ for(const [rx,k] of CAR_IMG) if(rx.test(model)) return typeof k==='function' ? k(model) : k; return ''; }
 function pic(c){
