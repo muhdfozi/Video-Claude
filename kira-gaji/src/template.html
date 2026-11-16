@@ -1,0 +1,266 @@
+<title>ProfPoji Kira Layak</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Saira+Condensed:wght@500;600;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one phone column (max 480px). Start = salary question; results = car list; tap a car = bottom sheet with WhatsApp. */
+:root{
+  --navy:#0A1A33; --navy-2:#102445; --navy-3:#1a3360; --line:#26406e; --pic-bg:#F6F2ED;
+  --ink:#F4F6FA; --muted:#9AA8C2; --red:#E10600; --red-soft:#ff3b30; --wa:#25D366;
+  --ok:#22C55E; --warn:#F5B300; --hot:#FF5A4F;
+  --f-display:"Russo One","Arial Black",system-ui,sans-serif;
+  --f-label:"Saira Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+*{box-sizing:border-box}
+body{background:var(--navy);color:var(--ink);font:15px/1.45 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 28px;
+  -webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+a{color:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--red-soft);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{width:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:18px;min-width:0}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top .logo{height:30px;width:122px;flex:none;display:block}
+.top .tag{font:800 13px var(--f-label);letter-spacing:1.5px;color:var(--muted);text-align:right}
+
+h1{margin:0;font:30px/1.1 var(--f-display);text-wrap:balance}
+h1 em{font-style:normal;color:var(--red-soft)}
+.lead{margin:6px 0 0;color:var(--muted)}
+
+.strip{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.strip::-webkit-scrollbar{display:none}
+.strip img{height:64px;width:auto;border-radius:10px;background:var(--pic-bg);flex:none}
+
+.card{background:var(--navy-2);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.lbl{font:600 13px var(--f-label);letter-spacing:2px;color:var(--muted);text-transform:uppercase}
+.money{display:flex;align-items:center;gap:8px;background:var(--navy);border:2px solid var(--red);border-radius:14px;padding:6px 14px}
+.money span{font:800 22px var(--f-label);color:var(--muted)}
+.money input{flex:1;min-width:0;background:none;border:0;color:var(--ink);font:34px var(--f-display);padding:6px 0;outline:none}
+.money input::placeholder{color:var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:8px 12px;border-radius:999px;background:var(--navy);border:1px solid var(--line);font:600 15px var(--f-label);letter-spacing:.5px;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--navy);border-color:var(--ink)}
+details{border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font:600 15px var(--f-label);letter-spacing:1px;color:var(--muted);list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::after{content:" ＋";color:var(--red-soft)}
+details[open] summary::after{content:" −"}
+.opts{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.small{width:100%;background:var(--navy);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--ink);font:500 16px var(--f-body)}
+.go{height:58px;border-radius:14px;background:var(--red);font:20px var(--f-display);letter-spacing:.5px;box-shadow:0 8px 24px rgba(225,6,0,.35)}
+.go:disabled{opacity:.45;box-shadow:none}
+.err{color:var(--red-soft);font-size:14px;margin:-6px 0 0}
+.priv{font-size:12.5px;color:var(--muted);margin:0;display:flex;gap:8px}
+
+.alt{display:flex;align-items:center;gap:12px;text-decoration:none;padding:14px 16px;border-radius:16px;border:1px dashed var(--line)}
+.alt b{display:block;font:700 16px var(--f-body)}
+.alt small{color:var(--muted)}
+.alt .arr{margin-left:auto;font:22px var(--f-display);color:var(--red-soft)}
+
+/* results */
+.sum{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.sum .k{font:600 13px var(--f-label);letter-spacing:2px;color:var(--muted)}
+.sum .big{font:32px/1.1 var(--f-display);color:var(--red-soft)}
+.sum .g{font:600 15px var(--f-body);color:var(--muted)}
+.sum .g b{color:var(--ink)}
+.gauge{width:110px;height:auto;display:block}
+.cnt{display:inline-block;font:800 17px var(--f-label);letter-spacing:1px;background:var(--ink);color:var(--navy);padding:2px 10px;border-radius:8px;margin-top:6px}
+.edit{justify-self:start;font:700 14px var(--f-label);letter-spacing:1px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.filters{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.filters::-webkit-scrollbar{display:none}
+.filters .chip{flex:none}
+.list{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:420px){.list{grid-template-columns:1fr 1fr}}
+.car{text-align:left;background:var(--navy-2);border:1px solid var(--line);border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:6px;position:relative}
+.car .pic{aspect-ratio:2/1;max-width:100%;border-radius:10px;overflow:hidden;background:var(--pic-bg);display:grid;place-items:center}
+.car .pic img{width:100%;height:100%;object-fit:cover;display:block}
+.car .pic.none{background:var(--navy-3)}
+.car .sil{height:52%;width:auto;color:var(--muted)}
+.car .tier{position:absolute;top:16px;right:16px;font:800 12px var(--f-label);letter-spacing:1.2px;padding:2px 8px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.t-selesa{background:var(--ok);color:#06240f}.t-sesuai{background:var(--warn);color:#2b1d00}.t-max{background:var(--hot);color:#2a0300}
+.car .nm{font:700 15.5px/1.25 var(--f-body)}
+.car .yr{font:600 13px var(--f-label);letter-spacing:1px;color:var(--muted)}
+.car .mo{font:24px var(--f-display)}
+.car .mo small{font:600 13px var(--f-label);color:var(--muted);letter-spacing:1px}
+.near h3{margin:0 0 8px;font:800 15px var(--f-label);letter-spacing:2px;color:var(--muted)}
+.near ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.near li{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:12px;border:1px dashed var(--line);font-size:14px;color:var(--muted)}
+.near li b{color:var(--ink);font-weight:600}
+.empty{padding:22px;text-align:center;border:1px dashed var(--line);border-radius:16px;color:var(--muted)}
+.empty b{display:block;font:20px var(--f-display);color:var(--ink);margin-bottom:6px}
+.fine{font-size:12px;color:var(--muted);margin:0}
+
+/* bottom sheet */
+.sheet{position:fixed;inset:0;background:rgba(3,8,18,.72);display:flex;align-items:flex-end;justify-content:center;z-index:20}
+.sheet .box{background:var(--navy-2);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;width:min(480px,100%);max-height:92%;overflow:auto;
+  padding:16px max(16px,env(safe-area-inset-left,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:12px;animation:up .25s ease-out}
+@keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+.sheet .x{align-self:flex-end;font:700 14px var(--f-label);letter-spacing:1px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.sheet .pic{aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:var(--pic-bg);display:grid;place-items:center}
+.sheet .pic img{width:100%;height:100%;object-fit:cover}
+.sheet .pic.none{background:var(--navy-3)} .sheet .sil{height:45%;width:auto;color:var(--muted)}
+.sheet h2{margin:0;font:22px/1.2 var(--f-display)}
+.sheet .meta{color:var(--muted);font:600 14px var(--f-label);letter-spacing:1px}
+.terms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.terms div{background:var(--navy);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.terms div.on{border-color:var(--red-soft)}
+.terms small{display:block;font:600 12px var(--f-label);letter-spacing:1px;color:var(--muted)}
+.terms b{font:18px var(--f-display)}
+.wa{display:flex;align-items:center;justify-content:center;gap:10px;height:56px;border-radius:14px;background:var(--wa);color:#04210f;font:800 19px var(--f-label);letter-spacing:1px;text-decoration:none}
+.wa svg{width:24px;height:24px}
+.phone{text-align:center;font-size:13px;color:var(--muted)}
+.phone b{color:var(--ink);user-select:all}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <!--LOGO-->
+    <span class="tag">YOUR PROFESSIONAL<br>RECOND ADVISOR</span>
+  </header>
+
+  <!-- START -->
+  <section id="start" class="wrap" style="gap:16px">
+    <div>
+      <h1>Gaji anda layak <em>kereta apa?</em></h1>
+      <p class="lead">Masukkan gaji bersih. Terus nampak kereta recond yang ngam dengan bajet, siap anggaran bulanan.</p>
+    </div>
+    <div class="strip" id="strip" aria-hidden="true"></div>
+    <form class="card" id="form" novalidate>
+      <label class="lbl" for="gaji">Gaji bersih sebulan</label>
+      <div class="money"><span>RM</span><input id="gaji" inputmode="numeric" autocomplete="off" placeholder="4,500" aria-describedby="gErr"></div>
+      <p class="err" id="gErr" hidden>Masukkan gaji bersih antara RM1,000 dan RM100,000.</p>
+      <div class="chips" id="quick"></div>
+      <details>
+        <summary>Ubah deposit, tempoh &amp; komitmen</summary>
+        <div class="opts">
+          <div><div class="lbl" style="margin-bottom:6px">Deposit</div><div class="chips" id="depChips"></div></div>
+          <div><div class="lbl" style="margin-bottom:6px">Tempoh pinjaman</div><div class="chips" id="yrChips"></div></div>
+          <div><label class="lbl" for="komit" style="display:block;margin-bottom:6px">Komitmen bulanan lain (RM)</label>
+            <input class="small num" id="komit" inputmode="numeric" placeholder="0 · PTPTN, rumah, kad kredit"></div>
+        </div>
+      </details>
+      <button class="go" type="submit">TENGOK KERETA LAYAK</button>
+      <p class="priv"><span aria-hidden="true">🔒</span><span>Gaji anda tak disimpan dan tak dihantar ke mana-mana. Ia cuma masuk dalam mesej WhatsApp kalau anda sendiri tekan butang WhatsApp.</span></p>
+    </form>
+    <a class="alt" href="https://profpojikira.netlify.app" target="_blank" rel="noopener">
+      <span><b>Dah ada kereta idaman?</b><small>Pilih model, warna &amp; grade di kalkulator penuh</small></span><span class="arr">→</span>
+    </a>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="result" class="wrap" style="gap:14px" hidden></section>
+  <p class="fine">Harga ialah anggaran pasaran kereta recond, bukan stok sebenar. Bulanan dikira dengan kadar rata <span id="rateTxt"></span> untuk rujukan sahaja; kelulusan, kadar dan tempoh sebenar tertakluk kepada bank dan umur kereta.</p>
+</div>
+
+<div class="sheet" id="sheet" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="sTitle" id="sBox"></div></div>
+
+<script>
+/*@DATA@*/
+const WA_NUM = '60187773474', WA_SHOW = '018-777 3474';
+let S = Object.assign({}, DEFAULTS);
+let st = {gaji:0, komit:0, type:'Semua'};
+const $ = id => document.getElementById(id);
+const rm = n => 'RM ' + Math.round(n).toLocaleString('en-MY');
+const mo = (price, y=S.years) => { const loan = price*(1-S.dep/100); return (loan + loan*(S.rate/100)*y)/(y*12); };
+const tier = r => r<=S.selesa/100 ? ['SELESA','t-selesa'] : r<=S.sesuai/100 ? ['SESUAI','t-sesuai'] : ['MAKSIMUM','t-max'];
+const CARS = () => parseStock(S.stock);
+
+/* start screen */
+(function strip(){
+  const seen = new Set(), imgs = [];
+  for (const c of CARS()) if (c.img && !seen.has(c.img)) { seen.add(c.img); imgs.push(c); }
+  $('strip').innerHTML = imgs.slice(0,14).map(c=>`<img src="cars/${esc(c.img)}.webp" alt="" loading="lazy" onerror="this.remove()">`).join('');
+})();
+$('quick').innerHTML = [3000,4000,5000,6000,8000,10000].map(v=>`<button type="button" class="chip" data-v="${v}">${'RM'+(v/1000)+'k'}</button>`).join('');
+$('quick').onclick = e => { const b=e.target.closest('button'); if(!b) return; $('gaji').value = (+b.dataset.v).toLocaleString('en-MY'); $('gErr').hidden=true; };
+$('gaji').addEventListener('input', e => { const v = e.target.value.replace(/\D/g,'').slice(0,6); e.target.value = v ? (+v).toLocaleString('en-MY') : ''; $('gErr').hidden=true; });
+$('komit').addEventListener('input', e => { e.target.value = e.target.value.replace(/\D/g,'').slice(0,6); });
+function chips(el, vals, cur, fmt, set){
+  el.innerHTML = vals.map(v=>`<button class="chip" type="button" data-v="${v}" aria-pressed="${v==cur}">${fmt(v)}</button>`).join('');
+  el.onclick = e=>{ const b=e.target.closest('button'); if(!b) return; set(+b.dataset.v); el.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed', c===b)); };
+}
+chips($('depChips'), [0,10,20,30], S.dep, v=>v+'%', v=>S.dep=v);
+chips($('yrChips'), [5,7,9], S.years, v=>v+' tahun', v=>S.years=v);
+$('rateTxt').textContent = S.rate + '%';
+$('form').addEventListener('submit', e => {
+  e.preventDefault();
+  const g = +$('gaji').value.replace(/\D/g,'');
+  if (!(g >= 1000 && g <= 100000)) { $('gErr').hidden=false; $('gaji').focus(); return; }
+  st.gaji = g; st.komit = +$('komit').value || 0; st.type = 'Semua';
+  showResult();
+});
+
+/* results */
+function showResult(){
+  $('start').hidden = true; $('result').hidden = false; render(); window.scrollTo({top:0});
+}
+function render(){
+  const g = st.gaji, k = st.komit, mx = maxMonthly(g,k);
+  const all = CARS().map(c=>({...c, m:mo(c.price)}));
+  const types = ['Semua', ...new Set(all.map(c=>c.type))];
+  const pass = c => st.type==='Semua' || c.type===st.type;
+  const ok = all.filter(c=>c.m<=mx && pass(c)).sort((a,b)=>b.price-a.price);
+  const lMax = mx*S.years*12/(1+S.rate/100*S.years);
+  const near = all.filter(c=>c.m>mx && c.m<=mx*1.25 && pass(c)).sort((a,b)=>a.price-b.price).slice(0,3);
+  $('result').innerHTML = `
+    <div class="card">
+      <div class="sum">
+        <div>
+          <div class="g">Gaji bersih <b class="num">${rm(g)}</b>${k?` · komitmen <b class="num">${rm(k)}</b>`:''}</div>
+          <div class="k" style="margin-top:8px">BULANAN MAKSIMUM</div>
+          <div class="big num">${rm(mx)}</div>
+          <span class="cnt num">${ok.length} KERETA LAYAK</span>
+        </div>
+        ${gauge(g? mx/g*100 : 0)}
+      </div>
+      <button class="edit" type="button" id="edit">← UBAH GAJI</button>
+    </div>
+    <div class="filters">${types.map(t=>`<button class="chip" type="button" data-t="${esc(t)}" aria-pressed="${t===st.type}">${esc(t)}</button>`).join('')}</div>
+    ${ok.length ? `<div class="list">${ok.map((c,i)=>{ const [tl,tc]=tier(c.m/g);
+      return `<button class="car" type="button" data-i="${all.indexOf(c)}"><span class="tier ${tc}">${tl}</span>${pic(c)}
+        <span class="nm">${esc(c.model)}</span><span class="yr">${esc(c.year)} · ${c.origin==='UK'?'UK':'JEPUN'} · ${esc(c.type)}</span>
+        <span class="mo num">${rm(c.m)} <small>/BULAN</small></span></button>`; }).join('')}</div>`
+      : `<div class="empty"><b>Belum ada yang ngam</b>Cuba tambah deposit atau panjangkan tempoh. Prof Poji pun boleh carikan pilihan lain untuk anda.</div>`}
+    ${near.length ? `<div class="near"><h3>HAMPIR LAYAK · TAMBAH DEPOSIT</h3><ul>${near.map(c=>`<li><span><b>${esc(c.model)}</b> ${esc(c.year)}</span><span class="num">Deposit ${rm(Math.max(c.price-lMax, c.price*S.dep/100))}</span></li>`).join('')}</ul></div>`:''}
+    <a class="wa" href="${waLink(null)}" target="_blank" rel="noopener">${WA_ICON} TANYA PROF POJI</a>
+    <p class="phone">WhatsApp <b>${WA_SHOW}</b></p>`;
+  window._cars = all;
+}
+$('result').addEventListener('click', e => {
+  if (e.target.closest('#edit')) { $('result').hidden=true; $('start').hidden=false; window.scrollTo({top:0}); return; }
+  const f = e.target.closest('[data-t]'); if (f) { st.type = f.dataset.t; render(); return; }
+  const c = e.target.closest('.car'); if (c) openCar(window._cars[+c.dataset.i]);
+});
+
+/* car sheet + WhatsApp */
+const WA_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.2-.2-.4-.3Z"/></svg>';
+function waLink(c){
+  const lines = ['Salam Prof Poji, saya guna kalkulator gaji layak.'];
+  if (c) lines.push(`Saya berminat: ${c.model} (${c.year})`, `Anggaran bulanan: ${rm(mo(c.price))} (${S.years} tahun, deposit ${S.dep}%)`);
+  lines.push(`Gaji bersih: ${rm(st.gaji)}` + (st.komit ? `, komitmen ${rm(st.komit)}` : ''));
+  lines.push(c ? 'Boleh semak unit yang ada?' : 'Boleh cadangkan kereta yang sesuai?');
+  return `https://wa.me/${WA_NUM}?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+function openCar(c){
+  const [tl,tc] = tier(mo(c.price)/st.gaji);
+  $('sBox').innerHTML = `
+    <button class="x" type="button" id="sClose">TUTUP ✕</button>
+    ${pic(c)}
+    <div><span class="tier ${tc}" style="font:800 12px var(--f-label);letter-spacing:1.2px;padding:2px 8px;border-radius:999px">${tl}</span></div>
+    <h2 id="sTitle">${esc(c.model)}</h2>
+    <div class="meta">${esc(c.year)} · ${c.origin==='UK'?'UK':'JEPUN'} · ${esc(c.type)} · Harga anggaran ${rm(c.price)}</div>
+    <div class="terms">${[5,7,9].map(y=>`<div class="${y===S.years?'on':''}"><small>${y} TAHUN</small><b class="num">${rm(mo(c.price,y))}</b></div>`).join('')}</div>
+    <p class="fine">Deposit ${S.dep}% (${rm(c.price*S.dep/100)}) · kadar rata ${S.rate}% · unit, warna &amp; grade tertakluk stok semasa.</p>
+    <a class="wa" href="${waLink(c)}" target="_blank" rel="noopener">${WA_ICON} WHATSAPP PROF POJI</a>
+    <p class="phone">Atau hubungi <b>${WA_SHOW}</b></p>`;
+  $('sheet').hidden = false; $('sClose').focus();
+}
+$('sheet').addEventListener('click', e => { if (e.target.id==='sheet' || e.target.closest('#sClose')) $('sheet').hidden = true; });
+document.addEventListener('keydown', e => { if (e.key==='Escape') $('sheet').hidden = true; });
+</script>
