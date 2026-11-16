@@ -638,7 +638,9 @@ def audio_filter():
         "[mus][key]sidechaincompress=threshold=0.05:ratio=3:attack=40:release=500[duck];"
         "[3:a]aresample=48000,apad[sfx];"
         f"[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,atrim=0:{DURATION},"
-        "volume=2.5dB,alimiter=limit=0.95,apad[aout]"
+        # 4x-oversampled limiter keeps true peak below -1 dBTP after AAC encoding
+        "volume=4.2dB,aresample=192000,alimiter=limit=0.79:attack=2:release=60:level=false,"
+        "aresample=48000,apad[aout]"
     )
 
 
