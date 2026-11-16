@@ -29,7 +29,13 @@ from neon_scenes import (GY, GREEN_T, H, HEADER_LABEL, HEADER_TITLE, W, Neon, Ty
 
 FPS = 30
 DURATION = 49.64
-MUSIC_START = 705.0  # calm, steady passage of the classical bed
+# Pace: 110 BPM. The music bed (classical, ~97.4 BPM at 2:21) is time-stretched to
+# exactly 110 BPM with its first beat at t=0, and every cut/pop sits on that grid.
+BPM = 110.0
+BEAT = 60.0 / BPM
+MUSIC_START = 141.434        # first detected beat of the chosen passage (source seconds)
+MUSIC_SRC_BPM = 97.36        # measured tempo of that passage
+MUSIC_RATIO = BPM / MUSIC_SRC_BPM
 
 VO = "Voiceover/Prife International 6.m4a"
 MUSIC = "Music/v24044gl0000cthro1vog65gunpi1teg.mp4"
@@ -39,6 +45,31 @@ FONT = "Font Type/Formula1-Bold_web_0.ttf"
 def sec(lt, a, b):
     """0..1 progress of local time lt inside [a, b] seconds."""
     return clamp((lt - a) / (b - a)) if b > a else float(lt >= a)
+
+
+def snap(t):
+    """nearest beat on the 110 BPM grid."""
+    return round(t / BEAT) * BEAT
+
+
+def bt(b):
+    """time of beat number b."""
+    return b * BEAT
+
+
+def ev(lt, t, a, d):
+    """like sec(lt, a, a+d) but the start is snapped to the beat grid (absolute time)."""
+    st = t - lt
+    s0 = snap(st + a) - st
+    return sec(lt, s0, s0 + d)
+
+
+def beat_pulse(t, down=0.38, other=0.16, decay=0.12):
+    """pulse that kicks on every beat (bigger on bar downbeats)."""
+    k = math.floor(t / BEAT + 1e-6)
+    dt = t - k * BEAT
+    amp = down if k % 4 == 0 else other
+    return amp * math.exp(-dt / decay)
 
 
 # ---------------------------------------------------------------------------
@@ -102,8 +133,8 @@ def spotlight_mask():
 def s_hook(lt, t):
     n, f = Neon(), background()
     ground(n, GY)
-    car(n, W / 2, GY, 1.0, draw=ease(sec(lt, 0.0, 1.9)))
-    k = ease(sec(lt, 2.0, 2.5))
+    car(n, W / 2, GY, 1.0, draw=ease(ev(lt, t, 0.0, 1.9)))
+    k = ease(ev(lt, t, 2.0, 0.5))
     pill(n, W / 2, GY - 470 - 20 * (1 - k), "ORANG KAYA?", 40, a=k)
     dust(n, t)
     return f, n
@@ -111,12 +142,12 @@ def s_hook(lt, t):
 
 def s_twist(lt, t):  # starts 4.68
     n, f = Neon(), background()
-    f = f + spotlight_mask() * ease(sec(lt, 2.0, 3.0))
+    f = f + spotlight_mask() * ease(ev(lt, t, 2.0, 1.0))
     ground(n, GY)
     car(n, W / 2, GY, 1.0)
-    pill(n, W / 2, GY - 470, "ORANG KAYA?", 40, a=1 - 0.75 * sec(lt, 0.8, 1.6),
-         strike=ease(sec(lt, 0.1, 0.6)))
-    k = ease(sec(lt, 2.6, 3.1))
+    pill(n, W / 2, GY - 470, "ORANG KAYA?", 40, a=1 - 0.75 * ev(lt, t, 0.8, 0.8),
+         strike=ease(ev(lt, t, 0.1, 0.5)))
+    k = ease(ev(lt, t, 2.6, 0.5))
     pill(n, W / 2, GY - 590, "YANG MEMERLUKAN", 40, a=k, filled=True)
     dust(n, t)
     return f, n
@@ -125,13 +156,13 @@ def s_twist(lt, t):  # starts 4.68
 def s_family(lt, t):  # starts 9.2
     n, f = Neon(), background()
     ground(n, GY)
-    car(n, W / 2 + 120, GY, 0.82, seats=sec(lt, 2.4, 6.0))
+    car(n, W / 2 + 120, GY, 0.82, seats=ev(lt, t, 2.4, 3.6))
     family = [("elder", 0.62), ("adult", 0.78), ("adult", 0.8), ("child", 0.8), ("child", 0.8)]
     for i, (kind, sc) in enumerate(family):
-        k = ease(sec(lt, 0.8 + i * 0.5, 1.8 + i * 0.5))
+        k = ease(ev(lt, t, 0.8 + i * BEAT, 0.6))
         x = 62 + i * 66 + 40 * (1 - k)
         person(n, x, GY, sc * 0.9, a=k, kind=kind, walk=t * 1.5 + i * 0.3)
-    pill(n, W / 2 + 120, GY - 430, "SEMUA MUAT", 38, a=ease(sec(lt, 5.0, 5.5)))
+    pill(n, W / 2 + 120, GY - 430, "SEMUA MUAT", 38, a=ease(ev(lt, t, 5.0, 0.5)))
     dust(n, t)
     return f, n
 
@@ -139,10 +170,10 @@ def s_family(lt, t):  # starts 9.2
 def s_door(lt, t):  # starts 16.6
     n, f = Neon(), background()
     ground(n, GY)
-    door = ease_io(sec(lt, 2.1, 3.4))
+    door = ease_io(ev(lt, t, 2.1, 1.3))
     car(n, W / 2 + 130, GY, 0.86, door=door)
-    k = ease(sec(lt, 3.6, 5.4))
-    person(n, 70 + 70 * k, GY, 0.72, a=ease(sec(lt, 0.3, 0.9)), kind="elder", walk=t * 1.2)
+    k = ease(ev(lt, t, 3.6, 1.8))
+    person(n, 70 + 70 * k, GY, 0.72, a=ease(ev(lt, t, 0.3, 0.6)), kind="elder", walk=t * 1.2)
     if 2.0 < lt < 3.8:
         for j in range(3):
             x = W / 2 + 130 - 95 - j * 34 - 140 * door
@@ -151,7 +182,7 @@ def s_door(lt, t):  # starts 16.6
             n.c.line_to(x, GY - 185)
             n.c.line_to(x + 12, GY - 170)
             n.stroke(0.8 - j * 0.25, 5)
-    pill(n, W / 2 + 130, GY - 420, "PINTU AUTO", 38, a=ease(sec(lt, 2.4, 2.9)))
+    pill(n, W / 2 + 130, GY - 420, "PINTU AUTO", 38, a=ease(ev(lt, t, 2.4, 0.5)))
     dust(n, t)
     return f, n
 
@@ -173,7 +204,7 @@ def s_trip(lt, t):  # starts 22.2
         n.c.move_to(x, yy)
         n.c.line_to(x + 70 - j * 15, yy)
         n.stroke(0.5, 4)
-    k = ease(sec(lt, 3.3, 3.8))
+    k = ease(ev(lt, t, 3.3, 0.5))
     if k > 0:
         bx, by = W / 2 - 40, GY - 530
         n.c.new_path()
@@ -199,10 +230,10 @@ def s_price(lt, t):  # starts 28.1
     n, f = Neon(), background()
     ground(n, GY, 0.35)
     t_drop = 2.4  # "bulanan" @ 30.66
-    drop = ease(sec(lt, t_drop - 0.45, t_drop))
-    vis = sec(lt, t_drop - 0.5, t_drop - 0.45)
+    drop = ease(ev(lt, t, t_drop - 0.45, 0.45))
+    vis = ev(lt, t, t_drop - 0.5, 0.05)
     y = GY - 160 - (1 - drop) * 760
-    bounce = sec(lt, t_drop, t_drop + 0.25)
+    bounce = ev(lt, t, t_drop, 0.25)
     if 0 < bounce < 1:
         y -= math.sin(bounce * math.pi) * 22
     cx = W / 2
@@ -225,7 +256,7 @@ def s_price(lt, t):  # starts 28.1
         c.move_to(cx - 50 - e.width / 2 - e.x_bearing, y - e.height / 2 - e.y_bearing)
         c.show_text(txt)
         n.fill(vis)
-    imp = sec(lt, t_drop, t_drop + 0.6)
+    imp = ev(lt, t, t_drop, 0.6)
     if 0 < imp < 1:
         for sgn in (-1, 1):
             for j in range(3):
@@ -234,7 +265,7 @@ def s_price(lt, t):  # starts 28.1
                 c.move_to(x0, GY - 20 - j * 40)
                 c.line_to(x0 + sgn * 60 * (0.5 + imp), GY - 50 - j * 50)
                 n.stroke(1 - imp, 5)
-    k = ease(sec(lt, 3.3, 3.8))  # "mesti mencekik"
+    k = ease(ev(lt, t, 3.3, 0.5))  # "mesti mencekik"
     c.set_font_size(90)
     for j, (dx, dy) in enumerate(((-260, -270), (230, -330), (0, -390))):
         c.move_to(cx + dx, y + dy + math.sin(t * 3 + j) * 10)
@@ -244,30 +275,39 @@ def s_price(lt, t):  # starts 28.1
     return f, n
 
 
-ANIM = [  # (start, end, fn)
-    (0.0, 4.68, s_hook),
-    (4.68, 9.20, s_twist),
-    (9.20, 16.60, s_family),
-    (16.60, 22.20, s_door),
-    (22.20, 28.10, s_trip),
-    (28.10, 33.40, s_price),
+ANIM = [  # (start, end, fn) - boundaries snapped to the nearest beat
+    (0.0, snap(4.68), s_hook),
+    (snap(4.68), snap(9.20), s_twist),
+    (snap(9.20), snap(16.60), s_family),
+    (snap(16.60), snap(22.20), s_door),
+    (snap(22.20), snap(28.10), s_trip),
+    (snap(28.10), bt(62), s_price),
 ]
 XFADE = 0.45
 
 # ---------------------------------------------------------------------------
 # Footage
 # ---------------------------------------------------------------------------
-RING_START, RING_END = 32.55, 33.35
-FOOT = [  # (clip, start, end, chip text)
-    ("IMG_0212", 32.55, 36.00, "ALPHARD Z 2024"),
-    ("IMG_0218", 36.00, 37.50, "GRADE 5A"),
-    ("IMG_0217", 37.50, 39.86, "5,000 KM"),
-    ("IMG_0215", 39.86, 42.38, "RM2,700 / BULAN"),
-    ("IMG_0214", 42.38, 44.72, "FREE BODYKIT"),
+RING_START, RING_END = bt(60), bt(62)
+# Shots cut on the beat (mostly every 2 beats = 1.09 s). Same clip may be reused with a
+# different source offset and a punch-in crop (zoom, centre x, centre y).
+FOOT = [  # (clip, start_beat, end_beat, src_offset, zoom, cx, cy)
+    ("IMG_0212", 60, 64, 0.00, 1.00, 0.50, 0.50),   # Unit Alphard Z 2024
+    ("IMG_0212", 64, 66, 1.60, 1.70, 0.68, 0.50),   # grille punch-in
+    ("IMG_0218", 66, 68, 0.00, 1.00, 0.50, 0.50),   # grade 5A
+    ("IMG_0217", 68, 70, 0.00, 1.00, 0.50, 0.50),   # mileage baru
+    ("IMG_0217", 70, 72, 1.20, 1.45, 0.50, 0.45),   # 5,000 km
+    ("IMG_0215", 72, 76, 0.00, 1.00, 0.50, 0.50),   # bulanan RM2,700
+    ("IMG_0215", 76, 78, 1.50, 1.60, 0.55, 0.47),   # tail-light punch-in
+    ("IMG_0214", 78, 80, 0.00, 1.00, 0.50, 0.50),   # free bodykit
+    ("IMG_0212", 80, 82, 0.50, 1.80, 0.62, 0.58),   # front bumper / bodykit
 ]
-CTA_START = 44.72          # Ken-Burns still from IMG_0212 under the CTA
-CTA_BUTTON = 46.56
-DISSOLVE = 0.22
+CHIPS = [  # (text, start_beat, end_beat)
+    ("ALPHARD Z 2024", 62, 66), ("GRADE 5A", 66, 68), ("5,000 KM", 70, 72),
+    ("RM2,700 / BULAN", 73, 78), ("FREE BODYKIT", 78, 82),
+]
+CTA_START = bt(82)         # Ken-Burns still from IMG_0212 under the CTA
+CTA_BUTTON = bt(85)
 CLIP_DUR = {"IMG_0212": 2.818, "IMG_0214": 1.467, "IMG_0215": 2.65, "IMG_0217": 2.45, "IMG_0218": 2.517}
 
 TONEMAP = ("zscale=t=linear:npl=203,format=gbrpf32le,zscale=p=bt709,"
@@ -276,14 +316,15 @@ TONEMAP = ("zscale=t=linear:npl=203,format=gbrpf32le,zscale=p=bt709,"
 
 
 class ClipReader:
-    """Streams tone-mapped 1080x1920 frames at 30 fps, slowed to fill the slot."""
+    """Streams tone-mapped 1080x1920 frames at 30 fps, slowed only if the slot needs it."""
 
-    def __init__(self, path, slot):
-        src = CLIP_DUR[os.path.basename(path).split(".")[0]]
-        self.speed = min(1.0, (src - 0.05) / (slot + DISSOLVE))
+    def __init__(self, path, slot, offset=0.0):
+        src = CLIP_DUR[os.path.basename(path).split(".")[0]] - offset
+        self.speed = min(1.0, (src - 0.05) / slot)
         vf = (f"{TONEMAP},scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
               f"setpts=(PTS-STARTPTS)/{self.speed:.4f},fps={FPS}")
-        self.p = subprocess.Popen(["ffmpeg", "-v", "error", "-i", path, "-an", "-vf", vf,
+        self.p = subprocess.Popen(["ffmpeg", "-v", "error", "-ss", f"{offset:.3f}", "-i", path,
+                                   "-an", "-vf", vf,
                                    "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
         self.idx, self.last = -1, None
 
@@ -301,10 +342,13 @@ class ClipReader:
         self.p.kill()
 
 
-def push(img, z):
+def push(img, z, cx=0.5, cy=0.5):
+    """zoom z around normalised centre (cx, cy), kept inside the frame."""
     if abs(z - 1) < 1e-4:
         return img.astype(np.float32)
-    M = np.float32([[z, 0, (1 - z) * W / 2], [0, z, (1 - z) * H / 2]])
+    px = clamp(cx, 0.5 / z, 1 - 0.5 / z) * W
+    py = clamp(cy, 0.5 / z, 1 - 0.5 / z) * H
+    M = np.float32([[z, 0, W / 2 - z * px], [0, z, H / 2 - z * py]])
     return cv2.warpAffine(img, M, (W, H), flags=cv2.INTER_LINEAR).astype(np.float32)
 
 
@@ -416,12 +460,13 @@ def text_layer(typo, t):
         if st <= t < en:
             a = sec(t, st, st + 0.18) * (1 - sec(t, en - 0.1, en))
             items.append(("c", i, round(a, 2), round((1 - ease(sec(t, st, st + 0.25))) * 18)))
-    for clip, st, en, txt in FOOT:
-        cs = st + (0.75 if clip == "IMG_0212" else 0.15)
+    for txt, b0, b1 in CHIPS:
+        cs, en = bt(b0), bt(b1)
         if cs <= t < en:
-            items.append(("chip", txt, round(sec(t, cs, cs + 0.12), 2), round(pop(t - cs), 2)))
+            items.append(("chip", txt, round(sec(t, cs, cs + 0.08), 2),
+                          round(pop(t - cs, 0.18) * (1 + 0.25 * beat_pulse(t)), 2)))
     if t >= CTA_BUTTON:
-        pul = 1 + 0.03 * math.sin((t - CTA_BUTTON) * 6) if t > CTA_BUTTON + 0.4 else 1
+        pul = 1 + 0.25 * beat_pulse(t) if t > CTA_BUTTON + 0.3 else 1
         items.append(("cta", round(sec(t, CTA_BUTTON, CTA_BUTTON + 0.1), 2),
                       round(pop(t - CTA_BUTTON, 0.3) * pul, 3)))
     key = tuple(items)
@@ -456,10 +501,12 @@ class Renderer:
         self.readers = {}
         self.cta_still = None
 
-    def reader(self, clip, slot):
-        if clip not in self.readers:
-            self.readers[clip] = ClipReader(os.path.join(self.assets, "Raw Video", clip + ".MOV"), slot)
-        return self.readers[clip]
+    def reader(self, i):
+        if i not in self.readers:
+            clip, b0, b1, off = FOOT[i][:4]
+            self.readers[i] = ClipReader(os.path.join(self.assets, "Raw Video", clip + ".MOV"),
+                                         bt(b1) - bt(b0), off)
+        return self.readers[i]
 
     def neon(self, t):
         """background + neon mask for the animated section (with crossfades)."""
@@ -481,32 +528,22 @@ class Renderer:
         return bg + (f - bg) * k, n.mask() * k
 
     def footage(self, t):
-        cur = None
-        for i, (clip, st, en, _) in enumerate(FOOT):
-            if st <= t < en:
-                cur = i
         if t >= CTA_START:
             return self.cta_frame(t)
-        clip, st, en, _ = FOOT[cur]
-        z = 1.0 + 0.05 * sec(t, st, en + DISSOLVE)
-        img = push(self.reader(clip, en - st).frame(t - st), z)
-        nxt_start = FOOT[cur + 1][1] if cur + 1 < len(FOOT) else CTA_START
-        if t > nxt_start - DISSOLVE:  # dissolve into next shot
-            x = sec(t, nxt_start - DISSOLVE, nxt_start)
-            if cur + 1 < len(FOOT):
-                c2, s2, e2, _ = FOOT[cur + 1]
-                nimg = push(self.reader(c2, e2 - s2).frame(0), 1.0)
-            else:
-                nimg = self.cta_frame(CTA_START)
-            img = img * (1 - x) + nimg * x
-        return img
+        i = next(k for k, f in enumerate(FOOT) if bt(f[1]) <= t + 1e-6 < bt(f[2]))
+        _, b0, b1, _, z0, cx, cy = FOOT[i]
+        st, en = bt(b0), bt(b1)
+        # hard cut on the beat: quick punch (1.06 -> 1) + slow drift + small beat bump
+        punch = 0.06 * (1 - ease(sec(t, st, st + 0.2))) if i > 0 else 0.0
+        z = z0 * (1.0 + 0.03 * sec(t, st, en) + punch + 0.05 * beat_pulse(t))
+        return push(self.reader(i).frame(t - st), z, cx, cy)
 
     def cta_frame(self, t):
         if self.cta_still is None:
             r = ClipReader(os.path.join(self.assets, "Raw Video", "IMG_0212.MOV"), 2.7)
             self.cta_still = r.frame(1.2).copy()
             r.close()
-        z = 1.04 + 0.08 * ease_io(sec(t, CTA_START, DURATION))
+        z = (1.04 + 0.08 * ease_io(sec(t, CTA_START, DURATION))) * (1 + 0.05 * beat_pulse(t))
         img = push(self.cta_still, z)
         return img * (1 - 0.18 * sec(t, CTA_BUTTON - 0.3, CTA_BUTTON + 0.3))
 
@@ -529,7 +566,7 @@ class Renderer:
             mask = mask * (1 - m[..., 0]) + ring.mask()
         else:
             base = shade(self.footage(t))
-        out = base + glow(mask) if mask is not None else base
+        out = base + glow(mask * (1 + beat_pulse(t))) if mask is not None else base
         out = np.clip(out, 0, 255)
         trgb, ta = text_layer(self.typo, t)
         out = trgb * ta + out * (1 - ta)
@@ -553,9 +590,23 @@ def make_sfx(path, sr=48000):
         j = min(n, i + len(sig))
         out[i:j] += sig[: j - i]
 
+    # 110 BPM pulse: soft kick on every beat (stronger on downbeats) + shaker on the 8ths,
+    # so the pace is audible even though the classical bed breathes (rubato).
+    tt = np.arange(int(0.28 * sr)) / sr
+    kick = np.sin(2 * np.pi * (48 * tt + 90 * (1 - np.exp(-tt * 30)) / 30)) * np.exp(-tt * 14)
+    m = int(0.05 * sr)
+    shaker = rng.standard_normal(m).astype(np.float32)
+    shaker = np.diff(shaker, prepend=0) * np.exp(-np.arange(m) / sr * 70)
+    nb = int(DURATION / BEAT)
+    for k in range(nb):
+        tb = bt(k)
+        if tb > DURATION - 1.2:
+            break
+        add((kick * (0.30 if k % 4 == 0 else 0.20)).astype(np.float32), tb)
+        add((shaker * 0.035).astype(np.float32), tb + BEAT / 2)
     # soft thud when the price tag lands
     tt = np.arange(int(0.6 * sr)) / sr
-    add((np.sin(2 * np.pi * (70 * tt - 25 * tt ** 2)) * np.exp(-tt * 7) * 0.5).astype(np.float32), 30.66)
+    add((np.sin(2 * np.pi * (70 * tt - 25 * tt ** 2)) * np.exp(-tt * 7) * 0.5).astype(np.float32), snap(30.66))
     # airy shimmer swell for the ring reveal
     m = int(0.9 * sr)
     noise = rng.standard_normal(m).astype(np.float32)
@@ -580,9 +631,10 @@ def audio_filter():
     return (
         "[1:a]aresample=48000,highpass=f=80,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,"
         "loudnorm=I=-14:TP=-1.5:LRA=7,aresample=48000,apad,asplit=2[vo][key];"
-        f"[2:a]atrim=start={MUSIC_START}:duration={DURATION},asetpts=PTS-STARTPTS,aresample=48000,"
-        "loudnorm=I=-27:TP=-8:LRA=11,aresample=48000,"
-        f"afade=t=in:d=1.0,afade=t=out:st={DURATION - 1.5}:d=1.5,apad[mus];"
+        f"[2:a]atrim=start={MUSIC_START}:duration={DURATION * MUSIC_RATIO + 1:.3f},"
+        f"asetpts=PTS-STARTPTS,aresample=48000,rubberband=tempo={MUSIC_RATIO:.5f}:transients=crisp,"
+        f"atrim=0:{DURATION},loudnorm=I=-24:TP=-6:LRA=11,aresample=48000,"
+        f"afade=t=in:d=0.3,afade=t=out:st={DURATION - 1.5}:d=1.5,apad[mus];"
         "[mus][key]sidechaincompress=threshold=0.05:ratio=3:attack=40:release=500[duck];"
         "[3:a]aresample=48000,apad[sfx];"
         f"[vo][duck][sfx]amix=inputs=3:normalize=0:duration=first,atrim=0:{DURATION},"
