@@ -67,8 +67,8 @@ function front(c){return `
   <path d="M348,96 Q344,120 338,138" stroke="${RED}" stroke-width="3" fill="none"/>
   <path d="M258,146 L300,112 L342,146" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="2" filter="url(#soft)"/>
   ${cuffs(c)}
-  <image href="../logo/${c.chest}" x="345" y="178" width="118" filter="url(#emb)"/>
-  <image href="../logo/${c.sleeveIcon}" x="62" y="168" width="40" transform="rotate(28 82 188)" filter="url(#emb)"/>
+  <image href="../logo/${c.chest}" x="345" y="182" width="120" filter="url(#emb)"/>
+  <image href="../logo/${c.sleeveIcon}" x="60" y="172" width="44" transform="rotate(28 82 188)" filter="url(#emb)"/>
 </svg>`}
 function back(c){return `
 <svg viewBox="0 0 600 760" width="600" height="760" filter="url(#drop)">
@@ -85,8 +85,8 @@ function back(c){return `
   <text x="300" y="560" text-anchor="middle" font-family="Saira" font-weight="800" font-size="30" letter-spacing="4" fill="${c.text}">KERETA PILIHAN ANDA</text>
   <text x="300" y="596" text-anchor="middle" font-family="Saira" font-weight="500" font-size="24" letter-spacing="6" fill="${RED}">IKUT BAJET ANDA</text>
 </svg>`}
-const navy={base:NAVY,inner:'#050d1c',collar:'#0d2145',cuff:'#0d2145',button:'#e8e8e8',fold:.55,chest:'logo-stacked-white.svg',sleeveIcon:'icon-white.svg',back:'logo-stacked-white.svg',text:'#fff'};
-const white={base:'#f8f8f6',inner:'#d9d9d6',collar:NAVY,cuff:NAVY,button:'#ffffff',fold:.18,chest:'logo-stacked.svg',sleeveIcon:'icon.svg',back:'logo-stacked.svg',text:NAVY};
+const navy={base:NAVY,inner:'#050d1c',collar:'#0d2145',cuff:'#0d2145',button:'#e8e8e8',fold:.55,chest:'sulaman/sulaman-stacked-white.svg',sleeveIcon:'sulaman/sulaman-icon-white.svg',back:'logo-stacked-white.svg',text:'#fff'};
+const white={base:'#f8f8f6',inner:'#d9d9d6',collar:NAVY,cuff:NAVY,button:'#ffffff',fold:.18,chest:'sulaman/sulaman-stacked-navy.svg',sleeveIcon:'sulaman/sulaman-icon-navy.svg',back:'logo-stacked.svg',text:NAVY};
 const shirts=[[front(navy),'DEPAN','Navy · logo sulam dada kiri',0],[back(navy),'BELAKANG','Navy · cetakan belakang',600],[front(white),'DEPAN','Putih · versi alternatif',1200]];
 document.getElementById('shirts').innerHTML=shirts.map(([s,l,sub,x])=>`<div class="shirt" style="left:${x}px">${s}</div><div class="label" style="left:${x}px">${l}<small>${sub}</small></div>`).join('');
 </script>

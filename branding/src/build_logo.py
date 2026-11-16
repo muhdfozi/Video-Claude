@@ -36,6 +36,7 @@ def text_path(font, text, size, x, y, tracking=0.0, anchor="start"):
 
 
 VARIANT = "key"
+EMB = False  # embroidery mode: thicker details, no hairlines
 APP_T = {"cap": "translate(78 74) scale(1.6)", "shield": "translate(70 40) scale(1.75)"}
 
 
@@ -64,22 +65,26 @@ def icon(main=NAVY, accent=RED, cutout=WHITE, variant=None):
     elif variant == "key":
         # key blade with cut teeth on the left, rounded tip
         parts.append(f'<path d="M30,64 H54 V204 Q54,214 44,214 H40 V202 H30 V190 H40 V180 H30 V168 H40 V158 H30 Z" fill="{main}"/>')
-        parts.append(f'<rect x="45" y="150" width="4" height="56" rx="2" fill="{cutout}" opacity=".9"/>')
+        if not EMB:
+            parts.append(f'<rect x="45" y="150" width="4" height="56" rx="2" fill="{cutout}" opacity=".9"/>')
     else:
         parts.append(f'<rect x="30" y="64" width="24" height="142" fill="{main}"/>')
     # gauge ticks inside hole
-    for k in range(9):
+    for k in (range(0, 9, 2) if EMB else range(9)):
         a = math.radians(-215 + k * (250 / 8))
         r1, r2 = (ri - 13, ri - 5) if k % 2 == 0 else (ri - 10, ri - 5)
+        if EMB:
+            r1, r2 = ri - 15, ri - 6
         x1, y1 = cx + r1 * math.cos(a), cy + r1 * math.sin(a)
         x2, y2 = cx + r2 * math.cos(a), cy + r2 * math.sin(a)
         col = accent if k >= 7 else main
         parts.append(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
-                     f'stroke="{col}" stroke-width="3.6" stroke-linecap="round"/>')
+                     f'stroke="{col}" stroke-width="{6.5 if EMB else 3.6}" stroke-linecap="round"/>')
     # needle pointing high
     a = math.radians(-35)
     tipx, tipy = cx + 30 * math.cos(a), cy + 30 * math.sin(a)
-    px, py = 4.5 * math.cos(a + math.pi / 2), 4.5 * math.sin(a + math.pi / 2)
+    nw = 6.5 if EMB else 4.5
+    px, py = nw * math.cos(a + math.pi / 2), nw * math.sin(a + math.pi / 2)
     parts.append(f'<path d="M{cx + px:.1f},{cy + py:.1f} L{tipx:.1f},{tipy:.1f} L{cx - px:.1f},{cy - py:.1f} Z" fill="{accent}"/>')
     parts.append(f'<circle cx="{cx}" cy="{cy}" r="7" fill="{main}"/>')
     parts.append(f'<circle cx="{cx}" cy="{cy}" r="2.6" fill="{cutout}"/>')
@@ -109,9 +114,9 @@ def tagline(x, y, size, width, color, text="YOUR PROFESSIONAL RECOND ADVISOR"):
     return f'<path d="{d}" fill="{color}"/>'
 
 
-def svg(w, h, body, bg=None):
-    bgr = f'<rect width="{w}" height="{h}" fill="{bg}"/>' if bg else ""
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}">{bgr}{body}</svg>'
+def svg(w, h, body, bg=None, y0=0):
+    bgr = f'<rect y="{y0}" width="{w}" height="{h}" fill="{bg}"/>' if bg else ""
+    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 {y0} {w} {h}" width="{w}" height="{h}">{bgr}{body}</svg>'
 
 
 def horizontal(main=NAVY, accent=RED, cutout=WHITE, sub=None, bg=None):
@@ -139,6 +144,23 @@ def stacked(main=NAVY, accent=RED, cutout=WHITE, sub=None, bg=None):
     return svg(W, 460, body, bg)
 
 
+def horizontal_emb(main=NAVY, accent=RED, cutout=WHITE):
+    X0 = 176
+    wm, ww = wordmark(X0, 172, 96, main, accent)
+    body = (f'<g transform="translate(10 0)">{icon(main, accent, cutout)}</g>'
+            f'<g transform="skewX(-9) translate(42 0)">{wm}</g>')
+    return svg(int(X0 + ww + 44), 176, body, y0=50)
+
+
+def stacked_emb(main=NAVY, accent=RED, cutout=WHITE):
+    W = 560
+    _, ww = wordmark(0, 0, 96, main, accent)
+    wm, _ = wordmark((W - ww) / 2 + 36, 338, 96, main, accent)
+    body = (f'<g transform="translate({W / 2 - 112} 18) scale(1.15)">{icon(main, accent, cutout)}</g>'
+            f'<g transform="skewX(-9)">{wm}</g>')
+    return svg(W, 300, body, y0=66)
+
+
 def write(name, content):
     with open(os.path.join(OUT, name), "w") as f:
         f.write(content)
@@ -156,4 +178,13 @@ write("icon.svg", svg(220, 220, f'<g transform="translate(0 4)">{icon()}</g>'))
 write("icon-white.svg", svg(220, 220, f'<g transform="translate(0 4)">{icon(WHITE, RED, NAVY)}</g>'))
 write("icon-app.svg", svg(512, 512, f'<rect width="512" height="512" rx="112" fill="{NAVY}"/>'
                          f'<g transform="{APP_T.get(VARIANT, "translate(96 34) scale(1.6)")}">{icon(WHITE, RED, NAVY)}</g>'))
+EMB = True
+os.makedirs(os.path.join(OUT, "sulaman"), exist_ok=True)
+write("sulaman/sulaman-stacked-navy.svg", stacked_emb())
+write("sulaman/sulaman-stacked-white.svg", stacked_emb(WHITE, RED, NAVY))
+write("sulaman/sulaman-horizontal-navy.svg", horizontal_emb())
+write("sulaman/sulaman-horizontal-white.svg", horizontal_emb(WHITE, RED, NAVY))
+write("sulaman/sulaman-icon-navy.svg", svg(212, 170, f'<g transform="translate(18 0)">{icon()}</g>', y0=54))
+write("sulaman/sulaman-icon-white.svg", svg(212, 170, f'<g transform="translate(18 0)">{icon(WHITE, RED, NAVY)}</g>', y0=54))
+EMB = False
 print("ok", hw)
