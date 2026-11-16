@@ -54,7 +54,7 @@ def icon(main=NAVY, accent=RED, cutout=WHITE, variant=None):
     for i, (y, l) in enumerate([(112, 30), (128, 22), (144, 14)]):
         parts.append(f'<rect x="{26 - l - 6}" y="{y}" width="{l}" height="7" rx="3.5" fill="{accent}"/>')
     # stem + bowl (even-odd hole)
-    bowl = (f"M52,64 H{cx} A{ro},{ro} 0 0 1 {cx},{cy + ro} H52 Z "
+    bowl = (f"M40,64 H{cx} A{ro},{ro} 0 0 1 {cx},{cy + ro} H40 Z "
             f"M54,{cy - ri} V{cy + ri} H{cx} A{ri},{ri} 0 0 0 {cx},{cy - ri} Z")
     parts.append(f'<path d="{bowl}" fill="{main}" fill-rule="evenodd"/>')
     if variant == "tie":
@@ -65,9 +65,6 @@ def icon(main=NAVY, accent=RED, cutout=WHITE, variant=None):
         # key blade with cut teeth on the left, rounded tip
         parts.append(f'<path d="M30,64 H54 V204 Q54,214 44,214 H40 V202 H30 V190 H40 V180 H30 V168 H40 V158 H30 Z" fill="{main}"/>')
         parts.append(f'<rect x="45" y="150" width="4" height="56" rx="2" fill="{cutout}" opacity=".9"/>')
-        # keyring hole + red ring
-        parts.append(f'<circle cx="42" cy="82" r="6.5" fill="{cutout}"/>')
-        parts.append(f'<circle cx="24" cy="70" r="14" fill="none" stroke="{accent}" stroke-width="4.5"/>')
     else:
         parts.append(f'<rect x="30" y="64" width="24" height="142" fill="{main}"/>')
     # gauge ticks inside hole
