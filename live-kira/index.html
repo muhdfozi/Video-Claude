@@ -23,9 +23,14 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--red-soft);outline-offset:2px}
 .num{font-variant-numeric:tabular-nums}
 
-.app{display:grid;grid-template-rows:auto 1fr auto;gap:12px;height:100%;min-height:600px}
+.app{display:grid;grid-template-columns:1fr 1fr;gap:12px;height:100%;min-height:600px}
+.opcol,.stagecol{display:grid;grid-template-rows:auto 1fr;gap:12px;min-height:0;min-width:0}
+.stagecol{grid-template-rows:auto 1fr auto}
+.app.full{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+.app.full .op{display:none}
+.app.full .opcol{grid-template-rows:auto}
 /* top bar */
-.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;min-height:48px}
 .top .logo{height:38px;width:auto;display:block}
 .live{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 10px;border-radius:999px;background:var(--red);font:800 15px var(--f-label);letter-spacing:2px}
 .live i{width:9px;height:9px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
@@ -34,9 +39,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 .tbtn{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:10px;background:var(--navy-2);border:1px solid var(--line);font:600 15px var(--f-label);letter-spacing:1px;color:var(--muted)}
 .tbtn[aria-pressed="true"]{color:var(--ink);border-color:var(--red)}
 
-.main{display:grid;grid-template-columns:minmax(300px,34%) 1fr;gap:12px;min-height:0}
-.app.full .main{grid-template-columns:1fr}
-.app.full .op{display:none}
 
 /* operator panel */
 .op{background:var(--navy-2);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:0;overflow:auto}
@@ -47,10 +49,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 .gaji .rm{font:800 22px var(--f-label);color:var(--muted)}
 .gaji .v{font:44px var(--f-display);letter-spacing:1px;line-height:1.1}
 .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.keys button{height:54px;border-radius:12px;background:var(--navy-3);font:26px var(--f-display);transition:transform .05s}
+.keys button{height:56px;border-radius:12px;background:var(--navy-3);font:26px var(--f-display);transition:transform .05s}
 .keys button:active{transform:scale(.96);background:var(--line)}
 .keys .fn{font:700 18px var(--f-label);letter-spacing:1px;color:var(--muted)}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.op>*{flex-shrink:0}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .chip{padding:8px 12px;border-radius:999px;background:var(--navy);border:1px solid var(--line);font:600 15px var(--f-label);letter-spacing:.5px;color:var(--muted)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--navy);border-color:var(--ink)}
 .go{height:62px;border-radius:14px;background:var(--red);font:22px var(--f-display);letter-spacing:1px;box-shadow:0 8px 24px rgba(225,6,0,.35)}
@@ -61,19 +65,17 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 /* stage */
 .stage{background:linear-gradient(180deg,var(--navy-2),var(--navy) 60%);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px;min-height:0;overflow:auto;position:relative}
 .hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
-.who{font:700 20px var(--f-body);color:var(--muted);min-width:0;overflow-wrap:anywhere}
-.who b{color:var(--ink)}
 .salary{font:800 20px var(--f-label);letter-spacing:2px;color:var(--muted);margin-top:4px}
-.salary b{font:40px var(--f-display);color:var(--ink);letter-spacing:1px;margin-left:6px}
+.salary b{font:36px var(--f-display);color:var(--ink);letter-spacing:1px;margin-left:6px}
 .maxline{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:baseline}
 .maxline .k{font:600 15px var(--f-label);letter-spacing:2px;color:var(--muted)}
 .maxline .big{font:34px var(--f-display);color:var(--red-soft)}
 .maxline .count{font:800 20px var(--f-label);letter-spacing:1px;background:var(--ink);color:var(--navy);padding:2px 12px;border-radius:8px}
-.gauge{width:200px;height:auto;display:block}
+.gauge{width:170px;height:auto;display:block}
 .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .filters .sep{width:1px;height:24px;background:var(--line);margin:0 4px}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;align-content:start}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;align-content:start}
 .car{background:var(--navy-2);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;animation:pop .35s both}
 @keyframes pop{from{opacity:.0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .car .tier{position:absolute;top:12px;right:12px;font:800 13px var(--f-label);letter-spacing:1.5px;padding:3px 9px;border-radius:999px}
@@ -102,8 +104,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 
 /* bottom ticker */
 .cta{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--red);border-radius:14px;padding:10px 16px}
-.cta .say{font:800 20px var(--f-label);letter-spacing:1.5px;flex:1;min-width:0}
-.cta .ph{font:22px var(--f-display);letter-spacing:1px;user-select:all}
+.cta .say{font:800 17px var(--f-label);letter-spacing:1.2px;flex:1;min-width:0;white-space:nowrap}
+.cta .ph{font:20px var(--f-display);letter-spacing:1px;user-select:all}
 .cta .tag{font:800 18px var(--f-label);letter-spacing:1px;background:var(--navy);padding:4px 10px;border-radius:8px}
 .note{font:500 12px var(--f-body);color:var(--muted)}
 
@@ -119,7 +121,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 .help{font:400 13px/1.5 var(--f-body);color:var(--muted);margin:0}
 
 @media (max-width:900px){
-  .main{grid-template-columns:1fr}
+  .app{grid-template-columns:1fr}
   .app{height:auto}
   .hero{grid-template-columns:1fr}
   .gauge{width:170px}
@@ -128,18 +130,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
 </style>
 
 <div class="app" id="app">
-  <header class="top">
-    <svg class="logo" role="img" aria-label="ProfPoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 50 713 176" width="713" height="176"><g transform="translate(10 0)"><g transform="skewX(-9) translate(18 0)"><rect x="-10" y="112" width="30" height="7" rx="3.5" fill="#E10600"/><rect x="-2" y="128" width="22" height="7" rx="3.5" fill="#E10600"/><rect x="6" y="144" width="14" height="7" rx="3.5" fill="#E10600"/><path d="M40,64 H100 A58,58 0 0 1 100,180 H40 Z M54,82 V162 H100 A40,40 0 0 0 100,82 Z" fill="#FFFFFF" fill-rule="evenodd"/><path d="M30,64 H54 V204 Q54,214 44,214 H40 V202 H30 V190 H40 V180 H30 V168 H40 V158 H30 Z" fill="#FFFFFF"/><line x1="79.5" y1="136.3" x2="72.1" y2="141.5" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="77.8" y1="110.5" x2="69.8" y2="106.3" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="100.0" y1="97.0" x2="100.0" y2="88.0" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="122.2" y1="110.5" x2="130.2" y2="106.3" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="120.5" y1="136.3" x2="127.9" y2="141.5" stroke="#E10600" stroke-width="6.5" stroke-linecap="round"/><path d="M103.7,127.3 L124.6,104.8 L96.3,116.7 Z" fill="#E10600"/><circle cx="100" cy="122" r="7" fill="#FFFFFF"/><circle cx="100" cy="122" r="2.6" fill="#0A1A33"/></g></g><g transform="skewX(-9) translate(42 0)"><path d="M181.76 104.8H222.07999999999998Q232.16 104.8 236.72 109.36Q241.28 113.92 241.28 124.0V133.6Q241.28 143.68 236.72 148.24Q232.16 152.8 222.07999999999998 152.8H199.04V172.0H181.76ZM224.0 124.0Q224.0 118.24000000000001 218.24 118.24000000000001H199.04V139.36H218.24Q224.0 139.36 224.0 133.6ZM249.92 104.8H290.24Q300.32 104.8 304.88 109.36Q309.44 113.92 309.44 124.0V132.64Q309.44 140.608 306.79999999999995 145.024Q304.15999999999997 149.44 298.4 150.88L310.4 172.0H291.68L280.64 151.84H267.2V172.0H249.92ZM292.15999999999997 124.0Q292.15999999999997 118.24000000000001 286.4 118.24000000000001H267.2V138.4H286.4Q292.15999999999997 138.4 292.15999999999997 132.64ZM362.23999999999995 123.03999999999999Q362.23999999999995 117.28 356.47999999999996 117.28H340.15999999999997Q334.4 117.28 334.4 123.03999999999999V153.76Q334.4 159.52 340.15999999999997 159.52H356.47999999999996Q362.23999999999995 159.52 362.23999999999995 153.76ZM379.52 153.76Q379.52 163.84 374.96 168.4Q370.4 172.96 360.32 172.96H336.32Q326.23999999999995 172.96 321.67999999999995 168.4Q317.11999999999995 163.84 317.11999999999995 153.76V123.03999999999999Q317.11999999999995 112.96000000000001 321.67999999999995 108.4Q326.23999999999995 103.84 336.32 103.84H360.32Q370.4 103.84 374.96 108.4Q379.52 112.96000000000001 379.52 123.03999999999999ZM406.40000000000003 172.0H389.12V104.8H442.40000000000003V118.24000000000001H406.40000000000003V134.07999999999998H434.72V147.52H406.40000000000003Z" fill="#FFFFFF"/><path d="M452.96 104.8H493.28Q503.36 104.8 507.92 109.36Q512.48 113.92 512.48 124.0V133.6Q512.48 143.68 507.92 148.24Q503.36 152.8 493.28 152.8H470.24V172.0H452.96ZM495.2 124.0Q495.2 118.24000000000001 489.44 118.24000000000001H470.24V139.36H489.44Q495.2 139.36 495.2 133.6ZM564.32 123.03999999999999Q564.32 117.28 558.5600000000001 117.28H542.24Q536.48 117.28 536.48 123.03999999999999V153.76Q536.48 159.52 542.24 159.52H558.5600000000001Q564.32 159.52 564.32 153.76ZM581.6 153.76Q581.6 163.84 577.04 168.4Q572.48 172.96 562.4 172.96H538.4Q528.32 172.96 523.76 168.4Q519.2 163.84 519.2 153.76V123.03999999999999Q519.2 112.96000000000001 523.76 108.4Q528.32 103.84 538.4 103.84H562.4Q572.48 103.84 577.04 108.4Q581.6 112.96000000000001 581.6 123.03999999999999ZM586.4000000000001 172.0V159.04Q593.888 159.52 601.7600000000001 159.52Q603.9680000000001 159.52 605.2640000000001 158.224Q606.5600000000001 156.928 606.5600000000001 154.72V118.24000000000001H594.08V104.8H623.84V154.72Q623.84 164.128 619.424 168.54399999999998Q615.008 172.96 605.84 172.96Q596.672 172.96 586.4000000000001 172.0ZM667.04 172.0H632.48V158.56H641.12V118.24000000000001H632.48V104.8H667.04V118.24000000000001H658.4V158.56H667.04Z" fill="#E10600"/></g></svg>
-    <span class="live"><i></i>LIVE KIRA</span>
-    <span class="sp"></span>
-    <button class="tbtn" id="btnFull" aria-pressed="false" type="button">⤢ Paparan Penuh</button>
-    <button class="tbtn" id="btnSet" type="button">⚙ Tetapan &amp; Stok</button>
-  </header>
-
-  <div class="main">
+  <div class="opcol">
+    <div class="top">
+      <button class="tbtn" id="btnFull" aria-pressed="false" type="button">⤢ Paparan Penuh</button>
+      <button class="tbtn" id="btnSet" type="button">⚙ Tetapan &amp; Stok</button>
+    </div>
     <section class="op" aria-label="Panel input">
-      <div class="field"><label class="lbl" for="nama">Nama penonton</label>
-        <input class="inp" id="nama" placeholder="@nama_tiktok" autocomplete="off"></div>
       <div class="field"><span class="lbl">Gaji bersih sebulan</span>
         <div class="gaji"><span class="rm">RM</span><span class="v num" id="gajiV">0</span></div></div>
       <div class="keys" id="keys">
@@ -150,20 +146,27 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
       </div>
       <div class="field"><label class="lbl" for="komit">Komitmen bulanan lain (RM)</label>
         <input class="inp num" id="komit" inputmode="numeric" placeholder="0 · PTPTN, rumah, kad kredit"></div>
-      <div class="field"><span class="lbl">Deposit</span><div class="row" id="depChips"></div></div>
-      <div class="field"><span class="lbl">Tempoh pinjaman</span><div class="row" id="yrChips"></div></div>
+      <div class="pair">
+        <div class="field"><span class="lbl">Deposit</span><div class="row" id="depChips"></div></div>
+        <div class="field"><span class="lbl">Tempoh pinjaman</span><div class="row" id="yrChips"></div></div>
+      </div>
       <button class="go" id="go" type="button">PAPAR KERETA LAYAK</button>
-      <div class="field"><span class="lbl">Penonton tadi</span><div class="hist" id="hist"></div></div>
+      <div class="field"><span class="lbl">Gaji tadi</span><div class="hist" id="hist"></div></div>
     </section>
-
-    <section class="stage" aria-live="polite" id="stage"></section>
   </div>
 
-  <footer class="cta">
-    <span class="say">BERKENAN? KOMEN "NAK" + MODEL · WHATSAPP</span>
-    <span class="ph">018-777 3474</span>
-    <span class="tag">#trustedSAever</span>
-  </footer>
+  <div class="stagecol">
+    <header class="top">
+      <svg class="logo" role="img" aria-label="ProfPoji" xmlns="http://www.w3.org/2000/svg" viewBox="0 50 713 176" width="713" height="176"><g transform="translate(10 0)"><g transform="skewX(-9) translate(18 0)"><rect x="-10" y="112" width="30" height="7" rx="3.5" fill="#E10600"/><rect x="-2" y="128" width="22" height="7" rx="3.5" fill="#E10600"/><rect x="6" y="144" width="14" height="7" rx="3.5" fill="#E10600"/><path d="M40,64 H100 A58,58 0 0 1 100,180 H40 Z M54,82 V162 H100 A40,40 0 0 0 100,82 Z" fill="#FFFFFF" fill-rule="evenodd"/><path d="M30,64 H54 V204 Q54,214 44,214 H40 V202 H30 V190 H40 V180 H30 V168 H40 V158 H30 Z" fill="#FFFFFF"/><line x1="79.5" y1="136.3" x2="72.1" y2="141.5" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="77.8" y1="110.5" x2="69.8" y2="106.3" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="100.0" y1="97.0" x2="100.0" y2="88.0" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="122.2" y1="110.5" x2="130.2" y2="106.3" stroke="#FFFFFF" stroke-width="6.5" stroke-linecap="round"/><line x1="120.5" y1="136.3" x2="127.9" y2="141.5" stroke="#E10600" stroke-width="6.5" stroke-linecap="round"/><path d="M103.7,127.3 L124.6,104.8 L96.3,116.7 Z" fill="#E10600"/><circle cx="100" cy="122" r="7" fill="#FFFFFF"/><circle cx="100" cy="122" r="2.6" fill="#0A1A33"/></g></g><g transform="skewX(-9) translate(42 0)"><path d="M181.76 104.8H222.07999999999998Q232.16 104.8 236.72 109.36Q241.28 113.92 241.28 124.0V133.6Q241.28 143.68 236.72 148.24Q232.16 152.8 222.07999999999998 152.8H199.04V172.0H181.76ZM224.0 124.0Q224.0 118.24000000000001 218.24 118.24000000000001H199.04V139.36H218.24Q224.0 139.36 224.0 133.6ZM249.92 104.8H290.24Q300.32 104.8 304.88 109.36Q309.44 113.92 309.44 124.0V132.64Q309.44 140.608 306.79999999999995 145.024Q304.15999999999997 149.44 298.4 150.88L310.4 172.0H291.68L280.64 151.84H267.2V172.0H249.92ZM292.15999999999997 124.0Q292.15999999999997 118.24000000000001 286.4 118.24000000000001H267.2V138.4H286.4Q292.15999999999997 138.4 292.15999999999997 132.64ZM362.23999999999995 123.03999999999999Q362.23999999999995 117.28 356.47999999999996 117.28H340.15999999999997Q334.4 117.28 334.4 123.03999999999999V153.76Q334.4 159.52 340.15999999999997 159.52H356.47999999999996Q362.23999999999995 159.52 362.23999999999995 153.76ZM379.52 153.76Q379.52 163.84 374.96 168.4Q370.4 172.96 360.32 172.96H336.32Q326.23999999999995 172.96 321.67999999999995 168.4Q317.11999999999995 163.84 317.11999999999995 153.76V123.03999999999999Q317.11999999999995 112.96000000000001 321.67999999999995 108.4Q326.23999999999995 103.84 336.32 103.84H360.32Q370.4 103.84 374.96 108.4Q379.52 112.96000000000001 379.52 123.03999999999999ZM406.40000000000003 172.0H389.12V104.8H442.40000000000003V118.24000000000001H406.40000000000003V134.07999999999998H434.72V147.52H406.40000000000003Z" fill="#FFFFFF"/><path d="M452.96 104.8H493.28Q503.36 104.8 507.92 109.36Q512.48 113.92 512.48 124.0V133.6Q512.48 143.68 507.92 148.24Q503.36 152.8 493.28 152.8H470.24V172.0H452.96ZM495.2 124.0Q495.2 118.24000000000001 489.44 118.24000000000001H470.24V139.36H489.44Q495.2 139.36 495.2 133.6ZM564.32 123.03999999999999Q564.32 117.28 558.5600000000001 117.28H542.24Q536.48 117.28 536.48 123.03999999999999V153.76Q536.48 159.52 542.24 159.52H558.5600000000001Q564.32 159.52 564.32 153.76ZM581.6 153.76Q581.6 163.84 577.04 168.4Q572.48 172.96 562.4 172.96H538.4Q528.32 172.96 523.76 168.4Q519.2 163.84 519.2 153.76V123.03999999999999Q519.2 112.96000000000001 523.76 108.4Q528.32 103.84 538.4 103.84H562.4Q572.48 103.84 577.04 108.4Q581.6 112.96000000000001 581.6 123.03999999999999ZM586.4000000000001 172.0V159.04Q593.888 159.52 601.7600000000001 159.52Q603.9680000000001 159.52 605.2640000000001 158.224Q606.5600000000001 156.928 606.5600000000001 154.72V118.24000000000001H594.08V104.8H623.84V154.72Q623.84 164.128 619.424 168.54399999999998Q615.008 172.96 605.84 172.96Q596.672 172.96 586.4000000000001 172.0ZM667.04 172.0H632.48V158.56H641.12V118.24000000000001H632.48V104.8H667.04V118.24000000000001H658.4V158.56H667.04Z" fill="#E10600"/></g></svg>
+      <span class="live"><i></i>LIVE KIRA</span>
+    </header>
+    <section class="stage" aria-live="polite" id="stage"></section>
+    <footer class="cta">
+      <span class="say">KOMEN "NAK" + MODEL</span>
+      <span class="ph">018-777 3474</span>
+      <span class="tag">#trustedSAever</span>
+    </footer>
+  </div>
 </div>
 
 <div class="sheet" id="sheet" hidden>
@@ -233,8 +236,8 @@ Toyota Land Cruiser 300 ZX | 2023 | JP | 380000 | SUV`;
 const DEFAULTS = {rate:2.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
 const store = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let S = Object.assign({}, DEFAULTS, store.get('pp-live-settings-v2') || {});
-let st = {nama:'@contoh_penonton', gaji:4500, komit:0, type:'Semua', origin:'Semua'};
-let hist = store.get('pp-live-hist') || [];
+let st = {gaji:4500, komit:0, type:'Semua', origin:'Semua'};
+let hist = store.get('pp-live-hist-v2') || [];
 let shown = true;
 
 const $ = id => document.getElementById(id);
@@ -301,7 +304,6 @@ function render(){
   stage.innerHTML = `
     <div class="hero">
       <div style="min-width:0">
-        <div class="who">Untuk <b>${esc(st.nama||'penonton')}</b></div>
         <div class="salary">GAJI BERSIH <b class="num">${rm(g)}</b></div>
         <div class="maxline">
           <span class="k">BULANAN MAKSIMUM</span><span class="big num">${rm(mx)}</span>
@@ -347,20 +349,19 @@ function chips(el, vals, cur, fmt, set){
   el.onclick = e=>{ const b=e.target.closest('button'); if(!b) return; set(+b.dataset.v); el.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed', c===b)); render(); };
 }
 chips($('depChips'), [0,10,20,30], S.dep, v=>v+'%', v=>{S.dep=v; store.set('pp-live-settings-v2',S);});
-chips($('yrChips'), [5,7,9], S.years, v=>v+' tahun', v=>{S.years=v; store.set('pp-live-settings-v2',S);});
+chips($('yrChips'), [5,7,9], S.years, v=>v+' thn', v=>{S.years=v; store.set('pp-live-settings-v2',S);});
 $('komit').addEventListener('input', e=>{ st.komit = +e.target.value.replace(/\D/g,'') || 0; if(shown) render(); });
-$('nama').addEventListener('input', e=>{ st.nama = e.target.value.trim(); if(shown) render(); });
 $('go').addEventListener('click', ()=>{
   if(!st.gaji) return;
   shown = true; render();
-  hist = [{n:st.nama||'penonton', g:st.gaji, k:st.komit}, ...hist.filter(h=>!(h.n===st.nama && h.g===st.gaji))].slice(0,8);
-  store.set('pp-live-hist', hist); drawHist();
+  hist = [{g:st.gaji, k:st.komit}, ...hist.filter(h=>!(h.g===st.gaji && h.k===st.komit))].slice(0,8);
+  store.set('pp-live-hist-v2', hist); drawHist();
 });
 function drawHist(){
-  $('hist').innerHTML = hist.length ? hist.map((h,i)=>`<button type="button" data-i="${i}">${esc(h.n)} · ${rm(h.g)}</button>`).join('') : '<span class="note">Belum ada.</span>';
+  $('hist').innerHTML = hist.length ? hist.map((h,i)=>`<button type="button" data-i="${i}">${rm(h.g)}${h.k?` · komitmen ${rm(h.k)}`:''}</button>`).join('') : '<span class="note">Belum ada.</span>';
 }
 $('hist').addEventListener('click', e=>{ const b=e.target.closest('button'); if(!b) return; const h=hist[+b.dataset.i];
-  st.nama=h.n; st.gaji=h.g; st.komit=h.k; $('nama').value=h.n; $('komit').value=h.k||''; drawGaji(); shown=true; render(); });
+  st.gaji=h.g; st.komit=h.k; $('komit').value=h.k||''; drawGaji(); shown=true; render(); });
 $('stage').addEventListener('click', e=>{ const b=e.target.closest('[data-f]'); if(!b) return; st[b.dataset.f]=b.dataset.v; render(); });
 $('btnFull').addEventListener('click', e=>{ const on = !$('app').classList.contains('full'); $('app').classList.toggle('full', on); e.currentTarget.setAttribute('aria-pressed', on); });
 
@@ -375,5 +376,5 @@ $('sSave').addEventListener('click', ()=>{
   S.stock = $('sStock').value; store.set('pp-live-settings-v2', S); $('sheet').hidden=true; render();
 });
 
-$('nama').value = st.nama; drawGaji(); drawHist(); render();
+drawGaji(); drawHist(); render();
 </script>
