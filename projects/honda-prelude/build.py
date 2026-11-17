@@ -17,6 +17,20 @@ _spec = importlib.util.spec_from_file_location("edl", _edl_path); edl = importli
 SEGMENTS, GRAPHICS, KEYPOINTS = edl.SEGMENTS, edl.GRAPHICS, getattr(edl, "KEYPOINTS", [])
 WORD_FIX, TOKEN_FIX, KEYWORDS = getattr(edl, "WORD_FIX", {}), getattr(edl, "TOKEN_FIX", {}), getattr(edl, "KEYWORDS", set())
 MUSIC = getattr(edl, "MUSIC", None)
+VOICE = getattr(edl, "VOICE", "")            # "studio": AI-cleaned source (AUDIO) + broadcast mic chain below
+# "High-end mic in a studio": the noise is already removed by enhance_voice.py (DeepFilterNet3); this chain gives the
+# tonal signature of a large-diaphragm condenser + broadcast processing: rumble cut, gentle warmth, de-box,
+# presence and air, de-essing, two-stage compression (smooth leveller + fast peak control), loudness.
+STUDIO_CHAIN = ("highpass=f=75:poles=2,"
+                "equalizer=f=110:t=q:w=0.9:g=2.0,"          # chest / proximity warmth
+                "equalizer=f=320:t=q:w=1.1:g=-3.0,"         # remove boxiness (car park / phone mic)
+                "equalizer=f=900:t=q:w=1.4:g=-1.0,"         # tame honk
+                "equalizer=f=4200:t=q:w=1.2:g=2.5,"         # presence / intelligibility
+                "treble=g=2.5:f=11000:width_type=q:width=0.7,"  # air
+                "deesser=i=0.45:m=0.5:f=0.5,"
+                "acompressor=threshold=0.125:ratio=2.5:attack=20:release=250:knee=4:makeup=1.4,"
+                "acompressor=threshold=0.35:ratio=6:attack=2:release=60:makeup=1.0,"
+                "loudnorm=I=-15:TP=-2:LRA=7")
 THEME = getattr(edl, "THEME", "clean")      # "clean" (Prelude look) or "paper" (collage look)
 NO_ZOOM = getattr(edl, "NO_ZOOM", False)   # source has burned-in graphics: never crop/zoom
 LAYOUT = getattr(edl, "LAYOUT", None)       # dict(kind="inset", box=(x,y,w,h) in 1080x1920, border=16): video as a photo on paper
@@ -412,9 +426,10 @@ def write_wav(p, x):
 vraw = os.path.join(args.work, "voice_raw.wav"); vproc = os.path.join(args.work, "voice_proc.wav")
 write_wav(vraw, voice)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vraw, "-af",
+                (STUDIO_CHAIN if VOICE == "studio" else
                 "highpass=f=90,afftdn=nr=8:nf=-38,equalizer=f=250:t=q:w=1.2:g=-2.5,equalizer=f=3500:t=q:w=1.5:g=2,"
                 "acompressor=threshold=0.08:ratio=3:attack=5:release=120:makeup=1.6,"
-                "loudnorm=I=-15:TP=-2:LRA=9", "-ar", str(SR), vproc], check=True)
+                "loudnorm=I=-15:TP=-2:LRA=9"), "-ar", str(SR), vproc], check=True)
 mix = read_wav(vproc)[:n_total]
 if len(mix) < n_total: mix = np.vstack([mix, np.zeros((n_total - len(mix), 2), np.float32)])
 if MUSIC:

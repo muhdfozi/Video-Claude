@@ -55,6 +55,17 @@ Video walkaround: susun semula → hook soalan → kereta + harga → features (
 - Window kaca: titik akhir mesti DI DALAM segmen (bukan tepat pada `a1`), kalau tak elemen kekal sampai hujung.
 - Fail lain dalam Drive (Voiceover, Font Type) — semak dulu sama ada untuk video ini; jangan guna jika untuk subjek lain.
 
+## Suara "mic high-end dalam studio" (bila user minta)
+1. Buang bising dengan AI: `PYTHONPATH=/home/user/pystub python3 projects/honda-prelude/enhance_voice.py in48k.wav out_df.wav`
+   (DeepFilterNet3, `atten_lim_db=32` supaya tak bunyi "gated"). Setup sekali: `pip install deepfilternet`;
+   model via `git clone --depth 1 --filter=blob:none --sparse https://github.com/Rikorose/DeepFilterNet` +
+   `git sparse-checkout set models`, unzip `DeepFilterNet3.zip` ke `/home/user/dfmodel/DF3`; stub torchaudio di
+   `/home/user/pystub` (torchaudio tiada untuk torch ini). Hasil biasa: noise floor −31 → −52 dB, suara tak berubah.
+2. Dalam EDL: `AUDIO = "<out_df.wav>"`, `VOICE = "studio"` → rantaian `STUDIO_CHAIN` dalam build.py:
+   HPF 75 Hz, +2 dB @110 Hz (kehangatan), −3 dB @320 Hz (buang "kotak"), −1 dB @900 Hz, +2.5 dB @4.2 kHz (presence),
+   +2.5 dB shelf @11 kHz (air), de-esser, compressor 2 peringkat (leveller 2.5:1 + peak 6:1), loudnorm −15.
+3. Dalam preview, sertakan klip A/B 14 s (asal vs studio, tanpa muzik, MP3) supaya user boleh banding.
+
 ## Templat EDL ringkas
 ```python
 THEME = "glass"; ACCENT = "C8102E"; FACE = (0.47, 0.40)
