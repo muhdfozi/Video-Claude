@@ -17,10 +17,22 @@ _spec = importlib.util.spec_from_file_location("edl", _edl_path); edl = importli
 SEGMENTS, GRAPHICS, KEYPOINTS = edl.SEGMENTS, edl.GRAPHICS, getattr(edl, "KEYPOINTS", [])
 WORD_FIX, TOKEN_FIX, KEYWORDS = getattr(edl, "WORD_FIX", {}), getattr(edl, "TOKEN_FIX", {}), getattr(edl, "KEYWORDS", set())
 MUSIC = getattr(edl, "MUSIC", None)
+SOURCES = getattr(edl, "SOURCES", {})        # multi-clip edits: segment "vsrc" picks a file (default = --src)
+AMBIENT = getattr(edl, "AMBIENT", None)      # dict(file=..., lufs=-34): real location sound under a separate voiceover
 VOICE = getattr(edl, "VOICE", "")            # "studio": AI-cleaned source (AUDIO) + broadcast mic chain below
 # "High-end mic in a studio": the noise is already removed by enhance_voice.py (DeepFilterNet3); this chain gives the
 # tonal signature of a large-diaphragm condenser + broadcast processing: rumble cut, gentle warmth, de-box,
 # presence and air, de-essing, two-stage compression (smooth leveller + fast peak control), loudness.
+# "Recorded on location": voiceover from a quiet room made to sit in the footage — light cleanup, phone-mic-like
+# tone (no hyped air), short early reflections of a covered car park / showroom, gentle compression.
+LOCATION_CHAIN = ("highpass=f=85:poles=2,"
+                  "equalizer=f=200:t=q:w=1.0:g=-1.5,"
+                  "equalizer=f=3000:t=q:w=1.4:g=1.5,"
+                  "lowpass=f=13500,"
+                  "aecho=0.85:0.55:19|34|51:0.11|0.075|0.045,"
+                  "deesser=i=0.35:m=0.5:f=0.5,"
+                  "acompressor=threshold=0.125:ratio=2.5:attack=15:release=200:knee=4:makeup=1.3,"
+                  "loudnorm=I=-15:TP=-2:LRA=8")
 STUDIO_CHAIN = ("highpass=f=75:poles=2,"
                 "equalizer=f=110:t=q:w=0.9:g=2.0,"          # chest / proximity warmth
                 "equalizer=f=320:t=q:w=1.1:g=-3.0,"         # remove boxiness (car park / phone mic)
@@ -62,7 +74,9 @@ if args.mode == "final":
     _n, _d = (_fr.split(",")[0].split("\n")[0].split("/") + ["1"])[:2]
     OW, OH, FPS, SRC_MATRIX = 1080, 1920, round(float(_n) / float(_d)), ("bt2020" if "2020" in _cs else "bt709")   # fps follows source
 else:
-    OW, OH, FPS, SRC_MATRIX = 720, 1280, 30, "bt709"
+    _cs = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=color_space",
+                          "-of", "csv=p=0", args.src], capture_output=True, text=True).stdout.strip()
+    OW, OH, FPS, SRC_MATRIX = 720, 1280, 30, ("bt2020" if "2020" in _cs else "bt709")
 
 q = lambda t: round(t * GRID) / GRID          # quantise to source frame grid
 
@@ -426,12 +440,20 @@ def write_wav(p, x):
 vraw = os.path.join(args.work, "voice_raw.wav"); vproc = os.path.join(args.work, "voice_proc.wav")
 write_wav(vraw, voice)
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", vraw, "-af",
-                (STUDIO_CHAIN if VOICE == "studio" else
+                (STUDIO_CHAIN if VOICE == "studio" else LOCATION_CHAIN if VOICE == "location" else
                 "highpass=f=90,afftdn=nr=8:nf=-38,equalizer=f=250:t=q:w=1.2:g=-2.5,equalizer=f=3500:t=q:w=1.5:g=2,"
                 "acompressor=threshold=0.08:ratio=3:attack=5:release=120:makeup=1.6,"
                 "loudnorm=I=-15:TP=-2:LRA=9"), "-ar", str(SR), vproc], check=True)
 mix = read_wav(vproc)[:n_total]
 if len(mix) < n_total: mix = np.vstack([mix, np.zeros((n_total - len(mix), 2), np.float32)])
+if AMBIENT:
+    apath = os.path.join(args.work, "ambient_bed.wav")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-stream_loop", "-1", "-i", AMBIENT["file"], "-t", f"{TOTAL:.3f}", "-vn",
+                    "-af", f"highpass=f=60,lowpass=f=9000,loudnorm=I={AMBIENT.get('lufs', -34)}:TP=-9:LRA=6,afade=t=in:d=0.3,"
+                           f"afade=t=out:st={max(0, TOTAL - 1.0):.3f}:d=1.0", "-ac", "2", "-ar", str(SR), apath], check=True)
+    amb = read_wav(apath)[:n_total]
+    if len(amb) < n_total: amb = np.vstack([amb, np.zeros((n_total - len(amb), 2), np.float32)])
+    mix += amb
 if MUSIC:
     mpath = os.path.join(args.work, "music_bed.wav")
     fade_out = MUSIC.get("fade_out", 1.5)
@@ -579,7 +601,8 @@ for s in subs:
         if first >= n_frames: break
         continue
     off = first / FPS - s["o0"]
-    rd = subprocess.Popen(["ffmpeg", "-v", "quiet", "-ss", f"{s['v0'] + off:.4f}", "-i", args.src, "-an",
+    _src = SOURCES.get(s["seg"].get("vsrc"), args.src) if s["seg"].get("vsrc") else args.src
+    rd = subprocess.Popen(["ffmpeg", "-v", "quiet", "-ss", f"{s['v0'] + off:.4f}", "-i", _src, "-an",
                            "-frames:v", str(cnt + 2), "-vf",
                            (f"fps={FPS},colorspace=all=bt709:iall=bt2020:itrc=bt709:fast=0:format=yuv420p,"
                             f"scale=in_color_matrix=bt709:in_range=tv,format=" + PIX) if (SRC_MATRIX == "bt2020" and not args.hdr) else

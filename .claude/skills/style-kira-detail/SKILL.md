@@ -66,6 +66,14 @@ Video walkaround (susunan pilihan user): hook soalan → kereta + harga → **ki
    +2.5 dB shelf @11 kHz (air), de-esser, compressor 2 peringkat (leveller 2.5:1 + peak 6:1), loudnorm −15.
 3. Dalam preview, sertakan klip A/B 14 s (asal vs studio, tanpa muzik, MP3) supaya user boleh banding.
 
+## Voiceover berasingan + banyak klip ("nampak natural macam rakam di showroom")
+- `SOURCES = {key: path}` dan setiap segmen `vsrc=key, v=start`; `a=` ialah masa VOICEOVER. Segmen pendek ikut
+  panjang klip B-roll; padankan setiap ayat dengan shot yang ia sebut (dalaman → captain seat, side step → klip side step).
+- Buang semua pause VO (`VAD_DB ≈ -45` untuk rakaman bilik sunyi).
+- `VOICE = "location"` (HPF, EQ ringan, `aecho` pantulan awal pendek, tanpa sheen studio) +
+  `AMBIENT = dict(file=<klip walkaround dengan bunyi lokasi>, lufs=-33)` di bawah suara → bunyi rakam di lokasi.
+- Contoh: `projects/vellfire-z/edl.py`.
+
 ## Templat EDL ringkas
 ```python
 THEME = "glass"; ACCENT = "C8102E"; FACE = (0.47, 0.40)
