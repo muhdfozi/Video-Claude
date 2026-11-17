@@ -3,7 +3,7 @@ Voice: "high-end mic in a studio" = DeepFilterNet3 noise removal (enhance_voice.
 Exact totals (user rule): OTR 183,000 + 70 + 2,700 + 2,800 = RM188,570 (presenter: "188,000 lebih");
 rule 1/3 (his own maths this time): RM2,100 x 3 = RM6,300 (he says "itulah gaji yang layak" without the number).
 Whisper fixes: "1.3 daripada gaji" = 1/3, "semi-ladder" = semi leather, "kupih" = coupe, "GL/GA" n/a.
-Order: hook -> car + price -> spec & features -> jom kira -> maths -> answer + CTA. Times = SOURCE seconds.
+Order (user request v2): hook -> car + price -> jom kira -> maths -> answer -> car review (spec & features) -> CTA. Times = SOURCE seconds.
 """
 THEME = "glass"
 ACCENT = "C8102E"
@@ -17,17 +17,17 @@ SEGMENTS = [
     dict(id="hook", a=(16.66, 21.30), v=26.00, keys=K, why="Hook = salary question over the front 3/4 walk-around."),
     dict(id="intro", a=(0.00, 9.95), v=0.70, keys=K, why="Model, year, grade 5A, mileage 6,000 km (+0.7 s skips header intro)."),
     dict(id="price", a=(10.10, 15.98), keys=K, why="Body price RM183,000, not yet on the road."),
-    dict(id="spec", a=(63.66, 70.45), keys=K, why="Lower spec of the CLA class."),
-    dict(id="inside", a=(70.64, 77.98), keys=K, why="Semi leather seat (not AMG design), SE spec steering."),
-    dict(id="meter", a=(78.00, 84.12), keys=K, why="Meter shows 7,000 km (1,000 over the auction 6,000)."),
-    dict(id="exec", a=(84.20, 90.62), keys=K, why="Executive looks, electronic + memory seat."),
-    dict(id="frameless", a=(90.90, 95.70), keys=K, why="Frameless because coupe design."),
     dict(id="jom", a=(21.58, 22.62), keys=K, why="'Jom kita buat kira-kira' opens the maths."),
     dict(id="otr1", a=(22.66, 40.55), keys=K, why="Body price, road tax (1.3 turbo), insurance, processing fee."),
     dict(id="otr2", a=(40.60, 44.92), keys=K, why="Total on the road."),
     dict(id="loan", a=(44.96, 51.62), keys=K, why="9-year full loan, no DP, ~RM2,100+/month."),
     dict(id="rule", a=(51.66, 58.62), keys=K, why="x3 because the instalment = 1/3 of salary."),
     dict(id="answer", a=(58.64, 63.62), keys=K, why="'Itulah gaji yang layak' -> RM6,300 on screen."),
+    dict(id="spec", a=(63.66, 70.45), keys=K, why="Lower spec of the CLA class."),
+    dict(id="inside", a=(70.64, 77.98), keys=K, why="Semi leather seat (not AMG design), SE spec steering."),
+    dict(id="meter", a=(78.00, 84.12), keys=K, why="Meter shows 7,000 km (1,000 over the auction 6,000)."),
+    dict(id="exec", a=(84.20, 90.62), keys=K, why="Executive looks, electronic + memory seat."),
+    dict(id="frameless", a=(90.90, 95.70), keys=K, why="Frameless because coupe design."),
     dict(id="cta", a=(95.98, 98.62), v=93.30, keys=K, why="CTA. Video moved before the header's exit glitch (~97.8 s)."),
 ]
 
@@ -55,7 +55,7 @@ GLASS = [
                                          (54.50, "02 · Kira", "RM2,100 × 3"),
                                          (57.10, "03 · Hasil", "RM6,300 sebulan")]),
     ]),
-    dict(win=(58.64, 999), items=[
+    dict(win=(58.64, 63.58), items=[
         dict(kind="label", text="Jawapan", y=880),
         dict(kind="counter", at=59.80, to=6300, frm=0, dur=1.3, lab="Gaji layak", sub="RM2,100 × 3 = RM6,300 sebulan", accent=True, y=1180),
     ]),
