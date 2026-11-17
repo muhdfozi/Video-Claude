@@ -1,8 +1,8 @@
 """Toyota Vellfire Z Premier 2024 — "gaji berapa layak?" — STYLE KIRA DETAIL, built from a SEPARATE VOICEOVER
 ("Jalan 1-48G 16.m4a", 71 s) + 8 iPhone clips (IMG_1452..1459, 4K HLG; 1454 = 62 s POV walkaround, others B-roll).
 Audio times (a=) are VOICEOVER seconds; video comes from vsrc at v=. All pauses in the voiceover are cut.
-"Natural, like recorded live at the showroom": VOICE="location" (light cleanup + early reflections, no studio sheen)
-+ AMBIENT = the walkaround's real location sound under the voice; every line is matched to the shot it describes.
+Voice v2 (user): studio sound — DeepFilterNet3 cleanup + VOICE="studio" chain, NO location ambience/reflections.
+Every line is still matched to the shot it describes.
 Exact totals (user rule): OTR 326,000 + 4,500 + 740 + 2,800 = RM334,040 (voiceover: "334,000 lebih");
 rule 1/3: RM3,700 x 3 = RM11,100 (voiceover gives the method, not the number).
 Whisper fixes: "Rock Tax" = road tax, "RM2.4, RM740" = enjin 2.4 -> road tax RM740.
@@ -13,10 +13,10 @@ SOURCES = {k: R + f"IMG_{n}.MOV" for k, n in
            [("w", 1454), ("b52", 1452), ("b53", 1453), ("b55", 1455), ("b56", 1456), ("b57", 1457), ("b58", 1458), ("b59", 1459)]}
 THEME = "glass"
 ACCENT = "C8102E"
-AUDIO = "/home/user/work9/vo48k.wav"
-VOICE = "location"
+AUDIO = "/home/user/work9/vo48k_df.wav"   # DeepFilterNet3-cleaned voiceover
+VOICE = "studio"      # user: like a high-end mic in a studio (no location sound)
 VAD_DB = -45
-AMBIENT = dict(file=R + "IMG_1454.MOV", lufs=-33)
+AMBIENT = None        # user removed the location ambience
 CAR = (0.47, 0.44)
 
 def K(v, s=1.08, c=(0.5, 0.5), s2=None):
