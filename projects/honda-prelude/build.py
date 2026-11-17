@@ -64,7 +64,7 @@ mono = voice_src.mean(1)
 HOP = 480                                           # 10 ms
 nfr = len(mono) // HOP
 rms_db = 20 * np.log10(np.sqrt((mono[:nfr * HOP].reshape(nfr, HOP) ** 2).mean(1)) + 1e-9)
-THR = max(np.percentile(rms_db, 15) + 9, -46)
+THR = getattr(edl, "VAD_DB", None) or max(np.percentile(rms_db, 15) + 9, -46)   # EDL can override (boosted audio)
 voiced = rms_db > THR
 # close tiny holes (< 60 ms) inside words
 for i in range(1, nfr - 6):

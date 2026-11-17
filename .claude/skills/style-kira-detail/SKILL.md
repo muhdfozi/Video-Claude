@@ -5,8 +5,8 @@ description: Preset editing "style kira detail" — gaya GLASS (kaca kabur minim
 
 # Style Kira Detail
 
-Bila user sebut **"style kira detail"**: edit video dengan resipi di bawah dan **terus render final**
-(user tak perlu preview). Rujukan yang user approve: `exports/GR86-Gaji-Layak-GLASS-FINAL.mp4`,
+Bila user sebut **"style kira detail"**: edit video dengan resipi di bawah. **Tunjuk PREVIEW dulu** (page artifact
+dengan player + susunan + perkara untuk disahkan); render final hanya bila user approve/minta. Rujukan yang user approve: `exports/GR86-Gaji-Layak-GLASS-FINAL.mp4`,
 EDL `projects/gr86-glass/edl.py`. Skill penuh (teknik, pipeline): `.claude/skills/tiktok-edit-style/SKILL.md` §13.
 
 ## Peraturan tetap (dari user)
@@ -47,6 +47,13 @@ Kalau fail dalam `Raw Video` dah ada header/teks tetap (contoh "TOYOTA ALPHARD Z
 `NO_ZOOM = True`, `GLASS_TOP = 780` (kaca hanya bawah header, header kekal tajam), semua elemen kaca y ≥ ~880,
 warna ikut fail (biasanya SDR → tanpa `--hdr`), audio dari raw jika lag 0. Contoh: `projects/alphard-z/edl.py`.
 Video walkaround: susun semula → hook soalan → kereta + harga → features (pill laju) → kira-kira → jawapan + CTA.
+
+## Lain-lain pengajaran
+- Audio yang dah dikuatkan oleh app lain: threshold auto terlalu tinggi dan potong suku kata lembut →
+  set `VAD_DB = -31` dalam EDL, dan sentiasa transcribe semula `voice_proc.wav` untuk semak.
+- Jika presenter tak sebut jawapan gaji, tambah rule 1/3 (ansuran × 3) sebagai "anggaran" dan minta user sahkan.
+- Window kaca: titik akhir mesti DI DALAM segmen (bukan tepat pada `a1`), kalau tak elemen kekal sampai hujung.
+- Fail lain dalam Drive (Voiceover, Font Type) — semak dulu sama ada untuk video ini; jangan guna jika untuk subjek lain.
 
 ## Templat EDL ringkas
 ```python
