@@ -224,7 +224,7 @@ function render(){
     <div class="filters">${types.map(t=>`<button class="chip" type="button" data-t="${esc(t)}" aria-pressed="${t===st.type}">${esc(t)}</button>`).join('')}</div>
     ${ok.length ? `<div class="list">${ok.map((c,i)=>{ const [tl,tc]=tier(c.m/g);
       return `<button class="car" type="button" data-i="${all.indexOf(c)}"><span class="tier ${tc}">${tl}</span>${pic(c)}
-        <span class="nm">${esc(c.model)}</span><span class="yr">${esc(c.year)} · ${c.origin==='UK'?'UK':'JEPUN'} · ${esc(c.type)}</span>
+        <span class="nm">${esc(c.model)}</span><span class="yr">${esc(c.year)} · ${originLbl(c.origin)} · ${esc(c.type)}</span>
         <span class="mo num">${rm(c.m)} <small>/BULAN</small></span></button>`; }).join('')}</div>`
       : `<div class="empty"><b>Belum ada yang ngam</b>Cuba tambah deposit atau panjangkan tempoh. Prof Poji pun boleh carikan pilihan lain untuk anda.</div>`}
     ${near.length ? `<div class="near"><h3>HAMPIR LAYAK · TAMBAH DEPOSIT</h3><ul>${near.map(c=>`<li><span><b>${esc(c.model)}</b> ${esc(c.year)}</span><span class="num">Deposit ${rm(Math.max(c.price-lMax, c.price*S.dep/100))}</span></li>`).join('')}</ul></div>`:''}
@@ -254,7 +254,7 @@ function openCar(c){
     ${pic(c)}
     <div><span class="tier ${tc}" style="font:800 12px var(--f-label);letter-spacing:1.2px;padding:2px 8px;border-radius:999px">${tl}</span></div>
     <h2 id="sTitle">${esc(c.model)}</h2>
-    <div class="meta">${esc(c.year)} · ${c.origin==='UK'?'UK':'JEPUN'} · ${esc(c.type)} · Harga anggaran ${rm(c.price)}</div>
+    <div class="meta">${esc(c.year)} · ${originLbl(c.origin)} · ${esc(c.type)} · Harga anggaran ${rm(c.price)}</div>
     <div class="terms">${[5,7,9].map(y=>`<div class="${y===S.years?'on':''}"><small>${y} TAHUN</small><b class="num">${rm(mo(c.price,y))}</b></div>`).join('')}</div>
     <p class="fine">Deposit ${S.dep}% (${rm(c.price*S.dep/100)}) · kadar rata ${S.rate}% · unit, warna &amp; grade tertakluk stok semasa.</p>
     <a class="wa" href="${waLink(c)}" target="_blank" rel="noopener">${WA_ICON} WHATSAPP PROF POJI</a>

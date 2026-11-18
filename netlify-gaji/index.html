@@ -246,7 +246,26 @@ BMW M5 | 2025 | UK | 900000 | Sedan
 Lamborghini Urus | 2022 | UK | 1200000 | SUV
 Range Rover Autobiography LWB | 2024 | UK | 1130000 | SUV
 Mercedes-Maybach GLS600 | 2023 | UK | 1240000 | SUV
-Rolls-Royce Ghost EWB | 2025 | UK | 2890000 | Sedan`;
+Rolls-Royce Ghost EWB | 2025 | UK | 2890000 | Sedan
+Toyota Vellfire 2.5 Golden Eyes | 2021 | JP | 165000 | MPV
+Honda Stepwgn Spada | 2023 | JP | 155000 | MPV
+Lexus NX300 F Sport | 2021 | JP | 170000 | SUV
+Mercedes-Benz E200 | 2022 | UK | 225000 | Sedan
+Mercedes-Benz E300 Coupe | 2020 | UK | 230000 | Sport
+Mercedes-AMG CLA45 S Shooting Brake | 2022 | UK | 260000 | Hatchback
+Mercedes-Benz CLA200d | 2020 | UK | 265000 | Sedan
+Toyota Land Cruiser 250 VX | 2024 | JP | 275000 | SUV
+Land Rover Defender 110 P300 | 2022 | UK | 290000 | SUV
+Porsche 718 Boxster | 2022 | JP | 350000 | Sport
+Range Rover Sport SVR | 2017 | UK | 355000 | SUV
+Porsche Cayenne 3.0 | 2022 | JP | 420000 | SUV
+Mercedes-AMG GLE53 Coupe | 2022 | UK | 440000 | SUV
+Mercedes-AMG GLC43 Coupe | 2025 | UK | 460000 | SUV
+Lexus LM350h | 2025 | JP | 670000 | MPV
+Ferrari Roma | 2023 | JP | 1105000 | Sport
+GMC Hummer EV 3X | 2024 | US | 1200000 | SUV
+Mercedes-Maybach S580 | 2023 | UK | 1240000 | Sedan
+Porsche 911 GT3 | 2023 | JP | 1250000 | Sport`;
 const DEFAULTS = {rate:2.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
 
 function parseStock(t){
@@ -297,6 +316,7 @@ const CAR_IMG = [
   [/ghost|rolls/i,'rolls-royce-ghost'], [/gt-?r\b/i,'nissan-gt-r'], [/\bbrz/i,'subaru-brz'], [/levorg/i,'subaru-levorg-sti-sport'],
   [/jimny/i,'suzuki-jimny'], [/swift/i,'suzuki-swift-sport'], [/roadster|mx-?5/i,'mazda-roadster-rf'], [/\bmini\b|cooper/i,'mini-cooper-s']
 ];
+const originLbl = o => ({UK:'UK', US:'USA'})[o] || 'JEPUN';
 function carImg(model){ for(const [rx,k] of CAR_IMG) if(rx.test(model)) return typeof k==='function' ? k(model) : k; return ''; }
 function pic(c){
   return c.img ? `<div class="pic"><img src="cars/${esc(c.img)}.webp" alt="${esc(c.model)}" loading="lazy" onerror="this.parentNode.classList.add('none');this.replaceWith(document.createRange().createContextualFragment(sil('${esc(c.type)}')))"></div>`
@@ -389,7 +409,7 @@ function render(){
     <div class="filters">${types.map(t=>`<button class="chip" type="button" data-t="${esc(t)}" aria-pressed="${t===st.type}">${esc(t)}</button>`).join('')}</div>
     ${ok.length ? `<div class="list">${ok.map((c,i)=>{ const [tl,tc]=tier(c.m/g);
       return `<button class="car" type="button" data-i="${all.indexOf(c)}"><span class="tier ${tc}">${tl}</span>${pic(c)}
-        <span class="nm">${esc(c.model)}</span><span class="yr">${esc(c.year)} · ${c.origin==='UK'?'UK':'JEPUN'} · ${esc(c.type)}</span>
+        <span class="nm">${esc(c.model)}</span><span class="yr">${esc(c.year)} · ${originLbl(c.origin)} · ${esc(c.type)}</span>
         <span class="mo num">${rm(c.m)} <small>/BULAN</small></span></button>`; }).join('')}</div>`
       : `<div class="empty"><b>Belum ada yang ngam</b>Cuba tambah deposit atau panjangkan tempoh. Prof Poji pun boleh carikan pilihan lain untuk anda.</div>`}
     ${near.length ? `<div class="near"><h3>HAMPIR LAYAK · TAMBAH DEPOSIT</h3><ul>${near.map(c=>`<li><span><b>${esc(c.model)}</b> ${esc(c.year)}</span><span class="num">Deposit ${rm(Math.max(c.price-lMax, c.price*S.dep/100))}</span></li>`).join('')}</ul></div>`:''}
@@ -419,7 +439,7 @@ function openCar(c){
     ${pic(c)}
     <div><span class="tier ${tc}" style="font:800 12px var(--f-label);letter-spacing:1.2px;padding:2px 8px;border-radius:999px">${tl}</span></div>
     <h2 id="sTitle">${esc(c.model)}</h2>
-    <div class="meta">${esc(c.year)} · ${c.origin==='UK'?'UK':'JEPUN'} · ${esc(c.type)} · Harga anggaran ${rm(c.price)}</div>
+    <div class="meta">${esc(c.year)} · ${originLbl(c.origin)} · ${esc(c.type)} · Harga anggaran ${rm(c.price)}</div>
     <div class="terms">${[5,7,9].map(y=>`<div class="${y===S.years?'on':''}"><small>${y} TAHUN</small><b class="num">${rm(mo(c.price,y))}</b></div>`).join('')}</div>
     <p class="fine">Deposit ${S.dep}% (${rm(c.price*S.dep/100)}) · kadar rata ${S.rate}% · unit, warna &amp; grade tertakluk stok semasa.</p>
     <a class="wa" href="${waLink(c)}" target="_blank" rel="noopener">${WA_ICON} WHATSAPP PROF POJI</a>

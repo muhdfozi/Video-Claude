@@ -264,7 +264,26 @@ BMW M5 | 2025 | UK | 900000 | Sedan
 Lamborghini Urus | 2022 | UK | 1200000 | SUV
 Range Rover Autobiography LWB | 2024 | UK | 1130000 | SUV
 Mercedes-Maybach GLS600 | 2023 | UK | 1240000 | SUV
-Rolls-Royce Ghost EWB | 2025 | UK | 2890000 | Sedan`;
+Rolls-Royce Ghost EWB | 2025 | UK | 2890000 | Sedan
+Toyota Vellfire 2.5 Golden Eyes | 2021 | JP | 165000 | MPV
+Honda Stepwgn Spada | 2023 | JP | 155000 | MPV
+Lexus NX300 F Sport | 2021 | JP | 170000 | SUV
+Mercedes-Benz E200 | 2022 | UK | 225000 | Sedan
+Mercedes-Benz E300 Coupe | 2020 | UK | 230000 | Sport
+Mercedes-AMG CLA45 S Shooting Brake | 2022 | UK | 260000 | Hatchback
+Mercedes-Benz CLA200d | 2020 | UK | 265000 | Sedan
+Toyota Land Cruiser 250 VX | 2024 | JP | 275000 | SUV
+Land Rover Defender 110 P300 | 2022 | UK | 290000 | SUV
+Porsche 718 Boxster | 2022 | JP | 350000 | Sport
+Range Rover Sport SVR | 2017 | UK | 355000 | SUV
+Porsche Cayenne 3.0 | 2022 | JP | 420000 | SUV
+Mercedes-AMG GLE53 Coupe | 2022 | UK | 440000 | SUV
+Mercedes-AMG GLC43 Coupe | 2025 | UK | 460000 | SUV
+Lexus LM350h | 2025 | JP | 670000 | MPV
+Ferrari Roma | 2023 | JP | 1105000 | Sport
+GMC Hummer EV 3X | 2024 | US | 1200000 | SUV
+Mercedes-Maybach S580 | 2023 | UK | 1240000 | Sedan
+Porsche 911 GT3 | 2023 | JP | 1250000 | Sport`;
 const DEFAULTS = {rate:2.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
 const store = {get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let S = Object.assign({}, DEFAULTS, store.get('pp-live-settings-v2') || {});
@@ -323,6 +342,7 @@ const CAR_IMG = [
   [/ghost|rolls/i,'rolls-royce-ghost'], [/gt-?r\b/i,'nissan-gt-r'], [/\bbrz/i,'subaru-brz'], [/levorg/i,'subaru-levorg-sti-sport'],
   [/jimny/i,'suzuki-jimny'], [/swift/i,'suzuki-swift-sport'], [/roadster|mx-?5/i,'mazda-roadster-rf'], [/\bmini\b|cooper/i,'mini-cooper-s']
 ];
+const originLbl = o => ({UK:'UK', US:'USA'})[o] || 'JEPUN';
 function carImg(model){ for(const [rx,k] of CAR_IMG) if(rx.test(model)) return typeof k==='function' ? k(model) : k; return ''; }
 function pic(c){
   return c.img ? `<div class="pic"><img src="cars/${esc(c.img)}.webp" alt="${esc(c.model)}" loading="lazy" onerror="this.parentNode.classList.add('none');this.replaceWith(document.createRange().createContextualFragment(sil('${esc(c.type)}')))"></div>`
@@ -384,7 +404,7 @@ function render(){
       return `<article class="car" style="animation-delay:${Math.min(i,8)*40}ms">
         <span class="tier ${tc}">${tl}</span>${pic(c)}
         <div class="nm">${esc(c.model)}</div>
-        <div class="meta"><span>${esc(c.year)}</span><span class="${c.origin==='UK'?'uk':'jp'}">${c.origin==='UK'?'UK':'JEPUN'}</span><span>${esc(c.type)}</span></div>
+        <div class="meta"><span>${esc(c.year)}</span><span class="${c.origin==='JP'?'jp':'uk'}">${originLbl(c.origin)}</span><span>${esc(c.type)}</span></div>
         <div class="monthly"><b class="num">${rm(c.m)}</b><small>/BULAN</small></div>
         <div class="bar"><i style="width:${Math.min(100,r/(S.maxPct/100)*100)}%;background:${col}"></i></div>
         <div class="price num">Harga ${rm(c.price)} · ${Math.round(r*100)}% gaji</div>
