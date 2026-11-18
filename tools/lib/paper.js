@@ -220,6 +220,95 @@ const PAPER = (() => {
     c.restore();
   }
 
+
+  // ---------------------------------------------------------------- watak: HOS (muka sebenar + badan kartun)
+  let HEAD = null, HEADM = null;
+  function setHostHead(img, meta) { HEAD = img; HEADM = meta; }
+  function headSticker(c, x, y, hs, rot = 0) { // (x,y) = titik leher
+    if (!HEAD) return;
+    c.save(); c.translate(x, y); c.rotate(rot);
+    shadow(c, true, 0.8);
+    c.drawImage(HEAD, -HEADM.neckX * hs, -HEADM.neckY * hs, HEADM.w * hs, HEADM.h * hs);
+    c.restore();
+  }
+  function limb(c, x, y, a1, l1, a2, l2, w, col, sleeve, sleeveCol, hand) {
+    const ex = x + Math.sin(a1) * l1, ey = y + Math.cos(a1) * l1;
+    const hx = ex + Math.sin(a2) * l2, hy = ey + Math.cos(a2) * l2;
+    c.strokeStyle = col; c.lineWidth = w;
+    c.beginPath(); c.moveTo(x, y); c.lineTo(ex, ey); c.lineTo(hx, hy); c.stroke();
+    if (sleeve) { c.strokeStyle = sleeveCol; c.lineWidth = w + 18; c.beginPath(); c.moveTo(x, y); c.lineTo(x + Math.sin(a1) * sleeve, y + Math.cos(a1) * sleeve); c.stroke(); }
+    if (hand) { c.fillStyle = hand; c.beginPath(); c.arc(hx, hy, w * 0.72, 0, 7); c.fill(); }
+    return [ex, ey, hx, hy];
+  }
+  function host(c, x, y, s, o = {}) {
+    if (s <= 0.001) return;
+    const b = S.B, pose = o.pose || 'stand';
+    const skin = '#B47C55', shirt = '#F8F4EA', shirtD = '#DCD5C6', pants = '#D9D0C0', pantsD = '#BDB2A0', ink = '#2B2024';
+    c.save(); c.translate(x, y); c.scale(s * (o.flip ? -1 : 1), s);
+    c.lineCap = 'round'; c.lineJoin = 'round';
+    const bob = pose === 'sit' ? 0 : -Math.abs(Math.sin(b * Math.PI)) * 10;
+    c.translate(0, bob);
+    const sit = pose === 'sit';
+    const hipY = sit ? -230 : -270, neckY = hipY - 245;
+    // ---- kaki
+    c.save(); shadow(c, true, 0.7);
+    [-1, 1].forEach(sd => {
+      const sw = sit ? Math.sin(b * Math.PI + sd) * 0.25 : 0;
+      const hx = sd * 40, fx = sit ? sd * 60 : sd * 46;
+      const fy = sit ? hipY + 210 : 0;
+      c.strokeStyle = pants; c.lineWidth = 66;
+      if (sit) { c.beginPath(); c.moveTo(hx, hipY); c.lineTo(sd * 55, hipY + 20); c.lineTo(fx + Math.sin(sw) * 60, fy); c.stroke(); }
+      else { c.beginPath(); c.moveTo(hx, hipY); c.lineTo(fx, fy - 70); c.stroke(); }
+      // stokin corak
+      const sx = sit ? fx + Math.sin(sw) * 60 : fx, sy = sit ? fy : fy - 70;
+      c.save(); c.translate(sx, sy); if (sit) c.rotate(-Math.sin(sw) * 0.6);
+      c.fillStyle = '#1F1F24'; c.beginPath(); rr(c, -27, -6, 54, 74, 14); c.fill();
+      c.strokeStyle = '#F2EEE6'; c.lineWidth = 5;
+      for (let k = 0; k < 3; k++) { c.beginPath(); for (let i = 0; i <= 4; i++) c.lineTo(-22 + i * 11, 6 + k * 18 + (i % 2 ? 8 : 0)); c.stroke(); }
+      c.fillStyle = '#1F1F24'; c.beginPath(); c.ellipse(sd * 10, 70, 40, 18, 0, 0, 7); c.fill();
+      c.restore();
+    });
+    c.restore();
+    // ---- badan (kemeja)
+    fillP(c, shirt, cc => { cc.moveTo(-104, neckY + 26); cc.quadraticCurveTo(-118, neckY + 40, -110, neckY + 90); cc.lineTo(-96, hipY + 22); cc.lineTo(96, hipY + 22); cc.lineTo(110, neckY + 90); cc.quadraticCurveTo(118, neckY + 40, 104, neckY + 26); cc.closePath(); }, 1);
+    c.strokeStyle = shirtD; c.lineWidth = 4; c.beginPath(); c.moveTo(0, neckY + 30); c.lineTo(0, hipY + 20); c.stroke();
+    c.fillStyle = shirtD; for (let k = 0; k < 4; k++) { c.beginPath(); c.arc(7, neckY + 70 + k * 46, 4.5, 0, 7); c.fill(); }
+    c.strokeStyle = shirtD; c.lineWidth = 3.5; c.beginPath(); rr(c, 30, neckY + 80, 50, 54, 6); c.stroke();
+    // leher + kolar
+    c.fillStyle = skin; c.beginPath(); c.moveTo(-30, neckY - 8); c.lineTo(30, neckY - 8); c.lineTo(22, neckY + 40); c.lineTo(-22, neckY + 40); c.fill();
+    fillP(c, '#FFFFFF', cc => { cc.moveTo(-6, neckY + 44); cc.lineTo(-52, neckY + 6); cc.lineTo(-30, neckY - 6); cc.closePath(); cc.moveTo(6, neckY + 44); cc.lineTo(52, neckY + 6); cc.lineTo(30, neckY - 6); cc.closePath(); }, 0.4);
+    // ---- lengan
+    const beatW = Math.sin(b * Math.PI * 2);
+    // sudut: 0 = ke bawah, positif = ke luar badan (kedua-dua belah)
+    let L = [0.2 + 0.03 * beatW, 0.1], R = [0.2 - 0.03 * beatW, 0.1];
+    if (pose === 'wave') R = [2.25, 2.55 + 0.4 * beatW];
+    if (pose === 'point') R = [1.45, 1.6];
+    if (pose === 'pointUp') R = [2.2, 2.7];
+    if (pose === 'sit') { L = [0.35, -0.6]; R = [0.35, -0.6]; }
+    if (pose === 'cheer') { L = [2.5 + 0.15 * beatW, 3.0]; R = [2.5 - 0.15 * beatW, 3.0]; }
+    c.save(); shadow(c, true, 0.6);
+    const sl = limb(c, -100, neckY + 34, -L[0], 108, -L[1], 100, 34, skin, 62, shirt, skin);
+    // jam tangan kiri
+    c.fillStyle = '#1F1F24'; const wx = lerp(sl[0], sl[2], 0.78), wy = lerp(sl[1], sl[3], 0.78); c.beginPath(); c.arc(wx, wy, 14, 0, 7); c.fill(); c.fillStyle = '#C9CED6'; c.beginPath(); c.arc(wx, wy, 8, 0, 7); c.fill();
+    limb(c, 100, neckY + 34, R[0], 108, R[1], 100, 34, skin, 62, shirt, skin);
+    c.restore();
+    // ---- kepala (muka sebenar)
+    const tilt = (o.tilt || 0) + Math.sin(b * Math.PI * 0.5) * 0.05;
+    const hs = o.headScale || 0.95;
+    headSticker(c, 0, neckY + 22, hs, tilt);
+    c.restore();
+  }
+  // kepala mengintai dari tepi objek + satu tangan
+  function hostPeek(c, x, y, s, rot = 0) {
+    if (s <= 0.001 || !HEAD) return;
+    c.save(); c.translate(x, y); c.rotate(rot); c.scale(s, s);
+    const t = Math.sin(S.B * Math.PI * 0.5) * 0.06;
+    headSticker(c, 0, 0, 0.82, t);
+    c.fillStyle = '#B47C55'; shadow(c, true, 0.5);
+    c.beginPath(); c.ellipse(120, 10, 30, 26, 0, 0, 7); c.fill();
+    c.restore();
+  }
+
   // gelombang bau (garisan beralun yang mengalir)
   function wavyPath(c, x0, y0, x1, y1, amp, freq, phase, reveal) {
     const n = 48, dx = x1 - x0, dy = y1 - y0, len = Math.hypot(dx, dy), nx = -dy / len, ny = dx / len;
@@ -245,5 +334,5 @@ const PAPER = (() => {
   }
 
   return { W, H, S, clamp, lerp, inOut, inOut5, out3, in3, back, P, pop, life, rnd, mix, shadow, fillP, rr, grain, vignette,
-    FT, FC, font, label, bigText, caption, camAt, applyCam, viewRect, sees, toScreen, cicak, person, smell, wavyPath };
+    FT, FC, font, label, bigText, caption, camAt, applyCam, viewRect, sees, toScreen, cicak, person, smell, wavyPath, setHostHead, host, hostPeek, headSticker };
 })();

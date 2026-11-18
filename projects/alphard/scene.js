@@ -1,7 +1,7 @@
 // Sebab Apa? — Alphard. Semua masa dikunci pada perkataan VO (events.json).
 'use strict';
 const { W, H, S, clamp, lerp, inOut, out3, in3, back, P, pop, life, rnd, mix, shadow, fillP, rr, label, bigText,
-  caption, camAt, applyCam, viewRect, sees, toScreen, cicak, grain, vignette } = PAPER;
+  caption, camAt, applyCam, viewRect, sees, toScreen, grain, vignette, setHostHead, host, hostPeek } = PAPER;
 
 const cv = document.getElementById('c');
 const ctx = cv.getContext('2d');
@@ -123,12 +123,14 @@ function zoneRoad(c) {
   c.save(); c.beginPath(); rr(c, BOARD.x - BOARD.w / 2, BOARD.y - BOARD.h / 2, BOARD.w, BOARD.h, 14); c.clip();
   boardContent(c);
   c.restore();
-  cicak(c, BOARD.x + BOARD.w / 2 - 20, BOARD.y - BOARD.h / 2 - 60, 0.75, 0.5, { wink: P(E.ans + 1, E.ans + 1.2) * (1 - P(E.ans + 2.2, E.ans + 2.4)) });
+  if (b > E.toBoard && b < E.q) hostPeek(c, BOARD.x + BOARD.w / 2 - 120, BOARD.y - BOARD.h / 2 - 4, 0.5 * pop(E.toBoard + 0.6, 0.7), 0.08);
   // jalan
   fillP(c, '#C9BBA8', cc => cc.rect(-900, 1385, 2900, 50), 0.8);
   c.fillStyle = '#4A4652'; c.fillRect(-900, 1435, 2900, 1100);
   c.fillStyle = 'rgba(255,244,224,0.75)';
   for (let x = -880; x < 2000; x += 180) c.fillRect(x - ((b * 0) % 180), 1720, 100, 14);
+  // hos di kaki lima
+  if (b < E.toBoard + 1.5) host(c, 935, 1425, 0.4 * pop(1.0, 0.7), { pose: 'wave' });
   // kereta
   const cx = carX(), mv = P(E.carIn, E.carIn + 2.6) < 1 ? 1 : 0;
   mpv(c, cx, 1640, 0.95, { spin: cx / 60, bounce: mv ? Math.sin(b * 20) * 2 : 0 });
@@ -359,6 +361,7 @@ function overlay(c) {
       mpv(c, x, 800 + 40 * s, 0.55 * s, { color: col, dark: col === '#F6F3EC' ? '#C9C5BC' : '#0E0F12' });
       label(c, txt, x, 800 + 140 * s, { scale: s, size: 56, bg: col, fg });
     });
+    host(c, 165, 1420, 0.42 * pop(E.q + 0.8, 0.7), { pose: 'pointUp' });
     const cm = pop(E.comment, 0.6);
     if (cm > 0) { label(c, 'jawab di komen', 540, 1110, { scale: cm, size: 46, bg: CREAM }); c.save(); c.translate(540, 1185 + Math.sin(b * 3) * 10); c.scale(cm, cm); c.fillStyle = CREAM; c.beginPath(); c.moveTo(-26, 0); c.lineTo(26, 0); c.lineTo(0, 34); c.fill(); c.restore(); }
   }
@@ -372,10 +375,10 @@ function outro(c) {
   c.globalAlpha = 0.12; c.fillStyle = CREAM;
   for (let i = 0; i < 18; i++) { c.beginPath(); c.arc(rnd(i) * W, rnd(i + 30) * H, 40 + rnd(i + 3) * 120, 0, 7); c.fill(); }
   c.globalAlpha = 1; S.ZK = 1;
-  cicak(c, 540, 690, 1.9 * pop(E.outro + 0.2, 0.8), 0, { wink: P(E.outro + 1.5, E.outro + 1.7) * (1 - P(E.outro + 2.4, E.outro + 2.6)) });
-  bigText(c, 'SEBAB APA?', 540, 1040, 150, { scale: pop(E.outro + 0.5, 0.7), stroke: '#7A2A12' });
-  label(c, 'Satu soalan. Satu minit.', 540, 1190, { scale: pop(E.outro + 1.2, 0.6), size: 48, bg: CREAM });
-  label(c, 'follow untuk soalan seterusnya', 540, 1320, { scale: pop(E.outro + 1.8, 0.6), size: 36, bg: INK, fg: CREAM });
+  host(c, 540, 990, 0.74 * pop(E.outro + 0.2, 0.8), { pose: 'wave' });
+  bigText(c, 'SEBAB APA?', 540, 1120, 150, { scale: pop(E.outro + 0.5, 0.7), stroke: '#7A2A12' });
+  label(c, 'Satu soalan. Satu minit.', 540, 1265, { scale: pop(E.outro + 1.2, 0.6), size: 48, bg: CREAM });
+  label(c, 'follow untuk soalan seterusnya', 540, 1385, { scale: pop(E.outro + 1.8, 0.6), size: 36, bg: INK, fg: CREAM });
   c.restore();
 }
 function drawCaptions(c) {
@@ -423,6 +426,8 @@ window.ready = (async () => {
   CAPS = await (await fetch('captions.json')).json();
   E = await (await fetch('events.json')).json();
   BEAT = 60 / TL.bpm; CAM = buildCam();
+  const hi = new Image(); hi.src = '/assets/host/head.png'; await hi.decode();
+  setHostHead(hi, await (await fetch('/assets/host/head.json')).json());
   await document.fonts.load("800 50px 'Baloo 2'"); await document.fonts.load('900 50px Nunito');
   await document.fonts.ready;
   window.DURATION = TL.totalBeats * BEAT + TL.tailSeconds;
