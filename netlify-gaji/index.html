@@ -270,20 +270,32 @@ const SIL = {
 };
 /* car photos from profpojikira.netlify.app, matched by model name */
 const CAR_IMG = [
-  [/alphard/i, m => /baru|AGH40|40\b/i.test(m) ? 'alphard40' : 'alphard30'],
-  [/vellfire/i, m => /baru|z premier|40\b/i.test(m) ? 'vellfire40' : 'vellfire30'],
-  [/gr ?86/i,'gr86'], [/gt ?86/i,'gt86'], [/harrier/i,'harrier'], [/land ?cruiser|prado/i,'landcruiser'],
-  [/voxy/i,'voxy'], [/noah/i,'noah'], [/\bnx ?\d/i,'nx250'], [/\brx ?\d/i,'rx350'], [/\bis ?300/i,'is300'],
-  [/step ?wgn/i,'stepwgn'], [/type ?r|fl5/i,'civicfl5'], [/\ba ?180/i,'a180'], [/\ba ?35\b/i,'a35'], [/\ba ?45/i,'a45s'],
-  [/\bcla/i,'cla250'], [/\bg ?350|\bg ?63|g-class/i,'g350'], [/m135i/i,'m135i'], [/\b135i/i,'135i'], [/\b118i/i,'118i'],
-  [/\bm2\b/i,'m2'], [/gt-?r\b/i,'gtr'], [/\bbrz/i,'brz'], [/swift/i,'swift'], [/jimny/i,'jimny'], [/defender/i,'defender'],
-  [/taft/i,'taft'], [/\btank\b/i,'tank'], [/canbus/i,'canbus'], [/tanto/i,'tanto'], [/corolla sport/i,'corollasport'], [/roadster|mx-?5/i,'roadster'],
-  [/levorg/i,'levorg'], [/odyssey/i,'odyssey'], [/\bux ?\d/i,'ux200'], [/\bmini\b|cooper/i,'mini'], [/gr ?yaris/i,'gryaris'], [/420i|4 series/i,'420i'],
-  [/\bc ?200|c-class/i,'c200'], [/crown/i,'crownsport'], [/velar/i,'velar'], [/\blbx/i,'lbx'], [/macan/i,'macan'],
-  [/supra/i,'supra'], [/gx ?550/i,'gx550'], [/lx ?600/i,'lx600'], [/\blm ?\d/i,'lm500h'], [/718|cayman|boxster/i,'cayman718'], [/taycan/i,'taycan'],
-  [/cayenne/i,'cayenne'], [/panamera/i,'panamera'], [/\b911\b|carrera/i,'porsche911'], [/glc/i,'glc300'], [/cle ?53|\bcle\b/i,'cle53'],
-  [/range rover sport/i,'rrsport'], [/autobiography|range rover p530/i,'rangerover'], [/\bm4\b/i,'m4'], [/\bm5\b/i,'m5'], [/urus/i,'urus'],
-  [/maybach/i,'maybach'], [/ghost|rolls/i,'ghost']
+  [/alphard/i, m => /baru|AGH40|40\b/i.test(m) ? 'toyota-alphard-40-series' : 'toyota-alphard-30-series'],
+  [/vellfire/i, m => /baru|z premier|40\b/i.test(m) ? 'toyota-vellfire-40-series' : 'toyota-vellfire-30-series'],
+  [/gr ?86/i,'toyota-gr86'], [/gt ?86/i,'toyota-gt86'], [/supra/i,'toyota-gr-supra'], [/gr ?yaris/i,'toyota-gr-yaris-rz'],
+  [/corolla sport/i,'toyota-corolla-sport-gz'], [/crown sport/i,'toyota-crown-sport-z'], [/crown/i,'toyota-crown-crossover'],
+  [/harrier/i,'toyota-harrier'], [/prado/i,'toyota-land-cruiser-prado'], [/land ?cruiser 250|lc ?250/i,'toyota-land-cruiser-250'],
+  [/land ?cruiser/i,'toyota-land-cruiser-300'], [/voxy/i,'toyota-voxy'], [/noah/i,'toyota-noah'], [/\btank\b/i,'toyota-tank-custom-g-t'],
+  [/canbus/i,'daihatsu-move-canbus-g-turbo'], [/taft/i,'daihatsu-taft-g-turbo'], [/tanto/i,'daihatsu-tanto-funcross-turbo'],
+  [/type ?r|fl5/i,'honda-civic-type-r'], [/odyssey/i,'honda-odyssey'], [/step ?wgn/i,'honda-stepwgn'],
+  [/\bnx ?250/i,'lexus-nx250'], [/\bnx ?300/i,'lexus-nx300'], [/\bnx ?350/i,'lexus-nx350'], [/\brx ?300/i,'lexus-rx300'], [/\brx ?\d/i,'lexus-rx350'],
+  [/\bis ?300/i,'lexus-is300'], [/\bux ?\d/i,'lexus-ux200'], [/\blbx/i,'lexus-lbx'], [/\blm ?350/i,'lexus-lm350h'], [/\blm ?\d/i,'lexus-lm500h'],
+  [/\blx ?\d/i,'lexus-lx600'], [/\bgx ?\d/i,'lexus-gx550'],
+  [/s ?580/i,'mercedes-maybach-s580'], [/maybach|gls ?600/i,'mercedes-maybach-gls600'], [/\bg ?63/i,'mercedes-benz-g63-amg'], [/\bg ?350|g-class/i,'mercedes-benz-g350'],
+  [/cla ?45.*(shooting|brake)|shooting brake/i,'mercedes-benz-cla45-s-shooting-brake'], [/cla ?45/i,'mercedes-benz-cla45-s-amg'], [/cla ?200/i,'mercedes-benz-cla200-d'],
+  [/cla ?180/i,'mercedes-benz-cla180'], [/\bcla/i,'mercedes-benz-cla250'], [/\bcle/i,'mercedes-benz-cle53-amg'], [/\be ?300/i,'mercedes-benz-e300-coupe'],
+  [/\be ?200|e-class/i,'mercedes-benz-e200'], [/glc ?43/i,'mercedes-benz-glc43-amg-coupe'], [/glc/i,'mercedes-benz-glc300'], [/\bgle/i,'mercedes-benz-gle'],
+  [/\bc ?200|c-class/i,'mercedes-benz-c200-amg-line'], [/\ba ?45/i,'mercedes-benz-a45-s-amg'], [/\ba ?35\b/i,'mercedes-benz-a35-amg'], [/\ba ?180/i,'mercedes-benz-a180'],
+  [/m135i/i,'bmw-m135i'], [/\b135i/i,'bmw-135i'], [/\b118i/i,'bmw-118i'], [/420i|4 series/i,'bmw-420i-m-sport-coupe'], [/\bm2\b/i,'bmw-m2-competition'],
+  [/\bm4\b/i,'bmw-m4'], [/\bm5\b/i,'bmw-m5'],
+  [/boxster/i,'porsche-718-boxster'], [/718|cayman/i,'porsche-718-cayman'], [/gt3/i,'porsche-911-gt3'], [/\b911\b|carrera/i,'porsche-911-carrera'],
+  [/cayenne.*coupe/i,'porsche-cayenne-coupe'], [/cayenne/i,'porsche-cayenne'], [/macan.*(ev|electric)/i,'porsche-macan-ev'], [/macan/i,'porsche-macan'],
+  [/panamera/i,'porsche-panamera'], [/taycan/i,'porsche-taycan'],
+  [/svr/i,'land-rover-range-rover-sport-svr'], [/range rover sport/i,'land-rover-range-rover-sport'], [/velar/i,'land-rover-range-rover-velar'],
+  [/defender 110/i,'land-rover-defender-110'], [/defender/i,'land-rover-defender-90'], [/range rover|autobiography/i,'land-rover-range-rover'],
+  [/urus/i,'lamborghini-urus'], [/huracan/i,'lamborghini-huracan'], [/roma|ferrari/i,'ferrari-roma'], [/hummer/i,'gmc-hummer-ev'],
+  [/ghost|rolls/i,'rolls-royce-ghost'], [/gt-?r\b/i,'nissan-gt-r'], [/\bbrz/i,'subaru-brz'], [/levorg/i,'subaru-levorg-sti-sport'],
+  [/jimny/i,'suzuki-jimny'], [/swift/i,'suzuki-swift-sport'], [/roadster|mx-?5/i,'mazda-roadster-rf'], [/\bmini\b|cooper/i,'mini-cooper-s']
 ];
 function carImg(model){ for(const [rx,k] of CAR_IMG) if(rx.test(model)) return typeof k==='function' ? k(model) : k; return ''; }
 function pic(c){
