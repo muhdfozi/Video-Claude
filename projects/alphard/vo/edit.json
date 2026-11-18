@@ -1,0 +1,23 @@
+{
+  "source": "raw.m4a",
+  "note": "Masa dalam saat pada rakaman asal. lineStarts = permulaan setiap ayat (12 ayat). innerGaps = jeda dalam ayat [mula, akhir, sasaran]. Jeda antara ayat dikira automatik supaya setiap ayat masuk tepat pada ketukan 110 BPM.",
+  "head": 0.30,
+  "tail": 54.08,
+  "lineStarts": [0.30, 3.51, 8.48, 15.64, 20.19, 24.23, 27.58, 32.56, 36.99, 41.13, 46.23, 50.82],
+  "lineEnds":   [3.16, 7.83, 14.97, 19.61, 23.63, 26.79, 31.97, 36.53, 40.53, 45.51, 50.35, 54.08],
+  "innerGaps": [
+    [4.85, 5.39, 0.24, "catat … tujuh belas ribu (jeda kecil sebelum angka)"],
+    [6.46, 6.70, 0.16, "lebih … Alphard"],
+    [12.41, 12.86, 0.20, "sehari, … dan"],
+    [29.66, 30.09, 0.20, "kereta, … Alphard"],
+    [33.91, 34.21, 0.18, "Civic, … dan"],
+    [37.54, 38.08, 0.50, "Tapi … hampir (jeda dramatik, kekal)"],
+    [42.35, 42.66, 0.20, "sepuluh … warna putih"],
+    [43.33, 43.78, 0.24, "putih. … Lebih sepertiga"],
+    [47.14, 47.68, 0.24, "lebih. … Tahun ini"],
+    [48.92, 49.19, 0.14, "dah … empat belas"],
+    [52.68, 52.91, 0.18, "putih, … ataupun"]
+  ],
+  "fullBeatLines": [0, 8, 9],
+  "lineGapRange": [0.20, 0.55]
+}

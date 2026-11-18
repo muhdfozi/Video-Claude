@@ -109,6 +109,19 @@ def main():
              "-shortest", str(out)])
         print(out)
         return
+    if mode in ("vo-preview", "vo-final"):
+        src = b / ("preview_video.mp4" if mode == "vo-preview" else "video.mp4")
+        vo = proj / "vo" / "vo_studio.wav"
+        out = outdir / (f"{name}_PREVIEW.mp4" if mode == "vo-preview" else f"{name}_final.mp4")
+        fc = ("[3:a]aformat=channel_layouts=stereo,asplit=2[vo][key];"
+              "[1:a]volume=0.30[m0];[m0][key]sidechaincompress=threshold=0.02:ratio=5:attack=20:release=400:makeup=1[m];"
+              "[2:a]volume=0.40[s];"
+              "[vo][m][s]amix=inputs=3:normalize=0,alimiter=limit=0.9,loudnorm=I=-14:TP=-1:LRA=9[a]")
+        run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-i", str(music), "-i", str(sfx), "-i", str(vo),
+             "-filter_complex", fc, "-map", "0:v", "-map", "[a]", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k",
+             "-shortest", str(out)])
+        print(out)
+        return
     vo_src = Path(sys.argv[3])
     vo_clean = b / "vo_clean.wav"; vo_aligned = b / "vo_aligned.wav"
     clean_vo(vo_src, vo_clean)

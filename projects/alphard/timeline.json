@@ -2,7 +2,7 @@
   "title": "Sebab Apa? — Alphard",
   "bpm": 110,
   "beatsPerBar": 4,
-  "totalBeats": 100,
+  "totalBeats": 96.0,
   "tailSeconds": 1.5,
   "fps": 30,
   "width": 1080,
@@ -15,7 +15,7 @@
       "tone": "Macam tanya kawan kat kedai mamak — ingin tahu, sedikit sinis. Tekan 'setiap tahun'.",
       "screen": "Tajuk besar + Alphard putih masuk frame",
       "captionHidden": true,
-      "text": "Berapa ribu *Alphard* register | di Malaysia *setiap tahun?*"
+      "text": "Korang rasa, berapa ribu *Alphard* dah register | di Malaysia *setiap tahun?*"
     },
     {
       "bar": 2,
@@ -23,7 +23,7 @@
       "role": "SAUH",
       "tone": "Jeda kecil sebelum angka, kemudian sebut dengan yakin.",
       "screen": "Kaunter angka berpusing → 17,598 · tag 'JPJ 2025'",
-      "text": "Tahun lepas, JPJ daftar | *tujuh belas ribu lebih* Alphard."
+      "text": "Tahun lepas, JPJ catat | *tujuh belas ribu lebih* | Alphard dah register."
     },
     {
       "bar": 4,
@@ -31,7 +31,7 @@
       "role": "SKALA",
       "tone": "Terkejut sikit pada 'dua buah setiap jam'.",
       "screen": "Jam berdetik; ikon Alphard muncul 2 setiap pusingan · '48 sehari'",
-      "text": "Itu *empat puluh lapan sehari* — | *dua buah setiap jam!*"
+      "text": "Bersamaan dengan *48 unit sehari*, | dan *dua buah unit setiap jam.*"
     },
     {
       "bar": 6,
@@ -39,7 +39,7 @@
       "role": "DULU",
       "tone": "Turun sedikit, macam imbas kembali.",
       "screen": "Graf bar: 2017 = 2,267 (bar rendah)",
-      "text": "Tahun dua ribu tujuh belas, | jumlahnya cuma *dua ribu lebih.*"
+      "text": "Tahun *2017*, | jumlahnya cuma *2 ribu lebih.*"
     },
     {
       "bar": 8,
@@ -47,7 +47,7 @@
       "role": "LONJAKAN",
       "tone": "Naik tenaga pada 'melompat'.",
       "screen": "Bar 2021 = 6,286 → 2022 = 13,308 melompat · '×2'",
-      "text": "Empat tahun lepas, | angka tu *melompat dua kali ganda.*"
+      "text": "Empat tahun lepas, | angka itu *melompat dua kali ganda.*"
     },
     {
       "bar": 10,
@@ -55,7 +55,7 @@
       "role": "TREND",
       "tone": "Bercerita, mantap.",
       "screen": "Bar 2023 = 14,322 · 2024 = 15,395 · 2025 = 17,598 naik satu-satu",
-      "text": "Lepas tu, *setiap tahun* | terus *naik.*"
+      "text": "Lepas tu, *setiap tahun* | terus *menaik.*"
     },
     {
       "bar": 12,
@@ -63,7 +63,7 @@
       "role": "KEDUDUKAN",
       "tone": "Bangga separuh tak percaya.",
       "screen": "Papan kedudukan; Alphard naik ke tempat #13",
-      "text": "Dalam senarai semua model, | Alphard *nombor tiga belas.*"
+      "text": "Dalam senarai semua model kereta, | Alphard *nombor 13.*"
     },
     {
       "bar": 14,
@@ -71,7 +71,7 @@
       "role": "KEJUTAN",
       "tone": "Tekan 'Proton S70' macam punchline.",
       "screen": "Alphard 17,598 vs Civic 12,310 · S70 17,166",
-      "text": "Lebih banyak dari *Honda Civic*, | malah *Proton S70!*"
+      "text": "Lebih banyak daripada *Honda Civic*, | dan lebih banyak daripada *Proton S70.*"
     },
     {
       "bar": 16,
@@ -87,7 +87,7 @@
       "role": "PAYOFF",
       "tone": "Muzik masuk balik. Sebut macam pengumuman.",
       "screen": "Bar warna: putih 61.5% · hitam 34.9% · lain-lain 3.6%",
-      "text": "Enam daripada sepuluh, *putih.* | Lebih sepertiga, *hitam.*"
+      "text": "Enam daripada sepuluh, *warna putih.* | Lebih sepertiga, *warna hitam.*"
     },
     {
       "bar": 20,
@@ -95,7 +95,7 @@
       "role": "JAWAPAN",
       "tone": "Tutup kes, yakin.",
       "screen": "Kembali ke tajuk; '17,598 (2025)' · '14,408 (Jan–Okt 2026)'",
-      "text": "Jawapan: *tujuh belas ribu lebih.* | Tahun ni, dah *empat belas ribu.*"
+      "text": "*Tujuh belas ribu lebih.* | Tahun ini dah *14 ribu.*"
     },
     {
       "bar": 22,
@@ -103,10 +103,195 @@
       "role": "SOALAN",
       "tone": "Main-main, cabar penonton.",
       "screen": "Dua butang: PUTIH / HITAM · 'jawab di komen'",
-      "text": "Kalau kau beli, | *putih* atau *hitam?*"
+      "text": "Kalau kau beli, | *putih* ataupun *hitam?*"
     }
   ],
-  "sfx": [],
+  "sfx": [
+    [
+      0,
+      "pop"
+    ],
+    [
+      0.4,
+      "zip"
+    ],
+    [
+      2.24,
+      "pop"
+    ],
+    [
+      5.4,
+      "whoosh"
+    ],
+    [
+      7.38,
+      "pop"
+    ],
+    [
+      8.04,
+      "riser3"
+    ],
+    [
+      10.6,
+      "hit"
+    ],
+    [
+      13.7,
+      "pop"
+    ],
+    [
+      15.63,
+      "ding"
+    ],
+    [
+      22.27,
+      "pop"
+    ],
+    [
+      22.77,
+      "pop"
+    ],
+    [
+      25.3,
+      "whoosh"
+    ],
+    [
+      26.9,
+      "pop"
+    ],
+    [
+      26.9,
+      "pop"
+    ],
+    [
+      34.5,
+      "bubble"
+    ],
+    [
+      35.0,
+      "bubble"
+    ],
+    [
+      35.5,
+      "bubble"
+    ],
+    [
+      36.0,
+      "bubble"
+    ],
+    [
+      37.76,
+      "boing"
+    ],
+    [
+      39.15,
+      "stamp"
+    ],
+    [
+      42.56,
+      "pop"
+    ],
+    [
+      43.44,
+      "pop"
+    ],
+    [
+      44.5,
+      "pop"
+    ],
+    [
+      45.24,
+      "sparkle"
+    ],
+    [
+      45.8,
+      "whoosh"
+    ],
+    [
+      51.03,
+      "ding"
+    ],
+    [
+      53.05,
+      "stamp"
+    ],
+    [
+      56.13,
+      "swish"
+    ],
+    [
+      56.53,
+      "pop"
+    ],
+    [
+      59.64,
+      "swish"
+    ],
+    [
+      60.24,
+      "hit"
+    ],
+    [
+      62.0,
+      "boom"
+    ],
+    [
+      64.03,
+      "swish"
+    ],
+    [
+      67.3,
+      "pop"
+    ],
+    [
+      72.39,
+      "sparkle"
+    ],
+    [
+      76.02,
+      "pop"
+    ],
+    [
+      76.3,
+      "whoosh"
+    ],
+    [
+      76.76,
+      "hit"
+    ],
+    [
+      81.53,
+      "pop"
+    ],
+    [
+      84.5,
+      "swish"
+    ],
+    [
+      84.9,
+      "pop"
+    ],
+    [
+      87.45,
+      "pop"
+    ],
+    [
+      89.54,
+      "pop"
+    ],
+    [
+      90.74,
+      "pop"
+    ],
+    [
+      92.0,
+      "hit"
+    ],
+    [
+      92.1,
+      "sparkle"
+    ]
+  ],
   "facts": [
     "Semua angka dikira sendiri daripada data pendaftaran kenderaan JPJ (data.gov.my, fail cars_YYYY.parquet), data sehingga 31 Okt 2026.",
     "Pendaftaran = kali pertama kereta didaftar di Malaysia, termasuk unit recond/import, bukan hanya jualan baru UMW Toyota.",
@@ -117,5 +302,15 @@
     "Warna 2025: putih 61.5%, hitam 34.9%, lain-lain 3.6%.",
     "Jan–Okt 2026 (14,408) sedikit RENDAH berbanding Jan–Okt 2025 (15,017), jadi skrip sengaja TIDAK kata 'masih naik'.",
     "Media melaporkan 17,601/17,602 untuk 2025. Beza 3–4 unit disebabkan kemaskini data JPJ; skrip guna 'tujuh belas ribu lebih' supaya selamat."
-  ]
+  ],
+  "music": {
+    "breakBeat": 62.0,
+    "returnBeat": 72,
+    "endBeat": 92.0,
+    "introBeats": 6,
+    "crashBeats": [
+      10.6,
+      37.76
+    ]
+  }
 }

@@ -224,133 +224,143 @@ MELODY = {  # bar: [(beat, nota, panjang beat)]
 JINGLE = [(0, "E5", .5), (0.5, "G5", .5), (1, "C6", 1.5)]  # logo bunyi "Se-bab A-pa?"
 
 
-def chord_for_bar(bar):
-    if 14 <= bar <= 17:
-        return ["Dm7", "Dm7", "Bbmaj7", "E7"][bar - 14]
-    if bar == 22:
-        return "F"
-    if bar == 23:
-        return "G"
-    if bar >= 24:
+def music_cfg(tl):
+    """Bahagian lagu dalam unit beat. Default = susunan durian."""
+    c = {"breakBeat": 56, "returnBeat": 72, "endBeat": 96, "introBeats": 8, "crashBeats": [8]}
+    c.update(tl.get("music", {}))
+    return c
+
+
+def section(b, c):
+    if b >= c["endBeat"]:
+        return "end"
+    if c["breakBeat"] <= b < c["returnBeat"]:
+        return "break"
+    if b < c["introBeats"]:
+        return "intro"
+    return "groove2" if b >= c["returnBeat"] else "groove"
+
+
+BREAK_CH = ["Dm7", "Dm7", "Bbmaj7", "E7"]
+MEL_ORDER = [18, 19, 20, 21, 22, 23]
+
+
+def chord_at(b, c):
+    bar = int(b // 4)
+    end_bar = int(c["endBeat"] // 4)
+    s = section(b, c)
+    if s == "end":
         return "Cadd9"
+    if s == "break":
+        k = int((b - c["breakBeat"]) // 4)
+        return BREAK_CH[min(k, 3)] if (c["returnBeat"] - b) > 4 else "E7"
+    if bar == end_bar - 2:
+        return "F"
+    if bar == end_bar - 1:
+        return "G"
     return LOOP[bar % 4]
 
 
 def build_music(tl):
     bpm = tl["bpm"]
     B = 60.0 / bpm
+    c = music_cfg(tl)
     total = tl["totalBeats"] * B + tl["tailSeconds"] + 2.0
     L = int(total * SR)
-    drums = np.zeros(L)
-    keys = np.zeros(L)
-    bassb = np.zeros(L)
-    padb = np.zeros(L)
-    lead = np.zeros(L)
-    kick_env = np.zeros(L)
-    swing = 0.06 * B  # sedikit swing pada 8th lewat
-    nbars = tl["totalBeats"] // 4
+    drums, keys, bassb, padb, lead, kick_env = (np.zeros(L) for _ in range(6))
+    swing = 0.06 * B
 
-    def at(bar, beat):
-        b = bar * 4 + beat
-        if (beat * 2) % 2 == 1:  # 8th offbeat
-            return b * B + swing
-        return b * B
+    def T(b):
+        frac = b % 1
+        return b * B + (swing if abs(frac - 0.5) < 1e-6 else 0)
 
-    for bar in range(nbars + 1):
-        ch = chord_for_bar(bar)
+    def kenv(b):
+        add(kick_env, np.exp(-tvec(0.25) / 0.08), T(b))
+
+    nbars = int(np.ceil(c["endBeat"] / 4))
+    for bar in range(nbars):
+        b0 = bar * 4
+        ch = chord_at(b0, c)
         notes = [mtof(n(x)) for x in CHORDS[ch]]
         root = mtof(n(ROOT[ch]))
-        brk = 14 <= bar <= 17
-        intro = bar < 2
-        final = bar >= 24
-
-        if final:
-            # pukulan akhir
-            add(drums, kick(1.0), at(bar, 0))
-            add(drums, crash(0.9), at(bar, 0))
-            add(bassb, bass(root, 2.5 * B * 4 / 4, 0.9), at(bar, 0))
-            for k, f in enumerate(notes + [notes[-1] * 2]):
-                add(keys, marimba(f, 2.0, 0.45), at(bar, 0) + k * 0.025)
-            for bt, nm, d in JINGLE:
-                add(lead, bell(mtof(n(nm)), 1.8, 0.55), at(bar, bt))
-            add(padb, pad([f * 2 for f in notes], 4 * B + 1.5, 0.35), at(bar, 0))
-            break
-
-        # ---- keys: arpeggio marimba 8th
-        if not brk:
-            pattern = [0, 2, 1, 3, 2, 1, 3, 2]
-            for i, pi in enumerate(pattern):
-                f = notes[pi] * 2
-                vel = 0.55 if i % 2 == 0 else 0.38
-                if intro and i % 2 == 1:
-                    vel *= 0.6
-                add(keys, marimba(f, 0.6, vel), at(bar, i * 0.5))
-        else:
-            add(padb, pad(notes, 4 * B + 0.6, 0.55), at(bar, 0))
-            # tik-tok saspens
-            for i in range(4):
-                add(drums, woodtick(0.18 if i % 2 else 0.25), at(bar, i))
-            if bar in (14, 16):
-                add(lead, bell(mtof(n("A5")), 2.5, 0.22, idx=1.2), at(bar, 0))
-            if bar == 15:
-                add(lead, bell(mtof(n("F5")), 2.5, 0.2, idx=1.2), at(bar, 0))
-            if bar == 17:
-                add(lead, bell(mtof(n("G#5")), 2.5, 0.22, idx=1.2), at(bar, 0))
-
-        # ---- bass
-        if brk:
-            add(bassb, bass(root, 4 * B + 0.04, 0.42), at(bar, 0))
-            # degup jantung
-            for bt in (0, 0.5) if bar < 17 else (0, 0.5, 2, 2.5):
-                add(drums, kick(0.55), at(bar, bt))
-                add(kick_env, np.exp(-tvec(0.25) / 0.08), at(bar, bt))
-        else:
-            fifth = root * 1.5
-            pat = [(0, root, .9), (1.5, root, .45), (2.5, fifth, .45), (3, root * 2, .45), (3.5, root, .4)]
-            if intro:
-                pat = [(0, root, 1.8), (2.5, fifth, .45), (3, root, .9)]
-            for bt, f, d in pat:
-                add(bassb, bass(f, d * B, 0.8), at(bar, bt))
-
+        # ---- keys
+        for i, pi in enumerate([0, 2, 1, 3, 2, 1, 3, 2]):
+            b = b0 + i * 0.5
+            s = section(b, c)
+            if s in ("groove", "groove2", "intro"):
+                chb = chord_at(b, c); nn = [mtof(n(x)) for x in CHORDS[chb]]
+                vel = (0.55 if i % 2 == 0 else 0.38) * (0.75 if s == "intro" and i % 2 else 1)
+                add(keys, marimba(nn[pi] * 2, 0.6, vel), T(b))
+        # ---- bass groove
+        for bt, mul, d in [(0, 1, .9), (1.5, 1, .45), (2.5, 1.5, .45), (3, 2, .45), (3.5, 1, .4)]:
+            b = b0 + bt
+            s = section(b, c)
+            if s in ("groove", "groove2") or (s == "intro" and bt in (0, 2.5, 3)):
+                r = mtof(n(ROOT[chord_at(b, c)]))
+                add(bassb, bass(r * mul, (1.8 if s == "intro" and bt == 0 else d) * B, 0.8), T(b))
         # ---- dram
-        if not brk:
-            kpos = [0, 2, 2.75] if not intro else [0, 2]
-            for bt in kpos:
-                add(drums, kick(0.95 if bt in (0, 2) else 0.6), at(bar, bt))
-                add(kick_env, np.exp(-tvec(0.25) / 0.08), at(bar, bt))
-            if not intro:
-                for bt in (1, 3):
-                    add(drums, clap(0.55), at(bar, bt))
-            for i in range(8):
-                v = 0.10 if i % 2 == 0 else 0.17
-                if intro:
-                    v *= 0.6
-                add(drums, hat(v), at(bar, i * 0.5))
-            if not intro:
-                # kompang: corak tung–pak berselang
-                for bt, hi, v in [(0.75, False, .35), (1.5, True, .22), (2.5, False, .28), (3.25, True, .2), (3.75, True, .15)]:
-                    add(drums, kompang(v, hi), at(bar, bt))
-            if bar % 4 == 3 and bar not in (13,):
-                add(drums, hat(0.18, True), at(bar, 3.5))
+        for bt in (0, 2, 2.75):
+            b = b0 + bt; s = section(b, c)
+            if s in ("groove", "groove2") or (s == "intro" and bt != 2.75):
+                add(drums, kick(0.95 if bt != 2.75 else 0.6), T(b)); kenv(b)
+        for bt in (1, 3):
+            b = b0 + bt
+            if section(b, c) in ("groove", "groove2"):
+                add(drums, clap(0.55), T(b))
+        for i in range(8):
+            b = b0 + i * 0.5; s = section(b, c)
+            if s in ("groove", "groove2", "intro"):
+                add(drums, hat((0.10 if i % 2 == 0 else 0.17) * (0.6 if s == "intro" else 1)), T(b))
+        for bt, hi, v in [(0.75, False, .35), (1.5, True, .22), (2.5, False, .28), (3.25, True, .2), (3.75, True, .15)]:
+            b = b0 + bt
+            if section(b, c) in ("groove", "groove2"):
+                add(drums, kompang(v, hi), T(b))
+        if bar % 4 == 3 and section(b0 + 3.5, c) in ("groove", "groove2"):
+            add(drums, hat(0.18, True), T(b0 + 3.5))
+        # ---- melodi di bahagian kedua
+        if section(b0, c) == "groove2":
+            k = (bar - int(np.ceil(c["returnBeat"] / 4))) % len(MEL_ORDER)
+            if bar * 4 >= c["returnBeat"]:
+                for bt, nm, d in MELODY[MEL_ORDER[k]]:
+                    if section(b0 + bt, c) == "groove2":
+                        add(lead, bell(mtof(n(nm)), max(0.6, d * B * 2), 0.42), T(b0 + bt))
 
-        # ---- melodi (bahagian kedua)
-        if bar in MELODY:
-            for bt, nm, d in MELODY[bar]:
-                add(lead, bell(mtof(n(nm)), max(0.6, d * B * 2), 0.42), at(bar, bt))
-
-        # ---- jingle logo di awal
-        if bar == 0:
-            for bt, nm, d in JINGLE:
-                add(lead, bell(mtof(n(nm)), 1.4, 0.4), at(0, bt))
-
-    # crash pada titik penting
-    for bar in (2, 8, 18):
-        add(drums, crash(0.55 if bar != 18 else 0.8), bar * 4 * B)
-    # gulungan snare + riser masuk bar 18
-    roll0 = (17 * 4 + 2) * B
+    # ---- break: pad + bass panjang + degupan + tik-tok
+    bb, rb = c["breakBeat"], c["returnBeat"]
+    pts = [bb] + [x for x in range(int(np.ceil(bb / 4)) * 4, int(rb), 4) if x > bb]
+    for i, p in enumerate(pts):
+        q = pts[i + 1] if i + 1 < len(pts) else rb
+        ch = chord_at(p, c); notes = [mtof(n(x)) for x in CHORDS[ch]]
+        dur = (q - p) * B
+        add(padb, pad(notes, dur + 0.6, 0.55), T(p))
+        add(bassb, bass(mtof(n(ROOT[ch])), dur + 0.04, 0.42), T(p))
+        add(lead, bell(mtof(n(["A5", "F5", "A5", "G#5"][min(i, 3)])), 2.5, 0.22, idx=1.2), T(p))
+    b = bb
+    while b < rb - 0.01:
+        add(drums, woodtick(0.25 if b % 2 == 0 else 0.18), T(b))
+        if (b - bb) % 4 in (0, 0.5) or (rb - b) <= 4 and (b % 2) in (0, 0.5):
+            add(drums, kick(0.55), T(b)); kenv(b)
+        b += 0.5 if (b - bb) % 4 == 0 or (rb - b) <= 4 else 1
+    # gulungan + riser ke returnBeat
+    roll0 = (rb - 2) * B
     for i in range(16):
         add(drums, clap(0.15 + 0.5 * i / 16), roll0 + i * B / 8)
     add(drums, riser(2 * B, 0.35), roll0)
+    # crash
+    for cb in list(c["crashBeats"]) + [rb]:
+        add(drums, crash(0.8 if cb == rb else 0.55), T(cb))
+    # jingle awal
+    for bt, nm, d in JINGLE:
+        add(lead, bell(mtof(n(nm)), 1.4, 0.4), T(bt))
+    # pukulan akhir
+    e = c["endBeat"]; notes = [mtof(n(x)) for x in CHORDS["Cadd9"]]
+    add(drums, kick(1.0), T(e)); add(drums, crash(0.9), T(e))
+    add(bassb, bass(mtof(n(ROOT["Cadd9"])), 2.5 * B, 0.9), T(e))
+    for k, f in enumerate(notes + [notes[-1] * 2]):
+        add(keys, marimba(f, 2.0, 0.45), T(e) + k * 0.025)
+    for bt, nm, d in JINGLE:
+        add(lead, bell(mtof(n(nm)), 1.8, 0.55), T(e + bt))
+    add(padb, pad([f * 2 for f in notes], 4 * B + 1.5, 0.35), T(e))
 
     # sidechain ringan pada keys/pad
     duck = 1 - 0.35 * np.clip(kick_env, 0, 1)

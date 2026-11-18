@@ -51,12 +51,14 @@ function serve() {
   } else {
     const dur = await page.evaluate(() => window.DURATION);
     const total = Math.round(dur * fps);
-    const out = path.join(outDir, 'video.mp4');
-    const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', String(fps), '-i', '-',
-      '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
+    const prev = mode === 'preview';
+    const out = path.join(outDir, prev ? 'preview_video.mp4' : 'video.mp4');
+    const vf = prev ? ['-vf', 'scale=540:960'] : [];
+    const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-c:v', 'mjpeg', '-framerate', String(fps), '-i', '-', ...vf,
+      '-c:v', 'libx264', '-preset', prev ? 'veryfast' : 'slow', '-crf', prev ? '24' : '16', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out], { stdio: ['pipe', 'inherit', 'inherit'] });
     const t0 = Date.now();
     for (let f = 0; f < total; f++) {
-      const url = await grab(f / fps, 0.94);
+      const url = await grab(f / fps, prev ? 0.85 : 0.95);
       const buf = Buffer.from(url.split(',')[1], 'base64');
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
       if (f % 150 === 0) console.log(`frame ${f}/${total}  ${((Date.now() - t0) / 1000).toFixed(0)}s`);
