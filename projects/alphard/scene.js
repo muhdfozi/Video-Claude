@@ -130,7 +130,7 @@ function zoneRoad(c) {
   c.fillStyle = 'rgba(255,244,224,0.75)';
   for (let x = -880; x < 2000; x += 180) c.fillRect(x - ((b * 0) % 180), 1720, 100, 14);
   // hos di kaki lima
-  if (b < E.toBoard + 1.5) host(c, 935, 1425, 0.4 * pop(1.0, 0.7), { pose: 'wave' });
+  host(c, 935, 1425, 0.4 * life(1.0, E.toBoard - 0.4, 0.7, 0.4), { pose: 'wave' });
   // kereta
   const cx = carX(), mv = P(E.carIn, E.carIn + 2.6) < 1 ? 1 : 0;
   mpv(c, cx, 1640, 0.95, { spin: cx / 60, bounce: mv ? Math.sin(b * 20) * 2 : 0 });
