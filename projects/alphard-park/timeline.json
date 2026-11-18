@@ -88,12 +88,6 @@
       "screen": "Barisan Alphard, sebahagian ada ✓"
     },
     {
-      "role": "FAKTA AGH40",
-      "text": "Dan remote parking guna telefon? | *Tak ada* untuk versi petrol.",
-      "tone": "Separuh terkejut.",
-      "screen": "Telefon dengan pangkah; 'Hybrid/PHEV sahaja'"
-    },
-    {
       "role": "KELEBIHAN",
       "text": "Sekarang, kelebihan. | Alphard panjang *hampir 5 meter.*",
       "tone": "Naik tenaga.",
@@ -122,18 +116,6 @@
       "text": "Kamera dan sonar yang ukur, | *bukan main agak.*",
       "tone": "Yakin.",
       "screen": "Garisan ukur hijau"
-    },
-    {
-      "role": "KELEBIHAN",
-      "text": "Dia juga boleh *ingat petak* | yang *tak ada garisan*,",
-      "tone": "Teruja.",
-      "screen": "Porch rumah tanpa garisan; ikon 'disimpan'"
-    },
-    {
-      "role": "KELEBIHAN",
-      "text": "contohnya *porch rumah* kau sendiri.",
-      "tone": "Senyum.",
-      "screen": "Alphard masuk porch sendiri"
     },
     {
       "role": "TAPI",
