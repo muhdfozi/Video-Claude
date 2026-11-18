@@ -52,4 +52,4 @@ Hook (1–3) → apa itu Advanced Park (4–7) → cara guna (8–10) → fakta 
   - Lebar: (2.5 − 1.85) ÷ 2 = **32.5 cm** setiap sisi.
   - Selari: 6.0 − 4.995 = **lebih kurang 1 meter** jumlah ruang.
 - **Kelemahan:** manual Toyota menyatakan sistem mungkin tak kesan petak bergantung pada permukaan dan keadaan, dan pemandu tetap kena pantau dan brek. ([manual.toyota.jp](https://manual.toyota.jp/aqua/2404/hev/ja_JP/contents/vhch04se050412.php)) "Perlahan" ialah pengalaman pemilik, bukan angka rasmi. ([ClubLexus](https://clublexus.com/forums/nx-2nd-gen-2022-current/1009623-advanced-park-to-the-left.html))
-- **Unit jualan:** Alphard Z 2023 dengan Advanced Park, RM262,000 (maklumat daripada kau).
+- **Unit jualan:** Alphard Z **2024** dengan Advanced Park, RM262,000 (disahkan oleh kau; dalam VO disebut 'tahun 2024').

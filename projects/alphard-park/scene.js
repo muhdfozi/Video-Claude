@@ -148,7 +148,7 @@ function zoneLot(c) {
   const tw = pop(E.terlanggar - 0.2, 0.45) * (1 - P(E.l22 - 0.5, E.l22));
   if (tw > 0) {
     c.save(); c.globalAlpha = 0.5 + 0.5 * Math.sin(b * 12); c.strokeStyle = RED; c.lineWidth = 12; c.beginPath(); c.arc(PILLAR.x, PILLAR.y, 110 * tw, 0, 7); c.stroke(); c.restore();
-    label(c, '!', PILLAR.x + 120, PILLAR.y - 110, { scale: tw, size: 90, bg: RED, fg: CREAM });
+    label(c, 'TIANG!', PILLAR.x + 90, PILLAR.y - 175, { scale: tw * (1 + 0.04 * Math.sin(b * 20)), size: 80, bg: RED, fg: CREAM, rot: -0.05 });
   }
   // ukuran (ayat 14-15)
   if (b > E.l14 && b < E.l16) {
@@ -179,7 +179,7 @@ function zonePar(c) {
   const a = pop(E.m6, 0.6);
   if (a > 0) { dimArrow(c, 120 + PAR_W, CURB - PAR_D - 70, 120 + PAR_W * 2, CURB - PAR_D - 70, CREAM, 8); label(c, '6.0 m', ax, CURB - PAR_D - 150, { scale: a, size: 60, bg: CREAM }); }
   const s2 = pop(E.semeter, 0.6);
-  if (s2 > 0) { const L2 = 4.995 * M / 2; [[120 + PAR_W, ax - L2], [ax + L2, 120 + PAR_W * 2]].forEach(([x0, x1]) => dimArrow(c, x0 + 6, yc, x1 - 6, yc, '#FFD23F', 6)); label(c, '~50 cm', 120 + PAR_W + 75, yc + 110, { scale: s2, size: 40, bg: '#FFD23F' }); label(c, '~50 cm', 120 + PAR_W * 2 - 75, yc + 110, { scale: s2, size: 40, bg: '#FFD23F' }); }
+  if (s2 > 0) { const L2 = 4.995 * M / 2; [[120 + PAR_W, ax - L2], [ax + L2, 120 + PAR_W * 2]].forEach(([x0, x1]) => dimArrow(c, x0 + 6, yc, x1 - 6, yc, '#FFD23F', 6)); label(c, '~50 cm', 120 + PAR_W + 80, yc + 150, { scale: s2, size: 52, bg: '#FFD23F' }); label(c, '~50 cm', 120 + PAR_W * 2 - 80, yc + 150, { scale: s2, size: 52, bg: '#FFD23F' }); }
 }
 
 // ================================================================ rakaman sebenar (jualan)
@@ -229,15 +229,15 @@ async function drawFootage(c) {
 function buildCam() {
   const lot = (x, y, z) => ({ x, y, z });
   return [
-    lot(1600, 900, 0.62),
-    { b0: 0, b1: 6, x: 1500, y: 950, z: 0.68, ease: 'lin' },
+    lot(1650, 1150, 0.8),
+    { b0: 0, b1: 6, x: 1500, y: 1180, z: 0.9, ease: 'lin' },
     { b0: E.l5 - 0.6, b1: E.l5 + 0.6, x: bayCx(2) + 330, y: AISLE_Y - 150, z: 1.15 },
     { b0: E.l8 - 0.4, b1: E.l8 + 1.0, x: bayCx(5) + 250, y: 1100, z: 0.72 },
     { b0: E.screen + 0.6, b1: E.depan + 1.2, x: bayCx(5) + 100, y: 950, z: 0.85 },
     { b0: E.keluar - 0.5, b1: E.keluar + 2.5, x: bayCx(5) - 200, y: 1150, z: 0.75 },
     { b0: E.l14 - 0.6, b1: E.l14 + 0.6, x: bayCx(2), y: 640, z: 1.05, whip: true },
     { b0: E.cm32 - 0.8, b1: E.cm32 + 0.2, x: bayCx(2), y: 700, z: 1.2 },
-    { b0: E.l16 - 0.6, b1: E.l16 + 0.6, x: 120 + PAR_W * 1.5, y: CURB - 350, z: 0.82, whip: true },
+    { b0: E.l16 - 0.6, b1: E.l16 + 0.6, x: 120 + PAR_W * 1.5, y: CURB - 260, z: 1.05, whip: true },
     { b0: E.l19 - 0.7, b1: E.l19 + 0.5, x: bayCx(5) + 700, y: 1150, z: 0.58, whip: true },
     { b0: E.l20 - 0.1, b1: E.l20 + 0.9, x: bayCx(2), y: 760, z: 0.95 },
     { b0: E.terlanggar - 1.2, b1: E.terlanggar, x: PILLAR.x - 100, y: 800, z: 0.95 },
@@ -354,7 +354,7 @@ function outro(c) {
   host(c, 540, 1000, 0.74 * pop(E.outro + 0.2, 0.8), { pose: 'wave' });
   bigText(c, 'Komen "NAK"', 540, 1130, 130, { scale: pop(E.outro + 0.5, 0.7), stroke: '#7A2A12' });
   label(c, 'saya DM korang', 540, 1270, { scale: pop(E.outro + 1.0, 0.6), size: 52, bg: CREAM });
-  label(c, 'Alphard Z · Advanced Park · RM262,000', 540, 1390, { scale: pop(E.outro + 1.5, 0.6), size: 36, bg: INK, fg: CREAM });
+  label(c, 'Alphard Z 2024 · Advanced Park · RM262,000', 540, 1390, { scale: pop(E.outro + 1.5, 0.6), size: 36, bg: INK, fg: CREAM });
   c.restore();
 }
 function drawCaptions(c) {
