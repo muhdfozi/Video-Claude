@@ -1,0 +1,121 @@
+{
+  "title": "Sebab Apa? — Alphard",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 100,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "lines": [
+    {
+      "bar": 0,
+      "bars": 2,
+      "role": "HOOK",
+      "tone": "Macam tanya kawan kat kedai mamak — ingin tahu, sedikit sinis. Tekan 'setiap tahun'.",
+      "screen": "Tajuk besar + Alphard putih masuk frame",
+      "captionHidden": true,
+      "text": "Berapa ribu *Alphard* register | di Malaysia *setiap tahun?*"
+    },
+    {
+      "bar": 2,
+      "bars": 2,
+      "role": "SAUH",
+      "tone": "Jeda kecil sebelum angka, kemudian sebut dengan yakin.",
+      "screen": "Kaunter angka berpusing → 17,598 · tag 'JPJ 2025'",
+      "text": "Tahun lepas, JPJ daftar | *tujuh belas ribu lebih* Alphard."
+    },
+    {
+      "bar": 4,
+      "bars": 2,
+      "role": "SKALA",
+      "tone": "Terkejut sikit pada 'dua buah setiap jam'.",
+      "screen": "Jam berdetik; ikon Alphard muncul 2 setiap pusingan · '48 sehari'",
+      "text": "Itu *empat puluh lapan sehari* — | *dua buah setiap jam!*"
+    },
+    {
+      "bar": 6,
+      "bars": 2,
+      "role": "DULU",
+      "tone": "Turun sedikit, macam imbas kembali.",
+      "screen": "Graf bar: 2017 = 2,267 (bar rendah)",
+      "text": "Tahun dua ribu tujuh belas, | jumlahnya cuma *dua ribu lebih.*"
+    },
+    {
+      "bar": 8,
+      "bars": 2,
+      "role": "LONJAKAN",
+      "tone": "Naik tenaga pada 'melompat'.",
+      "screen": "Bar 2021 = 6,286 → 2022 = 13,308 melompat · '×2'",
+      "text": "Empat tahun lepas, | angka tu *melompat dua kali ganda.*"
+    },
+    {
+      "bar": 10,
+      "bars": 2,
+      "role": "TREND",
+      "tone": "Bercerita, mantap.",
+      "screen": "Bar 2023 = 14,322 · 2024 = 15,395 · 2025 = 17,598 naik satu-satu",
+      "text": "Lepas tu, *setiap tahun* | terus *naik.*"
+    },
+    {
+      "bar": 12,
+      "bars": 2,
+      "role": "KEDUDUKAN",
+      "tone": "Bangga separuh tak percaya.",
+      "screen": "Papan kedudukan; Alphard naik ke tempat #13",
+      "text": "Dalam senarai semua model, | Alphard *nombor tiga belas.*"
+    },
+    {
+      "bar": 14,
+      "bars": 2,
+      "role": "KEJUTAN",
+      "tone": "Tekan 'Proton S70' macam punchline.",
+      "screen": "Alphard 17,598 vs Civic 12,310 · S70 17,166",
+      "text": "Lebih banyak dari *Honda Civic*, | malah *Proton S70!*"
+    },
+    {
+      "bar": 16,
+      "bars": 2,
+      "role": "TAPI",
+      "tone": "Turun suara, perlahan. Muzik hilang di sini.",
+      "screen": "Semua Alphard jadi siluet kelabu",
+      "text": "*Tapi...* | hampir semuanya | cuma *dua warna.*"
+    },
+    {
+      "bar": 18,
+      "bars": 2,
+      "role": "PAYOFF",
+      "tone": "Muzik masuk balik. Sebut macam pengumuman.",
+      "screen": "Bar warna: putih 61.5% · hitam 34.9% · lain-lain 3.6%",
+      "text": "Enam daripada sepuluh, *putih.* | Lebih sepertiga, *hitam.*"
+    },
+    {
+      "bar": 20,
+      "bars": 2,
+      "role": "JAWAPAN",
+      "tone": "Tutup kes, yakin.",
+      "screen": "Kembali ke tajuk; '17,598 (2025)' · '14,408 (Jan–Okt 2026)'",
+      "text": "Jawapan: *tujuh belas ribu lebih.* | Tahun ni, dah *empat belas ribu.*"
+    },
+    {
+      "bar": 22,
+      "bars": 2,
+      "role": "SOALAN",
+      "tone": "Main-main, cabar penonton.",
+      "screen": "Dua butang: PUTIH / HITAM · 'jawab di komen'",
+      "text": "Kalau kau beli, | *putih* atau *hitam?*"
+    }
+  ],
+  "sfx": [],
+  "facts": [
+    "Semua angka dikira sendiri daripada data pendaftaran kenderaan JPJ (data.gov.my, fail cars_YYYY.parquet), data sehingga 31 Okt 2026.",
+    "Pendaftaran = kali pertama kereta didaftar di Malaysia, termasuk unit recond/import, bukan hanya jualan baru UMW Toyota.",
+    "Alphard: 2017 = 2,267 · 2018 = 4,312 · 2019 = 4,490 · 2020 = 5,269 · 2021 = 6,286 · 2022 = 13,308 · 2023 = 14,322 · 2024 = 15,395 · 2025 = 17,598 · 2026 (Jan–Okt) = 14,408.",
+    "2025: 17,598 ÷ 365 = 48.2 sehari ≈ 2 sejam.",
+    "2021 → 2022: 6,286 → 13,308 = 2.1 kali ganda.",
+    "Kedudukan 2025 (semua model): #13. Proton S70 = 17,166 (#14), Honda Civic = 12,310 (#17), Honda CR-V = 10,735 (#19).",
+    "Warna 2025: putih 61.5%, hitam 34.9%, lain-lain 3.6%.",
+    "Jan–Okt 2026 (14,408) sedikit RENDAH berbanding Jan–Okt 2025 (15,017), jadi skrip sengaja TIDAK kata 'masih naik'.",
+    "Media melaporkan 17,601/17,602 untuk 2025. Beza 3–4 unit disebabkan kemaskini data JPJ; skrip guna 'tujuh belas ribu lebih' supaya selamat."
+  ]
+}
