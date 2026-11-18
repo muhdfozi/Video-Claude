@@ -12,7 +12,7 @@ studio lighting, soft natural shadow under the car, Japanese-market version,
 no text, no logo watermark, no number plate text, no people, 16:9 landscape.
 
 ---------------------------------------------------------------
-17 GAMBAR (Odyssey 2 versi kongsi satu gambar)
+GAMBAR YANG BELUM ADA (Odyssey 2 versi kongsi satu gambar)
 ---------------------------------------------------------------
 taft.webp          2021 Daihatsu Taft G Turbo (small kei crossover SUV)
 tank.webp          2020 Toyota Tank Custom G-T (compact tall wagon with sliding doors)
@@ -31,6 +31,29 @@ crownsport.webp    2023 Toyota Crown Sport (crossover)
 velar.webp         2020 Range Rover Velar R-Dynamic
 lbx.webp           2025 Lexus LBX (compact crossover)
 macan.webp         2022 Porsche Macan
+
+--- TAMBAHAN 18 NOV 2026 (senarai harga baru) ---
+supra.webp         2024 Toyota GR Supra 3.0 RZ
+crownsport.webp    2023 Toyota Crown Crossover (juga dipakai untuk Crown Sport)
+gx550.webp         2025 Lexus GX550
+lx600.webp         2023 Lexus LX600
+lm500h.webp        2024 Lexus LM500h (luxury MPV)
+cayman718.webp     2023 Porsche 718 Cayman
+taycan.webp        2024 Porsche Taycan
+cayenne.webp       2023 Porsche Cayenne Coupe (facelift)
+panamera.webp      2024 Porsche Panamera (facelift)
+porsche911.webp    2023 Porsche 911 Carrera (992)
+glc300.webp        2021 Mercedes-Benz GLC300
+cle53.webp         2024 Mercedes-AMG CLE53 Coupe
+rrsport.webp       2022 Range Rover Sport (L461)
+rangerover.webp    2024 Range Rover Autobiography LWB (L460)
+m4.webp            2023 BMW M4 Competition Coupe (G82)
+m5.webp            2025 BMW M5 (G90)
+urus.webp          2022 Lamborghini Urus
+maybach.webp       2023 Mercedes-Maybach GLS600
+ghost.webp         2025 Rolls-Royce Ghost Series II
+(Macan Electric 2025 guna macan.webp. G350d & G63 guna gambar g350 sedia ada.
+ RX300 guna rx350. CLA180 & CLA45 S guna cla250.)
 
 ---------------------------------------------------------------
 LEPAS SIAP

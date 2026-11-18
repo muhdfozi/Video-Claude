@@ -207,7 +207,32 @@ Mercedes-Benz A180 AMG Line | 2022 | UK | 150000 | Hatchback
 BMW M135i xDrive | 2023 | UK | 200000 | Hatchback
 Mercedes-AMG A45 S | 2022 | UK | 265000 | Hatchback
 BMW M2 | 2024 | UK | 375000 | Sport
-Nissan GT-R | 2023 | JP | 755000 | Sport`;
+Nissan GT-R | 2023 | JP | 755000 | Sport
+Toyota Supra 3.0 RZ | 2024 | JP | 355000 | Sport
+Toyota Crown Crossover | 2023 | JP | 235000 | SUV
+Lexus RX300 F Sport | 2022 | JP | 230000 | SUV
+Lexus GX550 | 2025 | JP | 580000 | SUV
+Lexus LX600 | 2023 | JP | 580000 | SUV
+Lexus LM500h | 2024 | JP | 625000 | MPV
+Porsche 718 Cayman | 2023 | JP | 440000 | Sport
+Porsche Taycan | 2024 | JP | 370000 | Sedan
+Porsche Macan Electric | 2025 | JP | 365000 | SUV
+Porsche Cayenne Coupe 3.0 | 2023 | UK | 560000 | SUV
+Porsche Panamera 2.9 | 2024 | UK | 700000 | Sedan
+Porsche 911 Carrera (992) | 2023 | UK | 700000 | Sport
+Mercedes-Benz CLA180 | 2021 | UK | 175000 | Sedan
+Mercedes-AMG CLA45 S | 2022 | UK | 295000 | Sedan
+Mercedes-Benz GLC300 | 2021 | UK | 290000 | SUV
+Mercedes-Benz G350d | 2022 | UK | 495000 | SUV
+Mercedes-AMG G63 | 2022 | UK | 805000 | SUV
+Mercedes-AMG CLE53 Coupe | 2024 | UK | 600000 | Sport
+Range Rover Sport 3.0 | 2022 | UK | 520000 | SUV
+BMW M4 Competition | 2023 | UK | 500000 | Sport
+BMW M5 | 2025 | UK | 900000 | Sedan
+Lamborghini Urus | 2022 | UK | 1200000 | SUV
+Range Rover Autobiography LWB | 2024 | UK | 1130000 | SUV
+Mercedes-Maybach GLS600 | 2023 | UK | 1240000 | SUV
+Rolls-Royce Ghost EWB | 2025 | UK | 2890000 | Sedan`;
 const DEFAULTS = {rate:2.5, maxPct:40, dsr:60, selesa:20, sesuai:30, dep:10, years:9, stock:SAMPLE_STOCK};
 
 function parseStock(t){
@@ -235,12 +260,16 @@ const CAR_IMG = [
   [/vellfire/i, m => /baru|z premier|40\b/i.test(m) ? 'vellfire40' : 'vellfire30'],
   [/gr ?86/i,'gr86'], [/gt ?86/i,'gt86'], [/harrier/i,'harrier'], [/land ?cruiser|prado/i,'landcruiser'],
   [/voxy/i,'voxy'], [/noah/i,'noah'], [/\bnx ?\d/i,'nx250'], [/\brx ?\d/i,'rx350'], [/\bis ?300/i,'is300'],
-  [/step ?wgn/i,'stepwgn'], [/type ?r|fl5/i,'civicfl5'], [/a ?180/i,'a180'], [/a ?35\b/i,'a35'], [/a ?45/i,'a45s'],
-  [/\bcla/i,'cla250'], [/g ?350|g-class/i,'g350'], [/m135i/i,'m135i'], [/\b135i/i,'135i'], [/\b118i/i,'118i'],
+  [/step ?wgn/i,'stepwgn'], [/type ?r|fl5/i,'civicfl5'], [/\ba ?180/i,'a180'], [/\ba ?35\b/i,'a35'], [/\ba ?45/i,'a45s'],
+  [/\bcla/i,'cla250'], [/\bg ?350|\bg ?63|g-class/i,'g350'], [/m135i/i,'m135i'], [/\b135i/i,'135i'], [/\b118i/i,'118i'],
   [/\bm2\b/i,'m2'], [/gt-?r\b/i,'gtr'], [/\bbrz/i,'brz'], [/swift/i,'swift'], [/jimny/i,'jimny'], [/defender/i,'defender'],
   [/taft/i,'taft'], [/\btank\b/i,'tank'], [/canbus/i,'canbus'], [/tanto/i,'tanto'], [/corolla sport/i,'corollasport'], [/roadster|mx-?5/i,'roadster'],
   [/levorg/i,'levorg'], [/odyssey/i,'odyssey'], [/\bux ?\d/i,'ux200'], [/\bmini\b|cooper/i,'mini'], [/gr ?yaris/i,'gryaris'], [/420i|4 series/i,'420i'],
-  [/\bc ?200|c-class/i,'c200'], [/crown/i,'crownsport'], [/velar/i,'velar'], [/\blbx/i,'lbx'], [/macan/i,'macan']
+  [/\bc ?200|c-class/i,'c200'], [/crown/i,'crownsport'], [/velar/i,'velar'], [/\blbx/i,'lbx'], [/macan/i,'macan'],
+  [/supra/i,'supra'], [/gx ?550/i,'gx550'], [/lx ?600/i,'lx600'], [/\blm ?\d/i,'lm500h'], [/718|cayman|boxster/i,'cayman718'], [/taycan/i,'taycan'],
+  [/cayenne/i,'cayenne'], [/panamera/i,'panamera'], [/\b911\b|carrera/i,'porsche911'], [/glc/i,'glc300'], [/cle ?53|\bcle\b/i,'cle53'],
+  [/range rover sport/i,'rrsport'], [/autobiography|range rover p530/i,'rangerover'], [/\bm4\b/i,'m4'], [/\bm5\b/i,'m5'], [/urus/i,'urus'],
+  [/maybach/i,'maybach'], [/ghost|rolls/i,'ghost']
 ];
 function carImg(model){ for(const [rx,k] of CAR_IMG) if(rx.test(model)) return typeof k==='function' ? k(model) : k; return ''; }
 function pic(c){
