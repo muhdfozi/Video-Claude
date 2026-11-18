@@ -39,7 +39,7 @@ function serve() {
   const outDir = path.join(ROOT, proj, 'build');
   fs.mkdirSync(outDir, { recursive: true });
 
-  const grab = (t, q) => page.evaluate(([t, q]) => { window.renderFrame(t); return document.getElementById('c').toDataURL(q ? 'image/jpeg' : 'image/png', q || undefined); }, [t, q]);
+  const grab = (t, q) => page.evaluate(async ([t, q]) => { await window.renderFrame(t); return document.getElementById('c').toDataURL(q ? 'image/jpeg' : 'image/png', q || undefined); }, [t, q]);
 
   if (mode === 'stills') {
     const sd = path.join(outDir, 'stills'); fs.mkdirSync(sd, { recursive: true });

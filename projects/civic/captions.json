@@ -1,0 +1,434 @@
+[
+ {
+  "line": 1,
+  "start": 0.0,
+  "end": 1.09,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "Hari-hari beli rokok,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 1,
+  "start": 1.09,
+  "end": 3.273,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "tapi korang pernah ",
+    "hl": false
+   },
+   {
+    "t": "terfikir",
+    "hl": true
+   },
+   {
+    "t": " tak?",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 3.273,
+  "end": 4.433,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Berapa banyak duit korang",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 4.433,
+  "end": 6.273,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dah ",
+    "hl": false
+   },
+   {
+    "t": "lesap menjadi asap?",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 6.273,
+  "end": 7.693,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dunhill sekotak",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 7.693,
+  "end": 8.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "RM18.20.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 8.182,
+  "end": 9.682,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Kalau sehari sekotak,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 9.682,
+  "end": 11.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "sebulan dah ",
+    "hl": false
+   },
+   {
+    "t": "RM500 lebih.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 11.182,
+  "end": 12.002,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Setahun,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 12.002,
+  "end": 13.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "RM6,000 lebih.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 13.091,
+  "end": 14.451,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Kalau duit itu dimasukkan",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 14.451,
+  "end": 16.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dalam ",
+    "hl": false
+   },
+   {
+    "t": "tabung beli kereta,",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 16.091,
+  "end": 17.451,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "agak-agak berapa banyak kotak",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 17.451,
+  "end": 19.636,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "baru dapat ",
+    "hl": false
+   },
+   {
+    "t": "Civic FL5?",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 19.636,
+  "end": 22.076,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Jawapan dia, ",
+    "hl": false
+   },
+   {
+    "t": "15,000 kotak",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 22.076,
+  "end": 25.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dan nilai dia adalah ",
+    "hl": false
+   },
+   {
+    "t": "RM273,000.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 25.091,
+  "end": 26.751,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Tapi",
+    "hl": true
+   },
+   {
+    "t": " kalau sehari sekotak,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 26.751,
+  "end": 29.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "41 tahun",
+    "hl": true
+   },
+   {
+    "t": " juga lah baru terkumpul.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 29.182,
+  "end": 29.922,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Tak apa,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 29.922,
+  "end": 32.727,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "berhenti rokok",
+    "hl": true
+   },
+   {
+    "t": " ataupun ",
+    "hl": false
+   },
+   {
+    "t": "kurangkan rokok.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 32.727,
+  "end": 35.347,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Tapi untuk sesiapa yang ",
+    "hl": false
+   },
+   {
+    "t": "tak merokok",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 35.347,
+  "end": 37.636,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dah cukup duit, nak beli ",
+    "hl": false
+   },
+   {
+    "t": "FL5?",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 37.636,
+  "end": 40.216,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Saya ada ",
+    "hl": false
+   },
+   {
+    "t": "2 unit",
+    "hl": true
+   },
+   {
+    "t": " tahun 2025,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 40.216,
+  "end": 43.636,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Racing Black",
+    "hl": true
+   },
+   {
+    "t": ", yang ready di showroom.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 13,
+  "start": 43.636,
+  "end": 46.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Harganya ",
+    "hl": false
+   },
+   {
+    "t": "RM270,000.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 14,
+  "start": 46.091,
+  "end": 47.231,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Nak tengok detail?",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 14,
+  "start": 47.231,
+  "end": 48.071,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Komen ",
+    "hl": false
+   },
+   {
+    "t": "\"nak\"",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 14,
+  "start": 48.071,
+  "end": 50.447,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "saya ",
+    "hl": false
+   },
+   {
+    "t": "DM",
+    "hl": true
+   },
+   {
+    "t": " korang.",
+    "hl": false
+   }
+  ]
+ }
+]

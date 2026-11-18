@@ -2,3 +2,4 @@ projects/*/build/
 __pycache__/
 output/
 assets/host/source.jpg
+projects/*/raw/

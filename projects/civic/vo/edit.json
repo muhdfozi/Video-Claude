@@ -1,0 +1,19 @@
+{
+  "source": "raw.m4a",
+  "note": "Masa dalam saat pada rakaman asal. Jeda antara ayat dikira automatik supaya setiap ayat masuk pada ketukan 110 BPM.",
+  "lineStarts": [0.00, 3.07, 6.40, 9.42, 12.78, 14.80, 17.87, 21.77, 27.75, 32.16, 35.88, 40.86, 47.30, 50.04],
+  "lineEnds":   [2.87, 5.77, 8.05, 12.23, 14.30, 17.59, 21.14, 27.10, 31.90, 35.32, 40.40, 46.84, 49.53, 54.07],
+  "innerGaps": [
+    [10.53, 10.74, 0.16, "sekotak, … sebulan"],
+    [22.48, 22.63, 0.12, "dia, … 15 ribu"],
+    [23.94, 24.22, 0.18, "kotak … dan nilai"],
+    [29.08, 29.62, 0.28, "sekotak, … 41 tahun (jeda kecil, kekal sedikit)"],
+    [33.62, 33.80, 0.14, "rokok … ataupun"],
+    [44.00, 44.23, 0.14, "Racing … Black"],
+    [45.12, 45.57, 0.18, "Black, … yang ready"],
+    [50.96, 51.46, 0.22, "detail? … komen"],
+    [52.08, 52.45, 0.20, "nak. … Saya DM"]
+  ],
+  "fullBeatLines": [0, 8, 10, 11],
+  "lineGapRange": [0.18, 0.55]
+}

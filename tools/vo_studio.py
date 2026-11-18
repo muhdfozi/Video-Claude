@@ -43,7 +43,7 @@ def xfade_concat(pieces, fade=0.012):
 
 def build_line(a, s, e, gaps, pre=0.05, post=0.10):
     """Potong satu ayat dari rakaman, pendekkan jeda dalam ayat."""
-    pieces, cur = [], s - pre
+    pieces, cur = [], max(0.0, s - pre)
     for g0, g1, tgt, *_ in gaps:
         if not (s < g0 < e):
             continue

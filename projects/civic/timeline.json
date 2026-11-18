@@ -1,0 +1,236 @@
+{
+  "title": "Sebab Apa? — Duit Rokok vs Civic FL5",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 98.0,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "lines": [
+    {
+      "captionHidden": true,
+      "text": "Hari-hari beli rokok, | tapi korang pernah *terfikir* tak?"
+    },
+    {
+      "text": "Berapa banyak duit korang | dah *lesap menjadi asap?*"
+    },
+    {
+      "text": "Dunhill sekotak | *RM18.20.*"
+    },
+    {
+      "text": "Kalau sehari sekotak, | sebulan dah *RM500 lebih.*"
+    },
+    {
+      "text": "Setahun, | *RM6,000 lebih.*"
+    },
+    {
+      "text": "Kalau duit itu dimasukkan | dalam *tabung beli kereta,*"
+    },
+    {
+      "text": "agak-agak berapa banyak kotak | baru dapat *Civic FL5?*"
+    },
+    {
+      "text": "Jawapan dia, *15,000 kotak*, | dan nilai dia adalah *RM273,000.*"
+    },
+    {
+      "text": "*Tapi* kalau sehari sekotak, | *41 tahun* juga lah baru terkumpul."
+    },
+    {
+      "text": "Tak apa, | *berhenti rokok* ataupun *kurangkan rokok.*"
+    },
+    {
+      "text": "Tapi untuk sesiapa yang *tak merokok*, | dah cukup duit, nak beli *FL5?*"
+    },
+    {
+      "text": "Saya ada *2 unit* tahun 2025, | *Racing Black*, yang ready di showroom."
+    },
+    {
+      "text": "Harganya *RM270,000.*"
+    },
+    {
+      "text": "Nak tengok detail? | Komen *\"nak\"*, | saya *DM* korang."
+    }
+  ],
+  "sfx": [
+    [
+      0,
+      "pop"
+    ],
+    [
+      1.54,
+      "pop"
+    ],
+    [
+      2.82,
+      "pop"
+    ],
+    [
+      7.08,
+      "bubble"
+    ],
+    [
+      7.68,
+      "bubble"
+    ],
+    [
+      10.31,
+      "swish"
+    ],
+    [
+      10.7,
+      "whoosh"
+    ],
+    [
+      13.39,
+      "ding"
+    ],
+    [
+      14.3,
+      "whoosh"
+    ],
+    [
+      17.84,
+      "riser3"
+    ],
+    [
+      18.8,
+      "hit"
+    ],
+    [
+      21.0,
+      "swish"
+    ],
+    [
+      22.1,
+      "hit"
+    ],
+    [
+      23.3,
+      "whoosh"
+    ],
+    [
+      26.95,
+      "pop"
+    ],
+    [
+      27.45,
+      "bubble"
+    ],
+    [
+      27.95,
+      "bubble"
+    ],
+    [
+      31.24,
+      "pop"
+    ],
+    [
+      33.77,
+      "ding"
+    ],
+    [
+      35.3,
+      "whoosh"
+    ],
+    [
+      37.09,
+      "riser3"
+    ],
+    [
+      37.89,
+      "hit"
+    ],
+    [
+      42.36,
+      "stamp"
+    ],
+    [
+      46.0,
+      "boom"
+    ],
+    [
+      49.14,
+      "stamp"
+    ],
+    [
+      54.95,
+      "buzz"
+    ],
+    [
+      57.41,
+      "pop"
+    ],
+    [
+      59.7,
+      "whoosh"
+    ],
+    [
+      63.72,
+      "pop"
+    ],
+    [
+      67.64,
+      "zip"
+    ],
+    [
+      68.6,
+      "whoosh"
+    ],
+    [
+      70.08,
+      "pop"
+    ],
+    [
+      73.82,
+      "pop"
+    ],
+    [
+      77.49,
+      "stamp"
+    ],
+    [
+      79.56,
+      "swish"
+    ],
+    [
+      81.19,
+      "hit"
+    ],
+    [
+      85.1,
+      "swish"
+    ],
+    [
+      86.68,
+      "pop"
+    ],
+    [
+      89.03,
+      "ding"
+    ],
+    [
+      89.8,
+      "pop"
+    ],
+    [
+      93.0,
+      "hit"
+    ],
+    [
+      93.1,
+      "sparkle"
+    ]
+  ],
+  "music": {
+    "breakBeat": 46.0,
+    "returnBeat": 60,
+    "endBeat": 93.0,
+    "introBeats": 6,
+    "crashBeats": [
+      18.8,
+      37.89,
+      68.999
+    ]
+  }
+}
