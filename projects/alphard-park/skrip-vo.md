@@ -1,41 +1,59 @@
-# Skrip VO — Park Assist pada Toyota Alphard AGH40: penting atau menyusahkan?
+# Skrip VO — Park Assist pada Toyota Alphard AGH40: penting atau menyusahkan? (versi panjang + jualan)
 
-**Panjang:** 15 ayat · 121 perkataan · anggaran **~54 saat** pada kelajuan cakap biasa (~2.2 perkataan sesaat)
-**Gaya:** santai "korang/kau" macam video sebelum ni. Aku akan potong jeda dan selaraskan dengan 110 BPM selepas kau rakam.
+**Panjang:** 33 ayat · 277 perkataan · anggaran **~125 saat** pada kelajuan cakap biasa
+**Gaya:** santai "korang/kau". Selepas rakam, aku potong jeda dan selaraskan dengan 110 BPM.
 
-> Perkataan **bold** = kata kunci (menyala oren dalam kapsyen). Tekan sedikit masa sebut.
+> Perkataan **bold** = kata kunci (menyala oren dalam kapsyen).
 
 | # | Bahagian | Ayat VO | Perkataan | Nada | Paparan skrin (rancangan) |
 |---|---|---|---|---|---|
-| 1 | HOOK | Park Assist dalam Alphard ni... **penting**, atau **menyusahkan?** | 8 | Macam tanya kawan, sedikit provokatif. Jeda kecil selepas 'ni...'. | Alphard dalam petak sempit; tanda soal besar; tajuk |
-| 2 | APA DIA | Nama sebenar dia, **Advanced Park.** Kereta parking **sendiri.** | 8 | Tenang, memperkenalkan. | Butang P dengan stereng; label 'Advanced Park' |
-| 3 | APA DIA | Stereng, minyak, brek, gear... semua **kereta yang kawal.** | 8 | Sebut empat benda tu satu-satu, ikut rentak. | 4 ikon pop ikut beat: stereng, pedal, brek, gear |
-| 4 | FAKTA | Tapi untuk **AGH40 petrol**, ia cuma **pilihan tambahan** gred Z. | 10 | Nada 'perlu tahu ni'. | Label 'Executive Lounge: standard' vs 'Z: pilihan' |
-| 5 | FAKTA | Dan remote parking guna telefon? **Tak ada** untuk versi petrol. | 10 | Separuh terkejut. | Telefon dengan pangkah; label 'Hybrid/PHEV sahaja' |
-| 6 | KELEBIHAN | Kenapa ia berguna? Alphard panjang **hampir 5 meter.** | 8 | Naik tenaga. | Pita ukur: 4,995 mm |
-| 7 | KELEBIHAN | Petak parkir standard cuma **4.8 meter.** | 6 | Tekan '4.8'. | Petak 2.5 × 4.8 m; muncung Alphard terkeluar |
-| 8 | KELEBIHAN | Lebar pula, tinggal **32 sentimeter** kiri dan kanan. | 8 | Macam 'ketat gila'. | Pandangan atas: 32.5 cm setiap sisi |
-| 9 | TAPI | **Tapi...** kelemahannya, dia **perlahan.** | 4 | Turun suara. Muzik hilang. | Siput / jam pasir; Alphard bergerak perlahan |
-| 10 | KELEMAHAN | Kalau ada kereta menunggu belakang, kena **sabar** sikit. | 8 | Kelakar, senyum. | Barisan kereta hon di belakang |
-| 11 | KELEMAHAN | Garisan tak jelas atau petak sempit? Kadang-kadang dia **tak kesan.** | 10 | Jujur, tak menghentam. | Garisan pudar; ikon 'ruang tidak dikesan' |
-| 12 | KELEMAHAN | Dan kau tetap kena **tengok sekeliling**, sedia **tekan brek.** | 9 | Serius sikit, nada keselamatan. | Mata + kaki atas pedal brek |
-| 13 | JAWAPAN | Jadi, penting ke tak? Untuk parking sempit, **sangat membantu.** | 9 | Muzik masuk balik. Yakin. | Skala: sempit = ✓ besar |
-| 14 | JAWAPAN | Tapi kalau kau dah **cekap parking**, ia cuma **bonus.** | 9 | Santai, senyum. | Maskot kau parking sendiri, thumbs up |
-| 15 | SOALAN | Korang pernah guna? **Membantu**, atau **menyusahkan?** | 6 | Cabar penonton. | Dua butang: MEMBANTU / MENYUSAHKAN, 'jawab di komen' |
+| 1 | HOOK | Park Assist dalam Alphard ni... **penting**, atau sebenarnya **menyusahkan?** | 9 | Provokatif, macam tanya kawan. Jeda kecil selepas 'ni...'. | Alphard dalam petak sempit; tanda soal; tajuk |
+| 2 | HOOK | Ada orang beli Alphard, tapi **tak pernah sentuh** fungsi ni langsung. | 11 | Separuh sinis. | Butang berhabuk / sawang |
+| 3 | HOOK | Hari ni kita tengok **kelebihan** dan **kekurangan** dia. | 8 | Jelas, macam buka topik. | Dua kad: ✓ KELEBIHAN / ✗ KEKURANGAN |
+| 4 | APA DIA | Nama sebenar dia, **Advanced Park.** Kereta parking **sendiri.** | 8 | Tenang, memperkenalkan. | Label 'Advanced Park' |
+| 5 | APA DIA | Dia guna **kamera** dan **sonar** keliling badan kereta. | 8 | Info. | Pandangan atas, gelombang sonar |
+| 6 | APA DIA | **Stereng**, **minyak** dan **brek**, kereta yang kawal. | 7 | Sebut satu-satu ikut rentak. | 3 ikon pop ikut beat |
+| 7 | APA DIA | Tapi untuk versi petrol, **gear kau tukar sendiri.** | 8 | Nada 'perlu tahu ni'. | Tangan pada tuil gear; label 'Petrol: manual' |
+| 8 | CARA GUNA | Cara guna senang. **Berhenti** dekat petak kosong, | 7 | Santai, macam tunjuk ajar. | Alphard berhenti sebelah petak |
+| 9 | CARA GUNA | tekan butang **Advanced Park**, dan ikut arahan dekat **skrin.** | 9 | Teruskan rentak. | Butang ditekan; skrin dengan petak |
+| 10 | CARA GUNA | Dia boleh masuk **ke depan** atau **mengundur**, dan bawa **keluar** pun boleh. | 12 | Kagum sikit. | Anak panah depan/belakang/keluar |
+| 11 | FAKTA AGH40 | Satu benda kau kena tahu. Untuk **AGH40 petrol** gred Z, | 10 | Serius sikit. | Label 'AGH40 · Z' |
+| 12 | FAKTA AGH40 | Advanced Park cuma **pilihan tambahan** masa beli dari kilang. | 9 | Penekanan pada 'pilihan'. | Executive Lounge: standard vs Z: pilihan |
+| 13 | FAKTA AGH40 | Maknanya, **bukan semua** Alphard Z ada fungsi ni. | 8 | Penting untuk pembeli. | Barisan Alphard, sebahagian ada ✓ |
+| 14 | FAKTA AGH40 | Dan remote parking guna telefon? **Tak ada** untuk versi petrol. | 10 | Separuh terkejut. | Telefon dengan pangkah; 'Hybrid/PHEV sahaja' |
+| 15 | KELEBIHAN | Sekarang, kelebihan. Alphard panjang **hampir 5 meter.** | 7 | Naik tenaga. | Pita ukur 4,995 mm |
+| 16 | KELEBIHAN | Petak parkir standard cuma **4.8 meter.** | 6 | Tekan '4.8'. | Petak 2.5 × 4.8 m; muncung terkeluar |
+| 17 | KELEBIHAN | Lebar pula, tinggal **32 sentimeter** kiri dan kanan. | 8 | Macam 'ketat gila'. | Pandangan atas: 32.5 cm setiap sisi |
+| 18 | KELEBIHAN | Parking selari lagi mencabar. Petak **6 meter**, ruang lebih **semeter** je. | 11 | Bina ketegangan. | Petak selari 6.0 m; ruang ±50 cm depan/belakang |
+| 19 | KELEBIHAN | Kamera dan sonar yang ukur, **bukan main agak.** | 8 | Yakin. | Garisan ukur hijau |
+| 20 | KELEBIHAN | Dia juga boleh **ingat petak** yang **tak ada garisan**, | 9 | Teruja. | Porch rumah tanpa garisan; ikon 'disimpan' |
+| 21 | KELEBIHAN | contohnya **porch rumah** kau sendiri. | 5 | Senyum. | Alphard masuk porch sendiri |
+| 22 | TAPI | **Tapi...** ada juga kelemahan. Yang pertama, dia **perlahan.** | 8 | Turun suara. Muzik hilang di sini. | Siput / jam pasir |
+| 23 | KELEMAHAN | Kalau ada kereta menunggu belakang, kena **sabar** sikit. | 8 | Kelakar. | Barisan kereta hon |
+| 24 | KELEMAHAN | Kedua, garisan pudar atau petak sempit? Kadang-kadang dia **tak kesan.** | 10 | Jujur. | Garisan pudar; 'ruang tidak dikesan' |
+| 25 | KELEMAHAN | Ketiga, kau **tetap kena tengok sekeliling** dan sedia **tekan brek.** | 10 | Nada keselamatan. | Mata + kaki atas brek |
+| 26 | KELEMAHAN | Ia **pembantu**, bukan **pemandu.** | 4 | Ayat padu, perlahan sikit. | Dua perkataan besar |
+| 27 | JAWAPAN | Jadi, penting ke tak? Untuk parking sempit dan selari, **sangat membantu.** | 11 | Muzik masuk balik. Yakin. | Skala condong ke ✓ |
+| 28 | JAWAPAN | Untuk yang **baru bawa MPV besar**, ia bagi **keyakinan.** | 9 | Mesra. | Pemandu senyum lega |
+| 29 | JAWAPAN | Tapi kalau kau dah **cekap parking**, ia cuma **bonus.** | 9 | Santai. | Maskot thumbs up |
+| 30 | JUALAN | Nak Alphard yang **dah siap** dengan Advanced Park? | 8 | Tukar ke nada jualan, mesra. | Peralihan ke rakaman unit sebenar |
+| 31 | JUALAN | Saya ada **Alphard Z tahun 2023**, siap dengan **parking assist.** | 10 | Bangga. | Pelekat 'Z · 2023' + 'Advanced Park ✓' |
+| 32 | JUALAN | Harganya **RM262 ribu** sahaja. | 4 | Jelas, tekan harga. | Tag harga RM262k berayun |
+| 33 | CTA | Nak tengok detail? Komen **"nak"**, saya **DM** korang. | 8 | Ajak, senyum. | Bubble 'Komen NAK' + maskot melambai |
 
 ## Struktur
-Hook soalan → apa itu Advanced Park → fakta khusus AGH40 → **kelebihan** (saiz kereta vs petak) → **"Tapi..."** (muzik hilang) → **kelemahan** → jawapan seimbang (muzik masuk balik) → soalan untuk komen.
+Hook (1–3) → apa itu Advanced Park (4–7) → cara guna (8–10) → fakta khusus AGH40 (11–14) → **kelebihan** (15–21) → **"Tapi..."**, muzik hilang (22) → **kelemahan** (23–26) → jawapan, muzik masuk balik (27–29) → **jualan** (30–33).
 
 ## Fakta & sumber
-- **Apa sistem ni buat:** Toyota menerangkan Advanced Park mengawal pecutan, stereng, brek dan gear untuk parking. Ia boleh parking secara selari dan mengundur masuk petak, dan boleh "ingat" petak tanpa garisan. ([Toyota Europe, T-Mate](https://www.toyota-europe.com/brands-and-services/toyota/t-mate-parking-assistance); [Getjerry](https://getjerry.com/driving/how-to-use-toyota-park-assist))
-- **AGH40 = petrol 2.5, gred Z.** Laman rasmi Toyota Jepun: Advanced Park "standard pada Executive Lounge, **pilihan pengilang pada Z**". Fungsi remote "standard pada Executive Lounge, pilihan pada **Z (hybrid / plug-in hybrid)**", jadi tiada untuk versi petrol. ([toyota.jp/alphard/safety](https://toyota.jp/alphard/safety/))
-- **Saiz Alphard 40:** 4,995 mm panjang (spek Jepun/Australia; spek Brunei/Malaysia 5,010 mm), lebar 1,850 mm, jejari pusingan 5.9 m. ([Toyota Brunei](https://toyota.com.bn/car/alphard/alphard-24t); [carsales](https://www.carsales.com.au/research/toyota/alphard/2023/z))
-- **Petak parkir standard Malaysia:** garis panduan PLANMalaysia **GP011-A**, petak bersudut tegak (90°) **2.5 m × 4.8 m**, dan petak selari 2.5 m × 6.0 m. ([PLANMalaysia GP011-A](https://www.planmalaysia.gov.my/uploads/content-downloads/file_20251114202230.pdf))
-- **32 sentimeter:** (2.5 m − 1.85 m) ÷ 2 = 0.325 m setiap sisi.
-- **Kelemahan:**
-  - Manual Toyota menyatakan sistem mungkin tak kesan petak atau tak dapat habiskan parking bergantung pada permukaan jalan, keadaan kereta dan jarak ke petak, dan pemandu tetap kena pantau sekeliling serta tekan brek bila perlu. ([Manual Toyota](https://manual.toyota.jp/aqua/2404/hev/ja_JP/contents/vhch04se050412.php))
-  - "Perlahan" ialah pengalaman ramai pemilik, terutamanya untuk petak bersudut tegak. Ini pengalaman pengguna, bukan angka rasmi Toyota. ([ClubLexus forum](https://clublexus.com/forums/nx-2nd-gen-2022-current/1009623-advanced-park-to-the-left.html))
-
-## Perlu kau sahkan sebelum rakam
-1. **Unit AGH40 dalam stok kau** ada Advanced Park atau tak, sebab ia pilihan tambahan. Kalau unit kau ada, ayat 4 boleh jadi titik jualan: "unit saya ada!"
-2. **Nak tambah ayat jualan di hujung** macam video Civic? Contoh: *"Nak Alphard yang ada Advanced Park? Komen 'nak', saya DM korang."* (lebih kurang 4 saat lagi)
+- **Toyota Jepun, laman keselamatan Alphard** ([toyota.jp/alphard/safety](https://toyota.jp/alphard/safety/)):
+  - Advanced Park guna **kamera dan sonar** untuk pantau sekeliling ("カメラやソナーによって、周囲を監視しながら駐車を支援").
+  - Boleh parking **mengundur dan ke depan**, keluar mengundur dan ke depan, termasuk parking selari ("前向き駐車、バック出庫、前向き出庫が可能"; "並列・縦列駐車および出庫が可能").
+  - Boleh guna di tempat **tanpa garisan putih** selepas petak didaftarkan ("白線・隣接車両がない駐車場でも使える").
+  - Bantuan **tukar gear hanya untuk hybrid/PHEV**. Pada petrol, pemandu tukar gear sendiri (ayat 6–7).
+  - Advanced Park **standard pada Executive Lounge, pilihan pengilang pada Z**. Remote **hanya pilihan pada Z hybrid/PHEV**.
+- **Saiz Alphard 40:** 4,995 mm × 1,850 mm (spek Jepun/Australia). ([carsales](https://www.carsales.com.au/research/toyota/alphard/2023/z); [Toyota Brunei](https://toyota.com.bn/car/alphard/alphard-24t))
+- **Petak parkir:** PLANMalaysia GP011-A, petak bersudut tegak 2.5 × 4.8 m, petak selari 2.5 × 6.0 m. ([PDF](https://www.planmalaysia.gov.my/uploads/content-downloads/file_20251114202230.pdf))
+  - Lebar: (2.5 − 1.85) ÷ 2 = **32.5 cm** setiap sisi.
+  - Selari: 6.0 − 4.995 = **lebih kurang 1 meter** jumlah ruang.
+- **Kelemahan:** manual Toyota menyatakan sistem mungkin tak kesan petak bergantung pada permukaan dan keadaan, dan pemandu tetap kena pantau dan brek. ([manual.toyota.jp](https://manual.toyota.jp/aqua/2404/hev/ja_JP/contents/vhch04se050412.php)) "Perlahan" ialah pengalaman pemilik, bukan angka rasmi. ([ClubLexus](https://clublexus.com/forums/nx-2nd-gen-2022-current/1009623-advanced-park-to-the-left.html))
+- **Unit jualan:** Alphard Z 2023 dengan Advanced Park, RM262,000 (maklumat daripada kau).

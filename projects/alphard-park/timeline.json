@@ -1,5 +1,5 @@
 {
-  "title": "Sebab Apa? — Park Assist Alphard AGH40",
+  "title": "Sebab Apa? — Park Assist Alphard AGH40 (versi panjang)",
   "bpm": 110,
   "beatsPerBar": 4,
   "totalBeats": 100,
@@ -10,46 +10,100 @@
   "lines": [
     {
       "role": "HOOK",
-      "text": "Park Assist dalam Alphard ni... | *penting*, atau *menyusahkan?*",
-      "tone": "Macam tanya kawan, sedikit provokatif. Jeda kecil selepas 'ni...'.",
-      "screen": "Alphard dalam petak sempit; tanda soal besar; tajuk",
+      "text": "Park Assist dalam Alphard ni... | *penting*, atau sebenarnya *menyusahkan?*",
+      "tone": "Provokatif, macam tanya kawan. Jeda kecil selepas 'ni...'.",
+      "screen": "Alphard dalam petak sempit; tanda soal; tajuk",
       "captionHidden": true
+    },
+    {
+      "role": "HOOK",
+      "text": "Ada orang beli Alphard, | tapi *tak pernah sentuh* fungsi ni langsung.",
+      "tone": "Separuh sinis.",
+      "screen": "Butang berhabuk / sawang"
+    },
+    {
+      "role": "HOOK",
+      "text": "Hari ni kita tengok | *kelebihan* dan *kekurangan* dia.",
+      "tone": "Jelas, macam buka topik.",
+      "screen": "Dua kad: ✓ KELEBIHAN / ✗ KEKURANGAN"
     },
     {
       "role": "APA DIA",
       "text": "Nama sebenar dia, *Advanced Park.* | Kereta parking *sendiri.*",
       "tone": "Tenang, memperkenalkan.",
-      "screen": "Butang P dengan stereng; label 'Advanced Park'"
+      "screen": "Label 'Advanced Park'"
     },
     {
       "role": "APA DIA",
-      "text": "Stereng, minyak, brek, gear... | semua *kereta yang kawal.*",
-      "tone": "Sebut empat benda tu satu-satu, ikut rentak.",
-      "screen": "4 ikon pop ikut beat: stereng, pedal, brek, gear"
+      "text": "Dia guna *kamera* dan *sonar* | keliling badan kereta.",
+      "tone": "Info.",
+      "screen": "Pandangan atas, gelombang sonar"
     },
     {
-      "role": "FAKTA",
-      "text": "Tapi untuk *AGH40 petrol*, | ia cuma *pilihan tambahan* gred Z.",
+      "role": "APA DIA",
+      "text": "*Stereng*, *minyak* dan *brek*, | kereta yang kawal.",
+      "tone": "Sebut satu-satu ikut rentak.",
+      "screen": "3 ikon pop ikut beat"
+    },
+    {
+      "role": "APA DIA",
+      "text": "Tapi untuk versi petrol, | *gear kau tukar sendiri.*",
       "tone": "Nada 'perlu tahu ni'.",
-      "screen": "Label 'Executive Lounge: standard' vs 'Z: pilihan'"
+      "screen": "Tangan pada tuil gear; label 'Petrol: manual'"
     },
     {
-      "role": "FAKTA",
+      "role": "CARA GUNA",
+      "text": "Cara guna senang. | *Berhenti* dekat petak kosong,",
+      "tone": "Santai, macam tunjuk ajar.",
+      "screen": "Alphard berhenti sebelah petak"
+    },
+    {
+      "role": "CARA GUNA",
+      "text": "tekan butang *Advanced Park*, | dan ikut arahan dekat *skrin.*",
+      "tone": "Teruskan rentak.",
+      "screen": "Butang ditekan; skrin dengan petak"
+    },
+    {
+      "role": "CARA GUNA",
+      "text": "Dia boleh masuk *ke depan* atau *mengundur*, | dan bawa *keluar* pun boleh.",
+      "tone": "Kagum sikit.",
+      "screen": "Anak panah depan/belakang/keluar"
+    },
+    {
+      "role": "FAKTA AGH40",
+      "text": "Satu benda kau kena tahu. | Untuk *AGH40 petrol* gred Z,",
+      "tone": "Serius sikit.",
+      "screen": "Label 'AGH40 · Z'"
+    },
+    {
+      "role": "FAKTA AGH40",
+      "text": "Advanced Park cuma *pilihan tambahan* | masa beli dari kilang.",
+      "tone": "Penekanan pada 'pilihan'.",
+      "screen": "Executive Lounge: standard vs Z: pilihan"
+    },
+    {
+      "role": "FAKTA AGH40",
+      "text": "Maknanya, *bukan semua* Alphard Z | ada fungsi ni.",
+      "tone": "Penting untuk pembeli.",
+      "screen": "Barisan Alphard, sebahagian ada ✓"
+    },
+    {
+      "role": "FAKTA AGH40",
       "text": "Dan remote parking guna telefon? | *Tak ada* untuk versi petrol.",
       "tone": "Separuh terkejut.",
-      "screen": "Telefon dengan pangkah; label 'Hybrid/PHEV sahaja'"
+      "screen": "Telefon dengan pangkah; 'Hybrid/PHEV sahaja'"
     },
     {
       "role": "KELEBIHAN",
-      "text": "Kenapa ia berguna? | Alphard panjang *hampir 5 meter.*",
+      "text": "Sekarang, kelebihan. | Alphard panjang *hampir 5 meter.*",
       "tone": "Naik tenaga.",
-      "screen": "Pita ukur: 4,995 mm"
+      "screen": "Pita ukur 4,995 mm"
     },
     {
       "role": "KELEBIHAN",
       "text": "Petak parkir standard | cuma *4.8 meter.*",
       "tone": "Tekan '4.8'.",
-      "screen": "Petak 2.5 × 4.8 m; muncung Alphard terkeluar"
+      "screen": "Petak 2.5 × 4.8 m; muncung terkeluar"
     },
     {
       "role": "KELEBIHAN",
@@ -58,46 +112,100 @@
       "screen": "Pandangan atas: 32.5 cm setiap sisi"
     },
     {
+      "role": "KELEBIHAN",
+      "text": "Parking selari lagi mencabar. | Petak *6 meter*, ruang lebih *semeter* je.",
+      "tone": "Bina ketegangan.",
+      "screen": "Petak selari 6.0 m; ruang ±50 cm depan/belakang"
+    },
+    {
+      "role": "KELEBIHAN",
+      "text": "Kamera dan sonar yang ukur, | *bukan main agak.*",
+      "tone": "Yakin.",
+      "screen": "Garisan ukur hijau"
+    },
+    {
+      "role": "KELEBIHAN",
+      "text": "Dia juga boleh *ingat petak* | yang *tak ada garisan*,",
+      "tone": "Teruja.",
+      "screen": "Porch rumah tanpa garisan; ikon 'disimpan'"
+    },
+    {
+      "role": "KELEBIHAN",
+      "text": "contohnya *porch rumah* kau sendiri.",
+      "tone": "Senyum.",
+      "screen": "Alphard masuk porch sendiri"
+    },
+    {
       "role": "TAPI",
-      "text": "*Tapi...* kelemahannya, | dia *perlahan.*",
-      "tone": "Turun suara. Muzik hilang.",
-      "screen": "Siput / jam pasir; Alphard bergerak perlahan"
+      "text": "*Tapi...* ada juga kelemahan. | Yang pertama, dia *perlahan.*",
+      "tone": "Turun suara. Muzik hilang di sini.",
+      "screen": "Siput / jam pasir"
     },
     {
       "role": "KELEMAHAN",
       "text": "Kalau ada kereta menunggu belakang, | kena *sabar* sikit.",
-      "tone": "Kelakar, senyum.",
-      "screen": "Barisan kereta hon di belakang"
+      "tone": "Kelakar.",
+      "screen": "Barisan kereta hon"
     },
     {
       "role": "KELEMAHAN",
-      "text": "Garisan tak jelas atau petak sempit? | Kadang-kadang dia *tak kesan.*",
-      "tone": "Jujur, tak menghentam.",
-      "screen": "Garisan pudar; ikon 'ruang tidak dikesan'"
+      "text": "Kedua, garisan pudar atau petak sempit? | Kadang-kadang dia *tak kesan.*",
+      "tone": "Jujur.",
+      "screen": "Garisan pudar; 'ruang tidak dikesan'"
     },
     {
       "role": "KELEMAHAN",
-      "text": "Dan kau tetap kena *tengok sekeliling*, | sedia *tekan brek.*",
-      "tone": "Serius sikit, nada keselamatan.",
-      "screen": "Mata + kaki atas pedal brek"
+      "text": "Ketiga, kau *tetap kena tengok sekeliling* | dan sedia *tekan brek.*",
+      "tone": "Nada keselamatan.",
+      "screen": "Mata + kaki atas brek"
+    },
+    {
+      "role": "KELEMAHAN",
+      "text": "Ia *pembantu*, | bukan *pemandu.*",
+      "tone": "Ayat padu, perlahan sikit.",
+      "screen": "Dua perkataan besar"
     },
     {
       "role": "JAWAPAN",
-      "text": "Jadi, penting ke tak? | Untuk parking sempit, *sangat membantu.*",
+      "text": "Jadi, penting ke tak? | Untuk parking sempit dan selari, *sangat membantu.*",
       "tone": "Muzik masuk balik. Yakin.",
-      "screen": "Skala: sempit = ✓ besar"
+      "screen": "Skala condong ke ✓"
+    },
+    {
+      "role": "JAWAPAN",
+      "text": "Untuk yang *baru bawa MPV besar*, | ia bagi *keyakinan.*",
+      "tone": "Mesra.",
+      "screen": "Pemandu senyum lega"
     },
     {
       "role": "JAWAPAN",
       "text": "Tapi kalau kau dah *cekap parking*, | ia cuma *bonus.*",
-      "tone": "Santai, senyum.",
-      "screen": "Maskot kau parking sendiri, thumbs up"
+      "tone": "Santai.",
+      "screen": "Maskot thumbs up"
     },
     {
-      "role": "SOALAN",
-      "text": "Korang pernah guna? | *Membantu*, atau *menyusahkan?*",
-      "tone": "Cabar penonton.",
-      "screen": "Dua butang: MEMBANTU / MENYUSAHKAN, 'jawab di komen'"
+      "role": "JUALAN",
+      "text": "Nak Alphard yang *dah siap* | dengan Advanced Park?",
+      "tone": "Tukar ke nada jualan, mesra.",
+      "screen": "Peralihan ke rakaman unit sebenar"
+    },
+    {
+      "role": "JUALAN",
+      "text": "Saya ada *Alphard Z tahun 2023*, | siap dengan *parking assist.*",
+      "tone": "Bangga.",
+      "screen": "Pelekat 'Z · 2023' + 'Advanced Park ✓'"
+    },
+    {
+      "role": "JUALAN",
+      "text": "Harganya *RM262 ribu* sahaja.",
+      "tone": "Jelas, tekan harga.",
+      "screen": "Tag harga RM262k berayun"
+    },
+    {
+      "role": "CTA",
+      "text": "Nak tengok detail? | Komen *\"nak\"*, saya *DM* korang.",
+      "tone": "Ajak, senyum.",
+      "screen": "Bubble 'Komen NAK' + maskot melambai"
     }
   ],
   "sfx": []
