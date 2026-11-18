@@ -326,6 +326,7 @@ async function drawFootage(c) {
   }
   // pelekat
   label(c, '2 UNIT', 230, 250, { scale: life(E.unit2, E.footB - 0.3, 0.6, 0.3), size: 70, bg: ACC, fg: CREAM, rot: -0.08 });
+  label(c, 'spec Racing Black', 330, 400, { scale: life(E.racing, E.footB - 0.3, 0.6, 0.3), size: 50, bg: '#1C1D22', fg: CREAM, rot: -0.04 });
   label(c, 'TAHUN 2025', 820, 330, { scale: life(E.y2025, E.footB - 0.3, 0.6, 0.3), size: 52, bg: CREAM, rot: 0.06 });
   const rd = pop(E.ready, 0.45) * (1 - P(E.footB - 0.3, E.footB));
   if (rd > 0) { c.save(); c.translate(540, 1120); c.rotate(-0.06); c.scale(rd, rd); c.font = "800 70px 'Baloo 2'"; const w = c.measureText('READY DI SHOWROOM').width + 60; c.fillStyle = 'rgba(255,248,236,0.95)'; c.beginPath(); rr(c, -w / 2, -60, w, 120, 16); c.fill(); c.strokeStyle = '#2F6B45'; c.lineWidth = 8; c.beginPath(); rr(c, -w / 2 + 8, -52, w - 16, 104, 12); c.stroke(); c.fillStyle = '#2F6B45'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('READY DI SHOWROOM', 0, 6); c.restore(); }
