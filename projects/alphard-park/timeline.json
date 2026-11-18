@@ -1,13 +1,295 @@
 {
-  "title": "Sebab Apa? — Park Assist Alphard AGH40 (versi panjang)",
+  "title": "Sebab Apa? — Park Assist Alphard AGH40",
   "bpm": 110,
   "beatsPerBar": 4,
-  "totalBeats": 100,
+  "totalBeats": 228.0,
   "tailSeconds": 1.5,
   "fps": 30,
   "width": 1080,
   "height": 1920,
   "lines": [
+    {
+      "text": "Parking Assist dalam Alphard ni, | *penting* ataupun *menyusahkan?*",
+      "captionHidden": true
+    },
+    {
+      "text": "Ada orang beli Alphard, | tapi tak pernah pun *sentuh* fungsi ni."
+    },
+    {
+      "text": "Hari ni kita tengok | *kelebihan* dan *kekurangan* dia."
+    },
+    {
+      "text": "Nama sebenar dia adalah *Advanced Park.* | Kereta parking *sendiri.*"
+    },
+    {
+      "text": "Dia guna *kamera* dan *sonar* | keliling badan kereta."
+    },
+    {
+      "text": "*Steering*, *minyak* dan *brake*, | kereta yang *control.*"
+    },
+    {
+      "text": "Tapi untuk version petrol, | *gear* kau kena *tukar sendiri.*"
+    },
+    {
+      "text": "Cara nak guna memang *sangat senang.*"
+    },
+    {
+      "text": "*Berhenti* sahaja dekat petak kosong yang kau jumpa, | tekan sahaja butang *Advanced Park*, | dan ikut arahan dekat *screen infotainment.*"
+    },
+    {
+      "text": "Dia boleh masuk *ke depan* dan *mengundur*, | nak bawa *keluar* daripada petak parking pun boleh juga."
+    },
+    {
+      "text": "Satu benda kau kena tahu, | untuk Alphard *AGH40* ni,"
+    },
+    {
+      "text": "Advanced Park cuma *pilihan tambahan* | masa beli dekat kilang."
+    },
+    {
+      "text": "Maknanya, *bukan semua* Alphard Z | ada fungsi ni."
+    },
+    {
+      "text": "Sekarang untuk *kelebihan*, | Alphard panjang dia *hampir 5 meter.*"
+    },
+    {
+      "text": "Petak parking standard cuma *4.8*, | lebar pula, tinggal *32 cm* kiri dan kanan."
+    },
+    {
+      "text": "Parking selari lagi *mencabar.* | Petak *6 meter*, ruang lebih *semeter* je."
+    },
+    {
+      "text": "*Tapi...* ada juga *kelemahan* je."
+    },
+    {
+      "text": "Yang pertama, dia *perlahan.*"
+    },
+    {
+      "text": "Kalau ada kereta menunggu kat belakang, | kau kena *sabar.* | Takut-takut ada yang *hon.*"
+    },
+    {
+      "text": "*Kedua*, garisan pudar ataupun petak sempit, | kadang-kadang dia *tak kesan* langsung petak parking itu."
+    },
+    {
+      "text": "*Ketiga*, kau tetap kena *tengok sekeliling* | dan bersedia untuk *tekan brake*, | takut-takut terlanggar kereta ataupun tiang."
+    },
+    {
+      "text": "Jadi, penting ke tidak | *parking assist* ni?"
+    },
+    {
+      "text": "Kalau untuk yang parking *sempit* dan *selari*, | *sangatlah membantu.*"
+    },
+    {
+      "text": "Untuk yang baru first nak bawa *MPV besar*, | memang bagi *confident* bila nak parking."
+    },
+    {
+      "text": "Tapi kalau kau dah *cekap parking*, | memang satu *bonus* kalau ada parking assist."
+    },
+    {
+      "text": "Jadi, andai kata korang mencari Alphard | yang dah siap *Advanced Park*, | saya ada *sebuah unit* tahun *2024*, | dengan harganya *RM262 ribu* sahaja."
+    },
+    {
+      "text": "Nak tengok detail korang, | komen *\"nak\"*, saya *DM* korang."
+    }
+  ],
+  "sfx": [
+    [
+      0,
+      "pop"
+    ],
+    [
+      3.85,
+      "pop"
+    ],
+    [
+      11.38,
+      "pop"
+    ],
+    [
+      14.63,
+      "pop"
+    ],
+    [
+      16.28,
+      "pop"
+    ],
+    [
+      20.68,
+      "ding"
+    ],
+    [
+      24.79,
+      "zip"
+    ],
+    [
+      27.23,
+      "pop"
+    ],
+    [
+      27.96,
+      "bubble"
+    ],
+    [
+      33.73,
+      "pop"
+    ],
+    [
+      34.46,
+      "pop"
+    ],
+    [
+      35.49,
+      "pop"
+    ],
+    [
+      37.36,
+      "ding"
+    ],
+    [
+      42.26,
+      "stamp"
+    ],
+    [
+      48.26,
+      "thud"
+    ],
+    [
+      53.47,
+      "pop"
+    ],
+    [
+      60.14,
+      "ding"
+    ],
+    [
+      64.43,
+      "pop"
+    ],
+    [
+      65.86,
+      "pop"
+    ],
+    [
+      68.13,
+      "zip"
+    ],
+    [
+      72.1,
+      "whoosh"
+    ],
+    [
+      80.4,
+      "stamp"
+    ],
+    [
+      85.81,
+      "pop"
+    ],
+    [
+      88.6,
+      "whoosh"
+    ],
+    [
+      94.99,
+      "pop"
+    ],
+    [
+      98.73,
+      "pop"
+    ],
+    [
+      103.06,
+      "ding"
+    ],
+    [
+      107.1,
+      "whoosh"
+    ],
+    [
+      111.92,
+      "pop"
+    ],
+    [
+      114.08,
+      "ding"
+    ],
+    [
+      116.0,
+      "boom"
+    ],
+    [
+      123.71,
+      "boing"
+    ],
+    [
+      134.98,
+      "buzz"
+    ],
+    [
+      142.95,
+      "buzz"
+    ],
+    [
+      149.49,
+      "pop"
+    ],
+    [
+      153.52,
+      "stamp"
+    ],
+    [
+      158.69,
+      "hit"
+    ],
+    [
+      160.5,
+      "swish"
+    ],
+    [
+      172.07,
+      "ding"
+    ],
+    [
+      180.74,
+      "sparkle"
+    ],
+    [
+      188.07,
+      "hit"
+    ],
+    [
+      191.6,
+      "whoosh"
+    ],
+    [
+      198.4,
+      "pop"
+    ],
+    [
+      203.16,
+      "pop"
+    ],
+    [
+      208.66,
+      "hit"
+    ],
+    [
+      217.13,
+      "pop"
+    ],
+    [
+      219.92,
+      "ding"
+    ],
+    [
+      223.0,
+      "hit"
+    ],
+    [
+      223.1,
+      "sparkle"
+    ]
+  ],
+  "scriptLines": [
     {
       "role": "HOOK",
       "text": "Park Assist dalam Alphard ni... | *penting*, atau sebenarnya *menyusahkan?*",
@@ -190,5 +472,15 @@
       "screen": "Bubble 'Komen NAK' + maskot melambai"
     }
   ],
-  "sfx": []
+  "music": {
+    "breakBeat": 116.001,
+    "returnBeat": 124,
+    "endBeat": 223.0,
+    "introBeats": 6,
+    "crashBeats": [
+      88.999,
+      160.499,
+      192.0
+    ]
+  }
 }

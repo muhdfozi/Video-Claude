@@ -1,0 +1,1018 @@
+[
+ {
+  "line": 1,
+  "start": 0.0,
+  "end": 2.05,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "Parking Assist dalam Alphard ni,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 1,
+  "start": 2.05,
+  "end": 3.818,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "penting",
+    "hl": true
+   },
+   {
+    "t": " ataupun ",
+    "hl": false
+   },
+   {
+    "t": "menyusahkan?",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 3.818,
+  "end": 5.298,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Ada orang beli Alphard,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 5.298,
+  "end": 7.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "tapi tak pernah pun ",
+    "hl": false
+   },
+   {
+    "t": "sentuh",
+    "hl": true
+   },
+   {
+    "t": " fungsi ni.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 7.091,
+  "end": 7.931,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Hari ni kita tengok",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 7.931,
+  "end": 10.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "kelebihan",
+    "hl": true
+   },
+   {
+    "t": " dan ",
+    "hl": false
+   },
+   {
+    "t": "kekurangan",
+    "hl": true
+   },
+   {
+    "t": " dia.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 10.091,
+  "end": 12.791,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Nama sebenar dia adalah ",
+    "hl": false
+   },
+   {
+    "t": "Advanced Park.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 12.791,
+  "end": 14.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Kereta parking ",
+    "hl": false
+   },
+   {
+    "t": "sendiri.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 14.182,
+  "end": 15.842,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia guna ",
+    "hl": false
+   },
+   {
+    "t": "kamera",
+    "hl": true
+   },
+   {
+    "t": " dan ",
+    "hl": false
+   },
+   {
+    "t": "sonar",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 15.842,
+  "end": 17.727,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "keliling badan kereta.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 17.727,
+  "end": 19.847,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Steering",
+    "hl": true
+   },
+   {
+    "t": ", ",
+    "hl": false
+   },
+   {
+    "t": "minyak",
+    "hl": true
+   },
+   {
+    "t": " dan ",
+    "hl": false
+   },
+   {
+    "t": "brake",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 19.847,
+  "end": 21.0,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "kereta yang ",
+    "hl": false
+   },
+   {
+    "t": "control.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 21.0,
+  "end": 23.0,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Tapi untuk version petrol,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 23.0,
+  "end": 24.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "gear",
+    "hl": true
+   },
+   {
+    "t": " kau kena ",
+    "hl": false
+   },
+   {
+    "t": "tukar sendiri.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 24.818,
+  "end": 26.455,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Cara nak guna memang ",
+    "hl": false
+   },
+   {
+    "t": "sangat senang.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 26.455,
+  "end": 29.115,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Berhenti",
+    "hl": true
+   },
+   {
+    "t": " sahaja dekat petak kosong yang kau jumpa,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 29.115,
+  "end": 31.375,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "tekan sahaja butang ",
+    "hl": false
+   },
+   {
+    "t": "Advanced Park",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 31.375,
+  "end": 34.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dan ikut arahan dekat ",
+    "hl": false
+   },
+   {
+    "t": "screen infotainment.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 34.091,
+  "end": 36.671,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia boleh masuk ",
+    "hl": false
+   },
+   {
+    "t": "ke depan",
+    "hl": true
+   },
+   {
+    "t": " dan ",
+    "hl": false
+   },
+   {
+    "t": "mengundur",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 36.671,
+  "end": 39.545,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "nak bawa ",
+    "hl": false
+   },
+   {
+    "t": "keluar",
+    "hl": true
+   },
+   {
+    "t": " daripada petak parking pun boleh juga.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 39.545,
+  "end": 40.745,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Satu benda kau kena tahu,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 40.745,
+  "end": 42.545,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "untuk Alphard ",
+    "hl": false
+   },
+   {
+    "t": "AGH40",
+    "hl": true
+   },
+   {
+    "t": " ni,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 42.545,
+  "end": 44.585,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Advanced Park cuma ",
+    "hl": false
+   },
+   {
+    "t": "pilihan tambahan",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 44.585,
+  "end": 45.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "masa beli dekat kilang.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 13,
+  "start": 45.818,
+  "end": 47.758,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Maknanya, ",
+    "hl": false
+   },
+   {
+    "t": "bukan semua",
+    "hl": true
+   },
+   {
+    "t": " Alphard Z",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 13,
+  "start": 47.758,
+  "end": 48.545,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "ada fungsi ni.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 14,
+  "start": 48.545,
+  "end": 49.885,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Sekarang untuk ",
+    "hl": false
+   },
+   {
+    "t": "kelebihan",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 14,
+  "start": 49.885,
+  "end": 52.364,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Alphard panjang dia ",
+    "hl": false
+   },
+   {
+    "t": "hampir 5 meter.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 15,
+  "start": 52.364,
+  "end": 54.204,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Petak parking standard cuma ",
+    "hl": false
+   },
+   {
+    "t": "4.8",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 15,
+  "start": 54.204,
+  "end": 58.636,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "lebar pula, tinggal ",
+    "hl": false
+   },
+   {
+    "t": "32 cm",
+    "hl": true
+   },
+   {
+    "t": " kiri dan kanan.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 16,
+  "start": 58.636,
+  "end": 60.596,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Parking selari lagi ",
+    "hl": false
+   },
+   {
+    "t": "mencabar.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 16,
+  "start": 60.596,
+  "end": 63.273,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Petak ",
+    "hl": false
+   },
+   {
+    "t": "6 meter",
+    "hl": true
+   },
+   {
+    "t": ", ruang lebih ",
+    "hl": false
+   },
+   {
+    "t": "semeter",
+    "hl": true
+   },
+   {
+    "t": " je.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 17,
+  "start": 63.273,
+  "end": 65.727,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Tapi...",
+    "hl": true
+   },
+   {
+    "t": " ada juga ",
+    "hl": false
+   },
+   {
+    "t": "kelemahan",
+    "hl": true
+   },
+   {
+    "t": " je.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 18,
+  "start": 65.727,
+  "end": 68.455,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Yang pertama, dia ",
+    "hl": false
+   },
+   {
+    "t": "perlahan.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 19,
+  "start": 68.455,
+  "end": 70.715,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Kalau ada kereta menunggu kat belakang,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 19,
+  "start": 70.715,
+  "end": 72.595,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "kau kena ",
+    "hl": false
+   },
+   {
+    "t": "sabar.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 19,
+  "start": 72.595,
+  "end": 74.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Takut-takut ada yang ",
+    "hl": false
+   },
+   {
+    "t": "hon.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 20,
+  "start": 74.182,
+  "end": 77.082,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Kedua",
+    "hl": true
+   },
+   {
+    "t": ", garisan pudar ataupun petak sempit,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 20,
+  "start": 77.082,
+  "end": 79.909,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "kadang-kadang dia ",
+    "hl": false
+   },
+   {
+    "t": "tak kesan",
+    "hl": true
+   },
+   {
+    "t": " langsung petak parking itu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 21,
+  "start": 79.909,
+  "end": 81.969,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Ketiga",
+    "hl": true
+   },
+   {
+    "t": ", kau tetap kena ",
+    "hl": false
+   },
+   {
+    "t": "tengok sekeliling",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 21,
+  "start": 81.969,
+  "end": 84.369,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dan bersedia untuk ",
+    "hl": false
+   },
+   {
+    "t": "tekan brake",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 21,
+  "start": 84.369,
+  "end": 87.545,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "takut-takut terlanggar kereta ataupun tiang.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 22,
+  "start": 87.545,
+  "end": 89.385,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Jadi, penting ke tidak",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 22,
+  "start": 89.385,
+  "end": 90.545,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "parking assist",
+    "hl": true
+   },
+   {
+    "t": " ni?",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 23,
+  "start": 90.545,
+  "end": 93.525,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Kalau untuk yang parking ",
+    "hl": false
+   },
+   {
+    "t": "sempit",
+    "hl": true
+   },
+   {
+    "t": " dan ",
+    "hl": false
+   },
+   {
+    "t": "selari",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 23,
+  "start": 93.525,
+  "end": 94.636,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "sangatlah membantu.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 24,
+  "start": 94.636,
+  "end": 97.436,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Untuk yang baru first nak bawa ",
+    "hl": false
+   },
+   {
+    "t": "MPV besar",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 24,
+  "start": 97.436,
+  "end": 100.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "memang bagi ",
+    "hl": false
+   },
+   {
+    "t": "confident",
+    "hl": true
+   },
+   {
+    "t": " bila nak parking.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 25,
+  "start": 100.091,
+  "end": 101.771,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Tapi kalau kau dah ",
+    "hl": false
+   },
+   {
+    "t": "cekap parking",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 25,
+  "start": 101.771,
+  "end": 104.727,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "memang satu ",
+    "hl": false
+   },
+   {
+    "t": "bonus",
+    "hl": true
+   },
+   {
+    "t": " kalau ada parking assist.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 26,
+  "start": 104.727,
+  "end": 107.427,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Jadi, andai kata korang mencari Alphard",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 26,
+  "start": 107.427,
+  "end": 109.087,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "yang dah siap ",
+    "hl": false
+   },
+   {
+    "t": "Advanced Park",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 26,
+  "start": 109.087,
+  "end": 111.847,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "saya ada ",
+    "hl": false
+   },
+   {
+    "t": "sebuah unit",
+    "hl": true
+   },
+   {
+    "t": " tahun ",
+    "hl": false
+   },
+   {
+    "t": "2024",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 26,
+  "start": 111.847,
+  "end": 116.727,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dengan harganya ",
+    "hl": false
+   },
+   {
+    "t": "RM262 ribu",
+    "hl": true
+   },
+   {
+    "t": " sahaja.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 27,
+  "start": 116.727,
+  "end": 118.387,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Nak tengok detail korang,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 27,
+  "start": 118.387,
+  "end": 121.415,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "komen ",
+    "hl": false
+   },
+   {
+    "t": "\"nak\"",
+    "hl": true
+   },
+   {
+    "t": ", saya ",
+    "hl": false
+   },
+   {
+    "t": "DM",
+    "hl": true
+   },
+   {
+    "t": " korang.",
+    "hl": false
+   }
+  ]
+ }
+]
