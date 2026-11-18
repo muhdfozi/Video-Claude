@@ -1,0 +1,104 @@
+{
+  "title": "Sebab Apa? — Park Assist Alphard AGH40",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 100,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "lines": [
+    {
+      "role": "HOOK",
+      "text": "Park Assist dalam Alphard ni... | *penting*, atau *menyusahkan?*",
+      "tone": "Macam tanya kawan, sedikit provokatif. Jeda kecil selepas 'ni...'.",
+      "screen": "Alphard dalam petak sempit; tanda soal besar; tajuk",
+      "captionHidden": true
+    },
+    {
+      "role": "APA DIA",
+      "text": "Nama sebenar dia, *Advanced Park.* | Kereta parking *sendiri.*",
+      "tone": "Tenang, memperkenalkan.",
+      "screen": "Butang P dengan stereng; label 'Advanced Park'"
+    },
+    {
+      "role": "APA DIA",
+      "text": "Stereng, minyak, brek, gear... | semua *kereta yang kawal.*",
+      "tone": "Sebut empat benda tu satu-satu, ikut rentak.",
+      "screen": "4 ikon pop ikut beat: stereng, pedal, brek, gear"
+    },
+    {
+      "role": "FAKTA",
+      "text": "Tapi untuk *AGH40 petrol*, | ia cuma *pilihan tambahan* gred Z.",
+      "tone": "Nada 'perlu tahu ni'.",
+      "screen": "Label 'Executive Lounge: standard' vs 'Z: pilihan'"
+    },
+    {
+      "role": "FAKTA",
+      "text": "Dan remote parking guna telefon? | *Tak ada* untuk versi petrol.",
+      "tone": "Separuh terkejut.",
+      "screen": "Telefon dengan pangkah; label 'Hybrid/PHEV sahaja'"
+    },
+    {
+      "role": "KELEBIHAN",
+      "text": "Kenapa ia berguna? | Alphard panjang *hampir 5 meter.*",
+      "tone": "Naik tenaga.",
+      "screen": "Pita ukur: 4,995 mm"
+    },
+    {
+      "role": "KELEBIHAN",
+      "text": "Petak parkir standard | cuma *4.8 meter.*",
+      "tone": "Tekan '4.8'.",
+      "screen": "Petak 2.5 × 4.8 m; muncung Alphard terkeluar"
+    },
+    {
+      "role": "KELEBIHAN",
+      "text": "Lebar pula, tinggal *32 sentimeter* | kiri dan kanan.",
+      "tone": "Macam 'ketat gila'.",
+      "screen": "Pandangan atas: 32.5 cm setiap sisi"
+    },
+    {
+      "role": "TAPI",
+      "text": "*Tapi...* kelemahannya, | dia *perlahan.*",
+      "tone": "Turun suara. Muzik hilang.",
+      "screen": "Siput / jam pasir; Alphard bergerak perlahan"
+    },
+    {
+      "role": "KELEMAHAN",
+      "text": "Kalau ada kereta menunggu belakang, | kena *sabar* sikit.",
+      "tone": "Kelakar, senyum.",
+      "screen": "Barisan kereta hon di belakang"
+    },
+    {
+      "role": "KELEMAHAN",
+      "text": "Garisan tak jelas atau petak sempit? | Kadang-kadang dia *tak kesan.*",
+      "tone": "Jujur, tak menghentam.",
+      "screen": "Garisan pudar; ikon 'ruang tidak dikesan'"
+    },
+    {
+      "role": "KELEMAHAN",
+      "text": "Dan kau tetap kena *tengok sekeliling*, | sedia *tekan brek.*",
+      "tone": "Serius sikit, nada keselamatan.",
+      "screen": "Mata + kaki atas pedal brek"
+    },
+    {
+      "role": "JAWAPAN",
+      "text": "Jadi, penting ke tak? | Untuk parking sempit, *sangat membantu.*",
+      "tone": "Muzik masuk balik. Yakin.",
+      "screen": "Skala: sempit = ✓ besar"
+    },
+    {
+      "role": "JAWAPAN",
+      "text": "Tapi kalau kau dah *cekap parking*, | ia cuma *bonus.*",
+      "tone": "Santai, senyum.",
+      "screen": "Maskot kau parking sendiri, thumbs up"
+    },
+    {
+      "role": "SOALAN",
+      "text": "Korang pernah guna? | *Membantu*, atau *menyusahkan?*",
+      "tone": "Cabar penonton.",
+      "screen": "Dua butang: MEMBANTU / MENYUSAHKAN, 'jawab di komen'"
+    }
+  ],
+  "sfx": []
+}
