@@ -41,6 +41,6 @@
 ## Rancangan visual (bila buat video)
 Aku boleh **rakam skrin website kau secara automatik** (masukkan gaji, tekan butang, skrol senarai, tapis jenis) dalam bingkai telefon, dan selitkan dengan animasi kertas dan maskot kau. Jadi penonton nampak website sebenar, bukan lukisan.
 
-## Perlu kau putuskan
-1. **Link di mana?** "dekat **bio**" (Reels/TikTok organik) atau "dekat **caption** / butang **Learn More**" (kalau jadi iklan berbayar). Ayat 15 aku tukar ikut pilihan kau.
+## Keputusan
+1. **Link di bio:** disahkan. Link akan ada di bio **Instagram, Facebook dan TikTok**, jadi ayat 15 ("Link ada dekat bio") kekal dan sesuai untuk ketiga-tiga platform. Dalam video, hujungnya akan tunjuk pelekat **"LINK DI BIO ↑"** dan alamat **profpojikira.netlify.app**, supaya orang yang skip suara pun nampak.
 2. **Ayat 16 (pilihan):** soalan komen untuk naikkan engagement. Rakam kalau nak.
