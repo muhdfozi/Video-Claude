@@ -1,0 +1,177 @@
+{
+  "title": "Pikachu di Malaysia — Raysha Sofia",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 83.0,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "lines": [
+    {
+      "text": "Apa jadi kalau *Pikachu* | ada di *Malaysia?*",
+      "captionHidden": true
+    },
+    {
+      "text": "Yang pertama sekali, | Pikachu akan *berkawan* dengan *anak aku.*"
+    },
+    {
+      "text": "Anak aku adalah | *Raysha Sofia.*"
+    },
+    {
+      "text": "Dia umur *2 tahun*, | dia memang *minat sangat* dekat Pikachu."
+    },
+    {
+      "text": "Hari-hari dia akan *tidur* | dengan Pikachu."
+    },
+    {
+      "text": "Dia akan *makan* | dengan Pikachu."
+    },
+    {
+      "text": "Dia akan *bermain* | dengan Pikachu."
+    },
+    {
+      "text": "Dan akan datang, | dia akan pergi *sekolah* dengan Pikachu."
+    },
+    {
+      "text": "Pergi sekolah pula | naik *basikal* dengan Pikachu."
+    },
+    {
+      "text": "Memang sangat *romantik.*"
+    },
+    {
+      "text": "Anak aku *suka* | dan *sayang* dengan Pikachu."
+    },
+    {
+      "text": "*Hari jadi* dia nanti, | dia akan *sambut* sekali dengan Pikachu."
+    }
+  ],
+  "sfx": [
+    [
+      0,
+      "pop"
+    ],
+    [
+      2.01,
+      "zip"
+    ],
+    [
+      2.31,
+      "sparkle"
+    ],
+    [
+      5.46,
+      "pop"
+    ],
+    [
+      6.6,
+      "whoosh"
+    ],
+    [
+      11.23,
+      "sparkle"
+    ],
+    [
+      12.81,
+      "pop"
+    ],
+    [
+      17.28,
+      "ding"
+    ],
+    [
+      22.02,
+      "pop"
+    ],
+    [
+      23.97,
+      "sparkle"
+    ],
+    [
+      27.1,
+      "whoosh"
+    ],
+    [
+      29.54,
+      "pop"
+    ],
+    [
+      32.6,
+      "whoosh"
+    ],
+    [
+      34.05,
+      "munch"
+    ],
+    [
+      37.1,
+      "whoosh"
+    ],
+    [
+      38.58,
+      "boing"
+    ],
+    [
+      41.6,
+      "whoosh"
+    ],
+    [
+      47.55,
+      "ding"
+    ],
+    [
+      50.6,
+      "whoosh"
+    ],
+    [
+      53.22,
+      "zip"
+    ],
+    [
+      59.04,
+      "sparkle"
+    ],
+    [
+      60.7,
+      "whoosh"
+    ],
+    [
+      62.49,
+      "pop"
+    ],
+    [
+      64.5,
+      "pop"
+    ],
+    [
+      67.6,
+      "whoosh"
+    ],
+    [
+      67.76,
+      "hit"
+    ],
+    [
+      71.83,
+      "sparkle"
+    ],
+    [
+      78.0,
+      "hit"
+    ],
+    [
+      78.1,
+      "sparkle"
+    ]
+  ],
+  "music": {
+    "breakBeat": 57.0,
+    "returnBeat": 60,
+    "endBeat": 78.0,
+    "introBeats": 6,
+    "crashBeats": [
+      7.0,
+      68.0
+    ]
+  }
+}

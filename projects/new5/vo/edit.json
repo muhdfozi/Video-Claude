@@ -1,0 +1,73 @@
+{
+ "source": "raw.m4a",
+ "note": "Jeda dalam rakaman ni ~-32 dB (bukan senyap penuh), dikesan dengan ambang -36 dB.",
+ "lineStarts": [
+  0.0,
+  3.98,
+  8.88,
+  11.39,
+  15.58,
+  18.9,
+  21.76,
+  24.77,
+  30.5,
+  33.68,
+  36.16,
+  40.55
+ ],
+ "lineEnds": [
+  3.44,
+  8.49,
+  11.21,
+  14.88,
+  18.14,
+  20.94,
+  23.9,
+  29.59,
+  33.12,
+  35.38,
+  40.29,
+  46.17
+ ],
+ "innerGaps": [
+  [
+   5.07,
+   5.41,
+   0.18,
+   "sekali, … pikachu"
+  ],
+  [
+   27.12,
+   27.45,
+   0.18,
+   ""
+  ],
+  [
+   36.94,
+   37.76,
+   0.24,
+   "suka … dan sayang (tersangkut)"
+  ],
+  [
+   41.78,
+   42.38,
+   0.14,
+   "dia … akan (tersangkut)"
+  ],
+  [
+   42.43,
+   42.8,
+   0.12,
+   ""
+  ]
+ ],
+ "fullBeatLines": [
+  0,
+  9,
+  10
+ ],
+ "lineGapRange": [
+  0.2,
+  0.5
+ ]
+}

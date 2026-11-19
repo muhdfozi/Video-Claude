@@ -62,7 +62,7 @@ def build_line(a, s, e, gaps, pre=0.05, post=0.10):
 STUDIO = ",".join([
     "highpass=f=75:poles=2",
     "afftdn=nr=10:nf=-62:tn=1",                      # buang hingar halus
-    "agate=threshold=0.006:ratio=2.5:range=0.2:attack=4:release=140",  # kurangkan nafas & bunyi bilik
+    "agate=threshold=0.008:ratio=2.5:range=0.2:attack=4:release=140",  # kurangkan nafas & bunyi bilik
     "equalizer=f=120:t=q:w=0.9:g=1.5",               # kehangatan (proximity mic kondenser)
     "equalizer=f=320:t=q:w=1.2:g=-3.5",              # buang 'boxy' bilik
     "equalizer=f=900:t=q:w=1.5:g=-1",

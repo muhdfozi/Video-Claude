@@ -1,0 +1,370 @@
+[
+ {
+  "line": 1,
+  "start": 0.0,
+  "end": 1.83,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "Apa jadi kalau ",
+    "hl": false
+   },
+   {
+    "t": "Pikachu",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 1,
+  "start": 1.83,
+  "end": 3.818,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "ada di ",
+    "hl": false
+   },
+   {
+    "t": "Malaysia?",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 3.818,
+  "end": 5.138,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Yang pertama sekali,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 5.138,
+  "end": 8.455,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Pikachu akan ",
+    "hl": false
+   },
+   {
+    "t": "berkawan",
+    "hl": true
+   },
+   {
+    "t": " dengan ",
+    "hl": false
+   },
+   {
+    "t": "anak aku.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 8.455,
+  "end": 9.375,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Anak aku adalah",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 9.375,
+  "end": 11.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Raysha Sofia.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 11.182,
+  "end": 12.662,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia umur ",
+    "hl": false
+   },
+   {
+    "t": "2 tahun",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 12.662,
+  "end": 15.0,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia memang ",
+    "hl": false
+   },
+   {
+    "t": "minat sangat",
+    "hl": true
+   },
+   {
+    "t": " dekat Pikachu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 15.0,
+  "end": 16.76,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Hari-hari dia akan ",
+    "hl": false
+   },
+   {
+    "t": "tidur",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 16.76,
+  "end": 18.0,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dengan Pikachu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 18.0,
+  "end": 18.98,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia akan ",
+    "hl": false
+   },
+   {
+    "t": "makan",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 18.98,
+  "end": 20.455,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dengan Pikachu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 20.455,
+  "end": 21.615,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia akan ",
+    "hl": false
+   },
+   {
+    "t": "bermain",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 21.615,
+  "end": 22.909,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dengan Pikachu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 22.909,
+  "end": 24.569,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dan akan datang,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 24.569,
+  "end": 27.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia akan pergi ",
+    "hl": false
+   },
+   {
+    "t": "sekolah",
+    "hl": true
+   },
+   {
+    "t": " dengan Pikachu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 27.818,
+  "end": 28.838,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Pergi sekolah pula",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 28.838,
+  "end": 31.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "naik ",
+    "hl": false
+   },
+   {
+    "t": "basikal",
+    "hl": true
+   },
+   {
+    "t": " dengan Pikachu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 31.091,
+  "end": 33.273,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Memang sangat ",
+    "hl": false
+   },
+   {
+    "t": "romantik.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 33.273,
+  "end": 34.513,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Anak aku ",
+    "hl": false
+   },
+   {
+    "t": "suka",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 34.513,
+  "end": 37.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dan ",
+    "hl": false
+   },
+   {
+    "t": "sayang",
+    "hl": true
+   },
+   {
+    "t": " dengan Pikachu.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 37.091,
+  "end": 38.331,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Hari jadi",
+    "hl": true
+   },
+   {
+    "t": " dia nanti,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 38.331,
+  "end": 42.777,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia akan ",
+    "hl": false
+   },
+   {
+    "t": "sambut",
+    "hl": true
+   },
+   {
+    "t": " sekali dengan Pikachu.",
+    "hl": false
+   }
+  ]
+ }
+]
