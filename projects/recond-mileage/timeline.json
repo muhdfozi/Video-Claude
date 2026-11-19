@@ -1,0 +1,128 @@
+{
+  "title": "Kenapa sekarang kereta recond tak boleh tipu mileage",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 100,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "lines": [
+    {
+      "role": "HOOK",
+      "text": "Kenapa sekarang kereta *recond* | *tak boleh tipu mileage?*",
+      "tone": "Provokatif, macam bongkar rahsia.",
+      "screen": "Meter kereta berpusing ke belakang; tanda soal",
+      "captionHidden": true
+    },
+    {
+      "role": "DULU",
+      "text": "Dulu, meter kereta boleh *putar balik*, | dan pembeli *tak tahu langsung.*",
+      "tone": "Nada cerita lama.",
+      "screen": "Odometer 98,000 → 38,000 berpusing"
+    },
+    {
+      "role": "DULU",
+      "text": "Laporan *The Star* tahun lepas, | lebih separuh kereta terpakai mungkin *sorok mileage* sebenar.",
+      "tone": "Serius.",
+      "screen": "Keratan akhbar kertas; '>50%'"
+    },
+    {
+      "role": "PUSING",
+      "text": "Tapi untuk kereta recond dari Jepun, | ceritanya *lain.*",
+      "tone": "Tukar tenaga, yakin.",
+      "screen": "Kapal / bendera Jepun; kereta turun dari kapal"
+    },
+    {
+      "role": "REKOD 1",
+      "text": "Pertama, di Jepun, kereta wajib buat | *pemeriksaan berkala*, dipanggil *shaken.*",
+      "tone": "Ajar, santai.",
+      "screen": "Bengkel pemeriksaan; label 'SHAKEN'"
+    },
+    {
+      "role": "REKOD 1",
+      "text": "Sejak *2004*, setiap kali shaken, | *mileage dicatat* dalam sijil kereta.",
+      "tone": "Tekan '2004'.",
+      "screen": "Sijil dengan cop; nombor mileage bertambah ikut tahun"
+    },
+    {
+      "role": "REKOD 1",
+      "text": "Sejak *2017* pula, kalau mileage tiba-tiba *turun*, | rekod *tertinggi* sebelum ni pun ditulis sekali.",
+      "tone": "Macam 'kantoi!'.",
+      "screen": "Graf mileage turun → anak panah merah ke rekod tertinggi"
+    },
+    {
+      "role": "REKOD 2",
+      "text": "Kedua, kereta recond biasanya dibeli | melalui *lelongan* di Jepun.",
+      "tone": "Info.",
+      "screen": "Dewan lelongan; tukul lelong"
+    },
+    {
+      "role": "REKOD 2",
+      "text": "Setiap kereta ada *auction report*, | siap dengan *mileage* dan *gred* keadaan.",
+      "tone": "Tekan 'auction report'.",
+      "screen": "Kertas auction report; ruangan mileage & gred 4.5"
+    },
+    {
+      "role": "REKOD 2",
+      "text": "Persatuan lelongan Jepun pula simpan *rekod mileage* | kereta yang pernah masuk lelongan.",
+      "tone": "Yakin.",
+      "screen": "Pangkalan data; senarai mileage ikut tarikh"
+    },
+    {
+      "role": "REKOD 3",
+      "text": "Ketiga, sekarang *kau sendiri* boleh semak. | Cuma guna *nombor casis.*",
+      "tone": "Mesra, ajak.",
+      "screen": "Telefon; taip nombor casis"
+    },
+    {
+      "role": "REKOD 3",
+      "text": "Ada servis macam *CTOS Vehicle Check* | yang tunjuk *rekod lelongan* dan *mileage.*",
+      "tone": "Info.",
+      "screen": "Skrin laporan: lelongan ✓ mileage ✓"
+    },
+    {
+      "role": "TAPI",
+      "text": "*Tapi...* bukan maksudnya | *mustahil* langsung.",
+      "tone": "Turun suara. Muzik hilang.",
+      "screen": "Skrin gelap; 'TAPI...'"
+    },
+    {
+      "role": "TAPI",
+      "text": "Ada kes di Johor, meter kereta Jepun *diusik*, | dan tribunal arahkan penjual *bayar balik.*",
+      "tone": "Serius, bercerita.",
+      "screen": "Tukul hakim; 'BAYAR BALIK'"
+    },
+    {
+      "role": "JAWAPAN",
+      "text": "Bezanya, sekarang orang yang tipu | *senang kantoi.*",
+      "tone": "Muzik masuk balik. Puas.",
+      "screen": "Lampu siren 'KANTOI!'"
+    },
+    {
+      "role": "TIP",
+      "text": "Jadi sebelum beli, *minta auction report*, | dan *semak nombor casis* sendiri.",
+      "tone": "Nasihat, mesra.",
+      "screen": "Senarai semak ✓ ✓"
+    },
+    {
+      "role": "TIP",
+      "text": "Kalau penjual *tak nak bagi*... | itu *tanda merah.*",
+      "tone": "Tekan 'tanda merah'.",
+      "screen": "Bendera merah berkibar"
+    },
+    {
+      "role": "SOALAN",
+      "text": "Korang pernah *kena tipu* mileage? | *Share* dekat komen.",
+      "tone": "Ajak berborak.",
+      "screen": "Bubble komen; maskot kau"
+    },
+    {
+      "role": "JUALAN (pilihan)",
+      "text": "Semua unit recond saya *ada auction report.* | Nak tengok? Komen *\"nak\"*, saya DM korang.",
+      "tone": "Jualan, mesra. Rakam hanya jika benar.",
+      "screen": "Rakaman unit sebenar + pelekat 'Auction report ✓'"
+    }
+  ],
+  "sfx": []
+}
