@@ -1,0 +1,111 @@
+{
+  "title": "ProfPoji Kira Layak — gaji kau layak kereta apa?",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 100,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "url": "https://profpojikira.netlify.app",
+  "lines": [
+    {
+      "role": "HOOK",
+      "text": "Gaji kau *RM2,500*... | layak pakai kereta *recond* ke?",
+      "tone": "Macam tanya kawan, ingin tahu. Jeda kecil lepas 'RM2,500...'.",
+      "screen": "Slip gaji kertas RM2,500 + tanda soal; Alphard/kei car berbayang",
+      "captionHidden": true
+    },
+    {
+      "role": "MASALAH",
+      "text": "Ramai *segan nak tanya*, | takut kena *gelak* dengan salesman.",
+      "tone": "Relatable, sedikit kelakar.",
+      "screen": "Watak tutup muka; salesman ketawa"
+    },
+    {
+      "role": "JAWAPAN",
+      "text": "Sebab tu aku buat satu *website.* | Nama dia, *ProfPoji Kira Layak.*",
+      "tone": "Bangga, mesra.",
+      "screen": "Rakaman skrin website (bingkai telefon)"
+    },
+    {
+      "role": "CARA",
+      "text": "Masukkan *gaji bersih* kau, | tekan *Tengok Kereta Layak.*",
+      "tone": "Tunjuk ajar, ikut rentak.",
+      "screen": "Jari tekan butang RM; butang merah ditekan"
+    },
+    {
+      "role": "CARA",
+      "text": "Terus keluar *bulanan maksimum* kau, | dan *senarai kereta* yang ngam dengan bajet.",
+      "tone": "Teruja.",
+      "screen": "Meter 40% berpusing; kad kereta muncul satu-satu"
+    },
+    {
+      "role": "CONTOH",
+      "text": "Contoh, gaji *RM2,500*: | bulanan maksimum *RM1,000.*",
+      "tone": "Jelas, tekan angka.",
+      "screen": "Angka RM1,000 besar"
+    },
+    {
+      "role": "CONTOH",
+      "text": "Ada *4 kereta layak*, | dalam *RM700 hingga RM900* sebulan.",
+      "tone": "Info.",
+      "screen": "4 kad kei car (Tanto, Move Canbus, Tank, Taft)"
+    },
+    {
+      "role": "CONTOH",
+      "text": "Gaji *RM4,000* pula? | Terus jadi *18 kereta*, sampai *Toyota Harrier.*",
+      "tone": "Naik tenaga, 'wah'.",
+      "screen": "Kaunter 4 → 18; Harrier pop"
+    },
+    {
+      "role": "CIRI",
+      "text": "Setiap kereta ada tanda: | *Selesa*, *Sesuai*, atau *Maksimum.*",
+      "tone": "Sebut tiga tanda ikut beat.",
+      "screen": "3 pelekat warna hijau / kuning / merah"
+    },
+    {
+      "role": "CIRI",
+      "text": "Nak *SUV*? *MPV*? *Kei car*? | Tapis *ikut jenis.*",
+      "tone": "Laju, ceria.",
+      "screen": "Butang penapis ditekan bergilir"
+    },
+    {
+      "role": "CIRI",
+      "text": "Kereta idaman *hampir layak*? | Dia tunjuk berapa *deposit* kena tambah.",
+      "tone": "Macam beri harapan.",
+      "screen": "Bahagian 'Hampir layak · tambah deposit'"
+    },
+    {
+      "role": "PERCAYA",
+      "text": "Jangan risau, | gaji kau *tak disimpan* langsung.",
+      "tone": "Menenangkan.",
+      "screen": "Ikon mangga kunci"
+    },
+    {
+      "role": "PERCAYA",
+      "text": "Semua harga *anggaran pasaran* recond, | untuk *rujukan.*",
+      "tone": "Jujur, ringkas.",
+      "screen": "Nota kecil kertas"
+    },
+    {
+      "role": "CTA",
+      "text": "Dah jumpa yang berkenan? | Tekan *Tanya Prof Poji*, terus *WhatsApp* aku.",
+      "tone": "Ajak, senyum.",
+      "screen": "Butang 'Tanya Prof Poji' → bubble WhatsApp; maskot kau"
+    },
+    {
+      "role": "CTA",
+      "text": "Link ada dekat *bio.* | Cuba sekarang, *percuma!*",
+      "tone": "Tutup kuat, tunjuk ke bawah/atas.",
+      "screen": "Anak panah besar ke link; URL profpojikira.netlify.app"
+    },
+    {
+      "role": "SOALAN (pilihan)",
+      "text": "Gaji korang layak kereta apa? | *Komen* keputusan korang!",
+      "tone": "Cabar penonton.",
+      "screen": "Bubble komen"
+    }
+  ],
+  "sfx": []
+}
