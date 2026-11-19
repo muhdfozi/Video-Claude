@@ -1,0 +1,181 @@
+{
+  "title": "Raysha pergi sekolah",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 106.0,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "lines": [
+    {
+      "text": "Video ini adalah video khas | untuk *Raysha Sofia.*",
+      "captionHidden": true
+    },
+    {
+      "text": "Dia akan *pergi sekolah.*"
+    },
+    {
+      "text": "Nanti dia pergi sekolah | dengan *kawan*, naik *basikal.*"
+    },
+    {
+      "text": "Dia akan pergi sekolah | naik basikal dengan *Pikachu.*"
+    },
+    {
+      "text": "Nanti dekat sekolah nanti, | dia *tak boleh hisap puting.*"
+    },
+    {
+      "text": "Dia *tak boleh pakai pampers.*"
+    },
+    {
+      "text": "Dia *tak boleh minum susu.*"
+    },
+    {
+      "text": "Dia kena *dengar cakap teacher* dia."
+    },
+    {
+      "text": "Lepas tu, kena *makan.*"
+    },
+    {
+      "text": "Kena makan *nasi*, kena makan *mi*, | kena makan *vegetable*,"
+    },
+    {
+      "text": "kena makan *chicken*, | kena makan *fruit.*"
+    },
+    {
+      "text": "Dia kena *dengar cakap teacher.*"
+    },
+    {
+      "text": "Dia akan *main dengan Pikachu* | dekat sekolah, dengan *teacher.*"
+    }
+  ],
+  "sfx": [
+    [
+      0,
+      "pop"
+    ],
+    [
+      4.69,
+      "sparkle"
+    ],
+    [
+      6.6,
+      "whoosh"
+    ],
+    [
+      10.76,
+      "ding"
+    ],
+    [
+      12.1,
+      "whoosh"
+    ],
+    [
+      15.85,
+      "pop"
+    ],
+    [
+      18.64,
+      "zip"
+    ],
+    [
+      20.6,
+      "whoosh"
+    ],
+    [
+      28.24,
+      "sparkle"
+    ],
+    [
+      30.6,
+      "whoosh"
+    ],
+    [
+      39.71,
+      "buzz"
+    ],
+    [
+      43.42,
+      "buzz"
+    ],
+    [
+      49.04,
+      "buzz"
+    ],
+    [
+      50.6,
+      "whoosh"
+    ],
+    [
+      55.82,
+      "ding"
+    ],
+    [
+      57.6,
+      "whoosh"
+    ],
+    [
+      59.92,
+      "munch"
+    ],
+    [
+      65.28,
+      "pop"
+    ],
+    [
+      68.18,
+      "pop"
+    ],
+    [
+      70.85,
+      "pop"
+    ],
+    [
+      76.77,
+      "pop"
+    ],
+    [
+      80.36,
+      "pop"
+    ],
+    [
+      82.1,
+      "whoosh"
+    ],
+    [
+      88.09,
+      "ding"
+    ],
+    [
+      90.1,
+      "whoosh"
+    ],
+    [
+      93.23,
+      "boing"
+    ],
+    [
+      98.95,
+      "sparkle"
+    ],
+    [
+      101.0,
+      "hit"
+    ],
+    [
+      101.1,
+      "sparkle"
+    ]
+  ],
+  "music": {
+    "breakBeat": 31.0,
+    "returnBeat": 52,
+    "endBeat": 101.0,
+    "introBeats": 6,
+    "crashBeats": [
+      7.0,
+      57.999,
+      90.501
+    ]
+  }
+}

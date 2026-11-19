@@ -1,0 +1,338 @@
+[
+ {
+  "line": 1,
+  "start": 0.0,
+  "end": 2.13,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "Video ini adalah video khas",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 1,
+  "start": 2.13,
+  "end": 3.818,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "untuk ",
+    "hl": false
+   },
+   {
+    "t": "Raysha Sofia.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 3.818,
+  "end": 6.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia akan ",
+    "hl": false
+   },
+   {
+    "t": "pergi sekolah.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 6.818,
+  "end": 8.458,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Nanti dia pergi sekolah",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 8.458,
+  "end": 11.455,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dengan ",
+    "hl": false
+   },
+   {
+    "t": "kawan",
+    "hl": true
+   },
+   {
+    "t": ", naik ",
+    "hl": false
+   },
+   {
+    "t": "basikal.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 11.455,
+  "end": 14.435,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia akan pergi sekolah",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 14.435,
+  "end": 16.909,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "naik basikal dengan ",
+    "hl": false
+   },
+   {
+    "t": "Pikachu.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 16.909,
+  "end": 19.709,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Nanti dekat sekolah nanti,",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 19.709,
+  "end": 22.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia ",
+    "hl": false
+   },
+   {
+    "t": "tak boleh hisap puting.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 22.091,
+  "end": 24.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia ",
+    "hl": false
+   },
+   {
+    "t": "tak boleh pakai pampers.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 24.818,
+  "end": 27.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia ",
+    "hl": false
+   },
+   {
+    "t": "tak boleh minum susu.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 27.818,
+  "end": 31.636,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia kena ",
+    "hl": false
+   },
+   {
+    "t": "dengar cakap teacher",
+    "hl": true
+   },
+   {
+    "t": " dia.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 31.636,
+  "end": 33.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Lepas tu, kena ",
+    "hl": false
+   },
+   {
+    "t": "makan.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 33.818,
+  "end": 37.978,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Kena makan ",
+    "hl": false
+   },
+   {
+    "t": "nasi",
+    "hl": true
+   },
+   {
+    "t": ", kena makan ",
+    "hl": false
+   },
+   {
+    "t": "mi",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 37.978,
+  "end": 40.364,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "kena makan ",
+    "hl": false
+   },
+   {
+    "t": "vegetable",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 40.364,
+  "end": 43.044,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "kena makan ",
+    "hl": false
+   },
+   {
+    "t": "chicken",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 43.044,
+  "end": 45.0,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "kena makan ",
+    "hl": false
+   },
+   {
+    "t": "fruit.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 45.0,
+  "end": 49.364,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia kena ",
+    "hl": false
+   },
+   {
+    "t": "dengar cakap teacher.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 13,
+  "start": 49.364,
+  "end": 51.944,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia akan ",
+    "hl": false
+   },
+   {
+    "t": "main dengan Pikachu",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 13,
+  "start": 51.944,
+  "end": 55.204,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dekat sekolah, dengan ",
+    "hl": false
+   },
+   {
+    "t": "teacher.",
+    "hl": true
+   }
+  ]
+ }
+]

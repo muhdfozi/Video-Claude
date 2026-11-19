@@ -1,0 +1,87 @@
+{
+ "source": "raw.m4a",
+ "note": "Buang: jeda panjang, ambilan pertama 'dia tak...' (23.4-24.6 s), ayat tergantung 'dan dia tak boleh... dia kena dengar cakap dia' (32.7-39.4 s), gumaman tak jelas (60.4-63.7 s), bunyi tak jelas 11.0-14.8 s. Ayat 3: bunyi 12.75-14.8 s (kemungkinan tawa / suara dipanjangkan) dibuang.",
+ "lineStarts": [
+  0.27,
+  3.8,
+  7.62,
+  14.83,
+  19.75,
+  27.02,
+  29.64,
+  39.43,
+  47.18,
+  49.77,
+  55.92,
+  63.74,
+  68.55
+ ],
+ "lineEnds": [
+  3.78,
+  7.16,
+  12.75,
+  19.62,
+  26.95,
+  29.51,
+  32.67,
+  44.0,
+  48.96,
+  55.85,
+  60.35,
+  68.39,
+  73.59
+ ],
+ "innerGaps": [
+  [
+   4.06,
+   4.82,
+   0.15,
+   "dia ... akan"
+  ],
+  [
+   20.59,
+   21.05,
+   0.18,
+   ""
+  ],
+  [
+   22.83,
+   24.95,
+   0.2,
+   "buang ambilan pertama 'dia tak'"
+  ],
+  [
+   29.79,
+   30.48,
+   0.15,
+   ""
+  ],
+  [
+   39.7,
+   40.9,
+   0.15,
+   "dia ... kena"
+  ],
+  [
+   65.03,
+   65.81,
+   0.15,
+   ""
+  ],
+  [
+   10.89,
+   11.97,
+   0.15,
+   "naik ... basikal"
+  ]
+ ],
+ "fullBeatLines": [
+  0,
+  4,
+  7
+ ],
+ "lineGapRange": [
+  0.2,
+  0.5
+ ]
+}
