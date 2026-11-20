@@ -230,3 +230,5 @@ Jangan biar kaca > ~60% durasi; selang-seli dengan presenter supaya muka masih j
   Tiada cara "bypass" compression TikTok — jangan janji.
 
 - **"poji hebat"** = gaya sendiri user (110 BPM, arang/krim/oren, word slam, ledger, HUD) → skill `poji-hebat`.
+- **"poji padu"** = tema showroom malam (kad skrin penuh hitam + champagne, cincin/odometer/checklist, hook nama
+  kereta font Formula1 di belakang kereta/kepala) → skill `poji-padu`.
