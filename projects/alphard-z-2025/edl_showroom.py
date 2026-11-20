@@ -17,8 +17,8 @@ FRONT, DASH = R + "IMG_1604.JPG", W + "still_dash.png"
 F1 = "/home/user/fonts_dl/f1/Formula1-Bold.ttf"
 MASK_MODEL = "birefnet-general-lite"
 BEHIND = [
-    dict(win=(24.66, 27.14), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=690, width=1000, dim=0.38, enter="slam", exit=False),
-    dict(win=(27.14, 29.62), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=1000, width=1000, dim=0.38, enter="settle", exit=True),
+    dict(win=(24.66, 27.14), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=625, width=1050, top_scale=0.42, dim=0.38, enter="slam", exit=False),
+    dict(win=(27.14, 29.62), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=975, width=1050, top_scale=0.42, dim=0.38, enter="settle", exit=True),
 ]
 
 SHOWROOM = dict(
