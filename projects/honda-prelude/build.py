@@ -374,6 +374,9 @@ if THEME == "glass":
     import glass_gfx
     GLASS_WIN = glass_gfx.render(getattr(edl, "GLASS", []), getattr(edl, "OVERLAYS", []), src2out, add, TOTAL, C,
                                  sfx_events, FPS, getattr(edl, "ACCENT", "C8102E"))
+for _bh in getattr(edl, "BEHIND", None) or []:          # title-behind-subject slam: sound (video is done later)
+    if _bh.get("enter", "slam") == "slam" and src2out(_bh["win"][0]) is not None:
+        sfx_events += [(src2out(_bh["win"][0]), "thump"), (src2out(_bh["win"][0]), "whoosh")]
 CARDS, SCRIMS = [], []
 if THEME == "showroom":
     import showroom_gfx
@@ -660,6 +663,80 @@ if CARDS or SCRIMS:
                 dn = min(1.0, (b + ramp - T) / ramp) if T > b else 1.0
                 lv = max(lv, max(0.0, min(up, dn)))
         return lv
+BEHIND_OUT = []
+if getattr(edl, "BEHIND", None):
+    # Big title placed BEHIND the subject (presenter / car): the title is composited over the footage and the
+    # subject is pasted back on top using a per-frame segmentation mask (BiRefNet via rembg, cached per source frame).
+    from PIL import Image, ImageDraw, ImageFilter, ImageFont as _IF
+    def _title_layer(bh):
+        W0, H0 = 1080, 1920
+        font_path = bh["font"]
+        main_txt = bh["main"]; plain = main_txt.replace("*", "")
+        size = 400
+        while size > 40:
+            f = _IF.truetype(font_path, size); bb = f.getbbox(plain)
+            if bb[2] - bb[0] <= bh.get("width", 1000): break
+            size -= 4
+        fm = _IF.truetype(font_path, size); bbm = fm.getbbox(plain); cap = bbm[3] - bbm[1]
+        bottom = bh["bottom"]; main_top = bottom - cap
+        fs_top = max(20, int(size * bh.get("top_scale", 0.40)))
+        ft = _IF.truetype(font_path, fs_top); trk = int(fs_top * 0.32)
+        top_txt = bh.get("top", "")
+        tw_ = sum(ft.getlength(c) for c in top_txt) + trk * max(0, len(top_txt) - 1)
+        bbt = ft.getbbox("T"); cap_t = bbt[3] - bbt[1]
+        top_bottom = main_top - int(cap * 0.16)
+        rgba = Image.new("RGBA", (W0, H0), (0, 0, 0, 0)); dr = ImageDraw.Draw(rgba)
+        acc = tuple(int(getattr(edl, "ACCENT", "E6C07B")[i:i + 2], 16) for i in (0, 2, 4))
+        # main line: centred, *word* in the accent colour
+        x = (W0 - (bbm[2] - bbm[0])) / 2 - bbm[0]
+        for k, part in enumerate(main_txt.split("*")):
+            if not part: continue
+            dr.text((x, main_top - bbm[1]), part, font=fm, fill=(acc + (255,)) if k % 2 else (255, 255, 255, 255))
+            x += fm.getlength(part)
+        x = (W0 - tw_) / 2
+        for c in top_txt:
+            dr.text((x, top_bottom - cap_t - bbt[1]), c, font=ft, fill=(255, 255, 255, 235)); x += ft.getlength(c) + trk
+        a = np.array(rgba).astype(np.float32) / 255.0
+        sh = Image.fromarray((a[..., 3] * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(18))
+        sh = np.roll(np.array(sh).astype(np.float32) / 255.0, 10, axis=0) * 0.55
+        a = cv2.resize(a, (OW, OH), interpolation=cv2.INTER_AREA); sh = cv2.resize(sh, (OW, OH), interpolation=cv2.INTER_AREA)
+        return dict(rgb=a[..., [2, 1, 0]] * 255.0, A=a[..., 3], S=sh,
+                    cy=(top_bottom - cap_t + bottom) / 2 * OH / 1920, bottom=bottom * OH / 1920)
+    for bh in edl.BEHIND:
+        a = src2out(bh["win"][0]); b = src2out(bh["win"][1] - 0.04)
+        if a is None or b is None: continue
+        it = dict(bh, a=a, b=b + 0.04); it.update(_title_layer(bh)); BEHIND_OUT.append(it)
+    _mask_dir = os.path.join(args.work, "_masks"); os.makedirs(_mask_dir, exist_ok=True)
+    _rb = {}
+    def subject_mask(src, tv, frame):
+        key = os.path.join(_mask_dir, f"{os.path.basename(src)}_{int(round(tv * 60)):06d}.png")
+        if os.path.exists(key):
+            m = cv2.imread(key, 0)
+        else:
+            if "s" not in _rb:
+                from rembg import new_session, remove
+                _rb["s"] = new_session(getattr(edl, "MASK_MODEL", "birefnet-general-lite")); _rb["remove"] = remove
+            m = np.array(_rb["remove"](Image.fromarray(frame[..., ::-1]), session=_rb["s"], only_mask=True))
+            cv2.imwrite(key, m)
+        return m.astype(np.float32) / 255.0
+    def behind_title(out, mk, bh, T):
+        e = min(1.0, max(0.0, (T - bh["a"]) / 0.35)); e = 1 - (1 - e) ** 3
+        if bh.get("enter", "slam") != "slam": e = 1.0 - 0.6 * (1 - e)
+        fo = min(1.0, max(0.0, (bh["b"] - T) / 0.22)) if bh.get("exit", True) else 1.0
+        al = min(1.0, e * 1.3) * fo
+        sc = 1.0 + 0.12 * (1 - e)
+        rgb, A, S = bh["rgb"], bh["A"], bh["S"]
+        if sc > 1.001:
+            M = np.float32([[sc, 0, (1 - sc) * OW / 2], [0, sc, (1 - sc) * bh["cy"]]])
+            rgb = cv2.warpAffine(rgb, M, (OW, OH)); A = cv2.warpAffine(A, M, (OW, OH)); S = cv2.warpAffine(S, M, (OW, OH))
+        f = out.astype(np.float32)
+        yy = np.arange(OH, dtype=np.float32)[:, None]
+        dim = (bh.get("dim", 0.35) * al * np.clip(1 - (yy - bh["bottom"]) / (260 * OH / 1920), 0, 1))[..., None]
+        bg = f * (1 - dim) * (1 - (S * al)[..., None])
+        A3 = (A * al)[..., None]
+        comp = bg * (1 - A3) + rgb * A3
+        m = mk[..., None]
+        return np.clip(comp * (1 - m) + f * m, 0, 255).astype(np.uint8)
 n_frames = int(round((min(TOTAL, args.limit) if args.limit else TOTAL) * FPS))
 fi = 0
 for s in subs:
@@ -706,6 +783,13 @@ for s in subs:
             out = img[y0:y0 + OH, x0:x0 + OW]
             lv = glass_level(fi / FPS) if GLASS_WIN else 0.0
             if lv > 0.001: out = apply_glass(out, lv)
+            if BEHIND_OUT:
+                _T = fi / FPS
+                _bh = next((b for b in BEHIND_OUT if b["a"] <= _T < b["b"]), None)
+                if _bh is not None and frame is not None:
+                    _m = subject_mask(_src, tv, frame)
+                    _m = cv2.resize(_m, (rw, rh), interpolation=cv2.INTER_LINEAR)[y0:y0 + OH, x0:x0 + OW]
+                    out = behind_title(np.ascontiguousarray(out), _m, _bh, _T)
             if CARDS or SCRIMS:
                 _T = fi / FPS
                 _cd = next((c for c in CARDS if c["a"] <= _T < c["b"]), None)

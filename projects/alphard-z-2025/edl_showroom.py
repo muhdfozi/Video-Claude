@@ -12,6 +12,15 @@ ACCENT = "E6C07B"          # champagne
 GRAPHICS, KEYPOINTS = [], []
 FRONT, DASH = R + "IMG_1604.JPG", W + "still_dash.png"
 
+# Hook title (user): big "TOYOTA ALPHARD Z" at the top in the user's own font (Drive "Font Type": Formula1-Bold),
+# placed BEHIND the subject: behind the car roof on the front shot, behind the head + car roof on the presenter shot.
+F1 = "/home/user/fonts_dl/f1/Formula1-Bold.ttf"
+MASK_MODEL = "birefnet-general-lite"
+BEHIND = [
+    dict(win=(24.66, 27.14), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=690, width=1000, dim=0.38, enter="slam", exit=False),
+    dict(win=(27.14, 29.62), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=1000, width=1000, dim=0.38, enter="settle", exit=True),
+]
+
 SHOWROOM = dict(
     cards=[
         dict(win=(37.97, 43.18), kicker="Alphard Z 2025", heading="HARGA BODY", head_fs=120, ghost="HARGA",
@@ -38,7 +47,7 @@ SHOWROOM = dict(
     ],
     lowers=[
         # hook
-        dict(at=24.66, until=27.12, kicker="Alphard Z 2025 · on the road", counter=dict(to=305740, dur=1.3), fs=150, y=1480),
+        dict(at=24.66, until=27.12, kicker="Harga on the road", counter=dict(to=305740, dur=1.3), fs=150, y=1480),
         dict(at=27.14, until=29.62, kicker="Soalan hari ni", big="GAJI BERAPA *LAYAK?*", fs=120, y=1480, thump=True),
         # car
         dict(at=1.04, until=3.30, kicker="Toyota", big="ALPHARD *Z*", chips=["2025"]),
