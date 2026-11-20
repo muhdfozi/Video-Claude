@@ -374,6 +374,11 @@ if THEME == "glass":
     import glass_gfx
     GLASS_WIN = glass_gfx.render(getattr(edl, "GLASS", []), getattr(edl, "OVERLAYS", []), src2out, add, TOTAL, C,
                                  sfx_events, FPS, getattr(edl, "ACCENT", "C8102E"))
+CARDS, SCRIMS = [], []
+if THEME == "showroom":
+    import showroom_gfx
+    CARDS, SCRIMS = showroom_gfx.render(getattr(edl, "SHOWROOM", {}), src2out, add, TOTAL, C, sfx_events, FPS,
+                                        getattr(edl, "ACCENT", "E6C07B"))
 
 if args.keypoints and THEME == "clean":
     from PIL import ImageFont
@@ -591,6 +596,70 @@ if LAYOUT and LAYOUT.get("kind") == "inset":
     else:
         BG = (bg[:, :, ::-1] * 255).astype(np.uint8)            # BGR order (bgr24)
     PANEL = (bx, by, bw, bh)
+if CARDS or SCRIMS:
+    # THEME "showroom": full-screen card background (night showroom: spotlight + glossy floor + horizon line),
+    # framed photos with a specular light sweep, and a bottom scrim under lower-thirds on footage.
+    _s = OW / 1080
+    _y = (np.arange(OH, dtype=np.float32) / OH)[:, None]; _x = (np.arange(OW, dtype=np.float32) / OW)[None, :]
+    _acc = np.array([int(getattr(edl, "ACCENT", "E6C07B")[i:i + 2], 16) for i in (4, 2, 0)], np.float32)   # BGR
+    _base = np.array([15, 12, 12], np.float32) * (1 - _y[..., None]) + np.array([6, 5, 5], np.float32) * _y[..., None]
+    _d = np.sqrt(((_x - 0.5) / 0.62) ** 2 + ((_y - 0.0) / 0.50) ** 2)
+    _spot = np.clip(1 - _d, 0, 1) ** 2.0
+    _bg = _base + _spot[..., None] * (_acc * 0.15 + 6)
+    _hz = 0.835
+    _dr = np.sqrt(((_x - 0.5) / 0.48) ** 2 + ((_y - _hz - 0.025) / 0.05) ** 2)
+    _refl = np.clip(1 - _dr, 0, 1) ** 1.6
+    _floor = (_y > _hz).astype(np.float32)[..., None] * np.ones((1, OW, 1), np.float32)
+    _bg = _bg * (1 - 0.35 * _floor) + _floor * _refl[..., None] * _acc * 0.20
+    _span = np.clip(1 - np.abs(_x - 0.5) / 0.5, 0, 1)
+    _bg += (np.exp(-((_y - _hz) * OH / (2.2 * _s)) ** 2) * _span ** 0.5)[..., None] * _acc * 0.60
+    _bg += (np.exp(-((_y - _hz) * OH / (30 * _s)) ** 2) * _span)[..., None] * _acc * 0.10
+    _bg *= np.clip(1 - 0.6 * (((_x - 0.5) / 0.75) ** 2 + ((_y - 0.45) / 0.85) ** 2), 0.3, 1)[..., None]
+    CARD_BG = np.clip(_bg, 0, 255).astype(np.float32)
+    _rng = np.random.default_rng(7)
+    GRAIN = [_rng.normal(0, 2.2, (OH, OW, 1)).astype(np.float32) for _ in range(4)]
+    SCRIM = (np.clip((_y - 0.50) / 0.50, 0, 1) ** 1.3 * 0.80)[..., None].astype(np.float32)
+    _photos = {}
+    def _photo(path, bw, bh):
+        k = (path, bw, bh)
+        if k not in _photos:
+            im = cv2.imread(path, cv2.IMREAD_COLOR)
+            ih, iw = im.shape[:2]; ar = bw / bh
+            if iw / ih > ar: nw = int(ih * ar); im = im[:, (iw - nw) // 2:(iw - nw) // 2 + nw]
+            else: nh = int(iw / ar); im = im[(ih - nh) // 2:(ih - nh) // 2 + nh]
+            _photos[k] = cv2.resize(im, (int(bw * 1.08), int(bh * 1.08)), interpolation=cv2.INTER_AREA).astype(np.float32)
+        return _photos[k]
+    def card_frame(cd, T, fi):
+        img = CARD_BG + GRAIN[fi % 4]
+        if cd.get("photo") and cd.get("box"):
+            bx, by, bw, bh = [int(round(v * _s)) for v in cd["box"]]
+            src = _photo(cd["photo"], bw, bh)
+            p = (T - cd["a"]) / max(0.5, cd["b"] - cd["a"])
+            z = 1.0 + 0.07 * (1 - p)                                   # slow push-out (Ken Burns)
+            sw, sh = int(bw * z), int(bh * z)
+            im = cv2.resize(src, (sw, sh), interpolation=cv2.INTER_LINEAR)
+            ox, oy = (sw - bw) // 2, (sh - bh) // 2
+            im = im[oy:oy + bh, ox:ox + bw]
+            al = min(1.0, max(0.0, (T - cd["a"] - 0.12) / 0.30)); al = al * al * (3 - 2 * al)
+            ty = by + int(round(30 * _s * (1 - al)))
+            u = (T - cd["a"] - 0.45) / 0.85                             # specular light sweep across the photo
+            if -0.1 < u < 1.2:
+                gx = (np.arange(bw, dtype=np.float32) / bw)[None, :]; gy = (np.arange(bh, dtype=np.float32) / bh)[:, None]
+                c = (gx + 0.35 * gy) / 1.35
+                band = 0.42 * np.exp(-((c - (u * 1.4 - 0.2)) / 0.055) ** 2)
+                im = im + band[..., None] * (255 - im)
+            y0, y1 = max(0, ty), min(OH, ty + bh)
+            if y1 > y0:
+                img[y0:y1, bx:bx + bw] = img[y0:y1, bx:bx + bw] * (1 - al) + im[y0 - ty:y1 - ty] * al
+        return np.clip(img, 0, 255).astype(np.uint8)
+    def win_level(wins, T, ramp=0.18):
+        lv = 0.0
+        for a, b in wins:
+            if a - ramp < T < b + ramp:
+                up = min(1.0, (T - a + ramp) / ramp) if T < a else 1.0
+                dn = min(1.0, (b + ramp - T) / ramp) if T > b else 1.0
+                lv = max(lv, max(0.0, min(up, dn)))
+        return lv
 n_frames = int(round((min(TOTAL, args.limit) if args.limit else TOTAL) * FPS))
 fi = 0
 for s in subs:
@@ -637,6 +706,14 @@ for s in subs:
             out = img[y0:y0 + OH, x0:x0 + OW]
             lv = glass_level(fi / FPS) if GLASS_WIN else 0.0
             if lv > 0.001: out = apply_glass(out, lv)
+            if CARDS or SCRIMS:
+                _T = fi / FPS
+                _cd = next((c for c in CARDS if c["a"] <= _T < c["b"]), None)
+                if _cd is not None:
+                    out = card_frame(_cd, _T, fi)
+                else:
+                    _lv = win_level(SCRIMS, _T)
+                    if _lv > 0.001: out = (out.astype(np.float32) * (1 - _lv * SCRIM)).astype(np.uint8)
             writer.stdin.write(np.ascontiguousarray(out).tobytes())
         fi += 1
     rd.stdout.close(); rd.kill(); rd.wait()
