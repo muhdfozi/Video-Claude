@@ -4,7 +4,7 @@ Pauses are found from RMS energy (breaths sit above digital silence, so a plain
 silence gate misses them). Then:
   * a pause inside a sentence (previous word has no . , ?) shrinks to 0.10 s
   * a pause between sentences/clauses shrinks to >= 0.12 s and the next phrase
-    starts on the next half-beat of the 110 BPM grid
+    starts on the next quarter-beat of the music grid (video/config.json)
   * leading silence and the trailing tail are removed
 Writes build/voice_edit.wav and build/vo_map.json ([src_start, src_end, dst_start]
 per kept piece) so timeline.py can move every word time to the edited clock.
@@ -14,7 +14,8 @@ import numpy as np
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-HALF = 60 / 110 / 2                 # half-beat = 0.2727 s
+BPM = json.load(open(os.path.join(ROOT, "video", "config.json")))["bpm"]
+HALF = 60 / BPM / 4                 # quarter-beat grid for sentence starts (0.176 s at 85 BPM)
 THRESH_DB, MIN_PAUSE = -29.0, 0.22
 PRE, POST = 0.04, 0.07              # keep a little air so consonants aren't clipped
 MID_GAP, MIN_GAP = 0.10, 0.12

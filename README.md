@@ -8,7 +8,7 @@ big punch titles ("ROSAK! ✗"), data numbers ("• TINGGI MENARA 13.9 m"),
 leader-line callouts pinned to 3D objects, and a closing question.
 
 Every cut, hazard-light blink, reverse beeper and drum hit is locked to a
-**110 BPM** grid (1 beat = 0.545 s, 1 bar = 2.18 s). The voiceover is tightened
+beat grid set in `video/config.json` (85 BPM: 1 beat = 0.71 s, 1 bar = 2.82 s). The voiceover is tightened
 so every sentence also starts on a half-beat.
 
 ## Pipeline
@@ -43,6 +43,7 @@ python3 tools/audio.py
 node tools/render.mjs --preview    # 540x960 @15fps draft  -> out/preview.mp4
 node tools/render.mjs              # 1080x1920 @30fps final -> out/final.mp4
 node tools/render.mjs --stills 4.4,17.5,36   # PNG stills for checking shots
+node tools/render.mjs --preview --orbit --out out/orbit3d.mp4   # 360° turntable of the tower
 ```
 
 ## Where things live

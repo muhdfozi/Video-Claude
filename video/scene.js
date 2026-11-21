@@ -963,6 +963,23 @@ window.renderAt = (t) => {
   drawOverlay(t);
 };
 
+// 360° turntable around the finished tower (proof-of-3D clip): world frozen at the
+// end of the story, smoke and hazard lights keep moving, no overlays.
+window.renderOrbit = (u) => {
+  const T = SH.still.start - 0.2, tFx = T + u * 6;
+  SHOT_STATE.traffic = false;
+  updateWorld(T);
+  posePerson(T, { face: 1.5 });
+  const c = truckCenter(4), top = stackTop().y, R = 46, a = -Math.PI / 2 + u * Math.PI * 2;
+  setCam(V(c.x + Math.sin(a) * R, 19 + Math.sin(u * Math.PI * 2) * 2, Math.cos(a) * R), V(c.x, top * 0.4, 0), 42);
+  updateFx(tFx);
+  sky.position.copy(camera.position);
+  glCanvas.style.filter = 'none';
+  renderer.render(scene, camera);
+  g.clearRect(0, 0, W, H);
+  drawVignette();
+};
+
 await document.fonts.load(`800 64px "Inter Display"`);
 await document.fonts.load(`700 64px "Inter Display"`);
 await document.fonts.load(`900 64px "Inter Display"`);

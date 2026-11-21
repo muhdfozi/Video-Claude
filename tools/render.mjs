@@ -49,8 +49,10 @@ async function openPage() {
   return page;
 }
 
+const ORBIT = flag('--orbit');
 async function frame(page, t) {
-  await page.evaluate((tt) => window.renderAt(tt), t);
+  if (ORBIT) await page.evaluate((u) => window.renderOrbit(u), t / Number(opt('--orbit-sec', 6)));
+  else await page.evaluate((tt) => window.renderAt(tt), t);
   return page.screenshot({ type: 'jpeg', quality: preview ? 85 : 95 });
 }
 
@@ -67,7 +69,7 @@ if (opt('--stills')) {
 }
 
 const t0 = Number(opt('--from', 0));
-const t1 = Number(opt('--to', timeline.duration));
+const t1 = ORBIT ? Number(opt('--orbit-sec', 6)) : Number(opt('--to', timeline.duration));
 const total = Math.ceil((t1 - t0) * FPS);
 fs.mkdirSync(path.dirname(out), { recursive: true });
 const tmp = path.join(ROOT, 'build', 'chunks');
@@ -103,7 +105,7 @@ server.close();
 
 const list = path.join(tmp, 'list.txt');
 fs.writeFileSync(list, fs.readdirSync(tmp).filter((f) => f.endsWith('.mp4')).sort().map((f) => `file '${path.join(tmp, f)}'`).join('\n'));
-const audio = path.join(ROOT, 'build', 'mix.wav');
+const audio = ORBIT ? '' : path.join(ROOT, 'build', 'mix.wav');
 const aArgs = fs.existsSync(audio) ? ['-ss', String(t0), '-t', String(t1 - t0), '-i', audio, '-map', '0:v', '-map', '1:a', '-c:a', 'aac', '-b:a', '192k', '-shortest'] : [];
 execFileSync('ffmpeg', ['-v', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', list, ...aArgs, '-c:v', 'copy', '-movflags', '+faststart', out]);
 console.log(`done -> ${out}  (${((Date.now() - started) / 1000).toFixed(0)}s)`);

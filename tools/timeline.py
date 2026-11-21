@@ -2,14 +2,14 @@
 
 Word times come from vo_words.py (original clock) and are moved through
 build/vo_map.json (written by vo_edit.py). Every shot cut and story event is
-then derived from anchor words and snapped to the 110 BPM grid, so re-editing
+then derived from anchor words and snapped to the beat grid, so re-editing
 the voice never needs hand-typed times.
 """
 import json, math, os, re
 from vo_words import corrected_words
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BPM = 110
+BPM = json.load(open(os.path.join(ROOT, "video", "config.json")))["bpm"]
 BEAT = 60 / BPM
 HALF = BEAT / 2
 

@@ -1,4 +1,4 @@
-"""Synthesise the 110 BPM music bed + sound effects and mix with the voiceover.
+"""Synthesise the relaxed music bed (tempo from video/config.json) + sound effects and mix with the voiceover.
 
 Everything is generated from build/timeline.json so audio and picture share
 the same clock: drum hits land on the beat grid the cuts use, reverse beeps
@@ -51,60 +51,58 @@ def note(f):
     return 440.0 * 2 ** ((f - 69) / 12)
 
 
-# ---------------------------------------------------------------- drums
+# ---------------------------------------------------------------- drums (soft, lo-fi)
 def kick():
-    t = t_axis(0.32)
-    f = 48 + 95 * np.exp(-t / 0.035)
+    t = t_axis(0.4)
+    f = 42 + 60 * np.exp(-t / 0.04)
     ph = 2 * np.pi * np.cumsum(f) / SR
-    return np.sin(ph) * np.exp(-t / 0.13) + 0.3 * np.sin(ph * 2) * np.exp(-t / 0.02)
+    return np.sin(ph) * np.exp(-t / 0.16) * np.minimum(1, t / 0.004)
 
 
-def clap():
-    t = t_axis(0.22)
-    n = rng.standard_normal(len(t))
-    n = highpass(lowpass(n, 2600), 900)
-    e = np.exp(-t / 0.06)
-    for d in (0.0, 0.011, 0.022):              # three quick hand hits
-        e += 0.6 * np.exp(-np.clip(t - d, 0, None) / 0.008) * (t >= d)
-    return n * e * 0.9
+def snap():
+    # finger snap / rim: short band-limited click
+    t = t_axis(0.12)
+    n = highpass(lowpass(rng.standard_normal(len(t)), 4200), 1400)
+    return n * np.exp(-t / 0.018) * 0.9
 
 
-def hat(open_=False):
-    t = t_axis(0.18 if open_ else 0.05)
-    n = highpass(rng.standard_normal(len(t)), 7000)
-    return n * np.exp(-t / (0.06 if open_ else 0.014)) * 0.5
+def shaker():
+    t = t_axis(0.09)
+    n = highpass(rng.standard_normal(len(t)), 6000)
+    return n * np.sin(np.pi * np.minimum(1, t / 0.09)) ** 2 * 0.35
 
 
 # ---------------------------------------------------------------- tonal
-def pluck(freq, sec=0.45, bright=1.0):
+def rhodes(freq, sec):
+    """Warm electric-piano-ish tone with a soft bell attack and slow tremolo."""
     t = t_axis(sec)
-    # marimba-ish: fundamental + 4th harmonic, fast decay on the overtone
-    s = np.sin(2 * np.pi * freq * t) * np.exp(-t / 0.22)
-    s += 0.35 * bright * np.sin(2 * np.pi * freq * 3.98 * t) * np.exp(-t / 0.03)
-    s *= np.minimum(1, t / 0.002)
-    return s
+    s = np.sin(2 * np.pi * freq * t)
+    s += 0.22 * np.sin(2 * np.pi * 2 * freq * t) * np.exp(-t / 0.5)
+    s += 0.10 * np.sin(2 * np.pi * 7.02 * freq * t) * np.exp(-t / 0.04)
+    env = np.exp(-t / 1.4) * np.minimum(1, t / 0.006) * np.minimum(1, (sec - t) / 0.15)
+    return s * env * (1 + 0.1 * np.sin(2 * np.pi * 4.1 * t))
 
 
 def bass(freq, sec):
     t = t_axis(sec)
-    s = np.sin(2 * np.pi * freq * t) + 0.35 * np.sin(2 * np.pi * freq * 2 * t) + 0.12 * np.sin(2 * np.pi * freq * 3 * t)
-    return s * np.minimum(1, t / 0.005) * np.exp(-t / 0.35) * np.minimum(1, (sec - t) / 0.02)
+    s = np.sin(2 * np.pi * freq * t) + 0.18 * np.sin(2 * np.pi * freq * 2 * t)
+    return s * np.minimum(1, t / 0.02) * np.exp(-t / 0.9) * np.minimum(1, (sec - t) / 0.06)
 
 
-# chord progression per bar: I - vi - IV - V in C (playful, major)
-CHORDS = [(48, [60, 64, 67, 72]), (45, [57, 60, 64, 69]), (41, [53, 57, 60, 65]), (43, [55, 59, 62, 67])]
-ARP = [0, 2, 1, 3, 2, 1, 3, 2]                 # 8th-note arpeggio pattern
+# relaxed jazzy loop, one chord per bar: Fmaj7 - Em7 - Dm7 - Cmaj7
+CHORDS = [(41, [53, 57, 60, 64]), (40, [52, 55, 59, 62]), (38, [50, 53, 57, 60]), (36, [48, 52, 55, 59])]
+SWING = 0.09 * BEAT                              # late off-beats = laid-back feel
 
 music = np.zeros(N)
 drums = np.zeros(N)
 breaks = EV["break"]
 stop_at = EV["gag"]                             # "masih tak bergerak": the band stops
-n_beats = int(DUR / BEAT)
+n_beats = int(DUR / BEAT) + 1
 
 
 def muted(t):
-    # music drops out for one beat right after each breakdown
-    return any(b <= t < b + BEAT * 1.0 for b in breaks) or t >= stop_at
+    # the band drops out for one beat right after each breakdown
+    return any(b <= t < b + BEAT for b in breaks) or t >= stop_at
 
 
 for bi in range(n_beats):
@@ -112,29 +110,37 @@ for bi in range(n_beats):
     bar, beat_in_bar = divmod(bi, 4)
     root, chord = CHORDS[bar % 4]
     intro = bar < 1
-    if not muted(tb):
-        if beat_in_bar in (0, 2) or (beat_in_bar == 3 and bar % 2 == 1):
-            place(drums, kick(), tb + (BEAT / 2 if beat_in_bar == 3 else 0), 0.55 if intro else 0.9)
-        if beat_in_bar in (1, 3) and not intro:
-            place(drums, clap(), tb, 0.45)
-        for h in range(2):
-            th = tb + h * BEAT / 2
-            if not muted(th) and not intro:
-                place(drums, hat(open_=(h == 1 and beat_in_bar == 3)), th, 0.22 if h else 0.14)
-        # bass on the beat and the "and"
-        place(music, bass(note(root), BEAT * 0.45), tb, 0.38)
-        if beat_in_bar in (1, 3):
-            place(music, bass(note(root + 12), BEAT * 0.3), tb + BEAT / 2, 0.22)
-    for h in range(2):
-        th = tb + h * BEAT / 2
-        if not muted(th):
-            n = chord[ARP[(beat_in_bar * 2 + h) % 8]]
-            place(music, pluck(note(n + 12)), th, 0.16 if h else 0.2)
+    if muted(tb):
+        continue
+    # chord: full strum on 1, a softer push on the "and" of 2
+    if beat_in_bar == 0:
+        for j, n in enumerate(chord):
+            place(music, rhodes(note(n + 12), BEAT * 3.6), tb + j * 0.012, 0.12)
+    if beat_in_bar == 1 and not muted(tb + BEAT / 2 + SWING):
+        for j, n in enumerate(chord[1:]):
+            place(music, rhodes(note(n + 12), BEAT * 1.8), tb + BEAT / 2 + SWING + j * 0.01, 0.06)
+    # bass on 1 and 3
+    if beat_in_bar in (0, 2):
+        place(music, bass(note(root), BEAT * 1.7), tb, 0.42)
+    # drums
+    if beat_in_bar == 0 or (beat_in_bar == 2 and not intro):
+        place(drums, kick(), tb, 0.6 if intro else 0.85)
+    if beat_in_bar == 2 and not intro and not muted(tb + BEAT / 2 + SWING):
+        place(drums, kick(), tb + BEAT / 2 + SWING, 0.4)
+    if beat_in_bar in (1, 3) and not intro:
+        place(drums, snap(), tb, 0.5)
+    if not intro:
+        place(drums, shaker(), tb, 0.12)
+        if not muted(tb + BEAT / 2 + SWING):
+            place(drums, shaker(), tb + BEAT / 2 + SWING, 0.2)
 
-# drum fill into the big reveal (last bar before 34.36)
-fill_start = EV["reveal"] - 4 * BEAT
-for i in range(8):
-    place(drums, clap(), fill_start + 2 * BEAT + i * BEAT / 4, 0.18 + i * 0.04)
+music = lowpass(music, 2600)                     # warm, dark top end
+
+# reverse-cymbal swell into the big reveal
+sw = 2 * BEAT
+t_sw = t_axis(sw)
+swell = highpass(rng.standard_normal(len(t_sw)), 3000) * (t_sw / sw) ** 2.5
+place(drums, swell, EV["reveal"] - sw, 0.35)
 
 # sad trombone after "masih tak bergerak"
 def trombone(midi, sec, vib=False):
@@ -146,8 +152,8 @@ def trombone(midi, sec, vib=False):
     return s * np.minimum(1, t / 0.04) * np.minimum(1, (sec - t) / 0.12)
 
 tr = EV["facepalm"]
-for i, (m, d) in enumerate([(62, 0.42), (61, 0.42), (60, 0.42), (59, 1.3)]):
-    place(music, trombone(m, d, vib=(i == 3)), tr + i * 0.43, 0.22)
+for i, (m, d) in enumerate([(62, 0.48), (61, 0.48), (60, 0.48), (59, 1.4)]):
+    place(music, trombone(m, d, vib=(i == 3)), tr + i * 0.5, 0.22)
 
 # ---------------------------------------------------------------- sfx
 sfx = np.zeros(N)
