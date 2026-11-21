@@ -165,7 +165,7 @@ const ROAD = { z0: -2.3, z1: 9.8 };
   }
   for (let gx = -40; gx < 70; gx++) for (let gz = 0; gz < 8; gz++) {
     const x = gx * 7 + (gz % 2) * 3.5 + (hash(gx * 5 + gz) - 0.5) * 2;
-    const z = 38 + gz * 7 + (hash(gx * 3 + gz * 7) - 0.5) * 2;
+    const z = 82 + gz * 7 + (hash(gx * 3 + gz * 7) - 0.5) * 2;
     palms.push([x, z, 4 + hash(gx * 2 + gz * 17) * 4]);
   }
   const trunks = new THREE.InstancedMesh(trunkG, M.trunk, palms.length);
@@ -243,7 +243,7 @@ function makeCar() {
   return { root, body, bonnet, lights, wheels };
 }
 
-const SCALES = [1.0, 1.12, 1.26, 1.42, 1.72];
+const SCALES = [1.0, 1.35, 1.82, 2.46, 3.32];   // each bed must carry the previous truck
 const TRUCK_L = 8.7;
 function makeTruck(n, s) {
   const root = new THREE.Group();
@@ -290,10 +290,6 @@ function makeTruck(n, s) {
 
 const car = makeCar(); scene.add(car.root);
 const trucks = SCALES.map((s, i) => { const t = makeTruck(i + 1, s); scene.add(t.root); return t; });
-
-// Tow bars between trucks.
-const barG = new THREE.CylinderGeometry(0.07, 0.07, 1, 8); barG.translate(0, 0.5, 0); barG.rotateZ(-Math.PI / 2);
-const bars = trucks.map(() => { const m = new THREE.Mesh(barG, M.darkSteel); m.castShadow = true; scene.add(m); return m; });
 
 // Background traffic.
 const traffic = [0xd8d8d8, 0xb3261e, 0x222831, 0xf0f0f0].map((c) => {
@@ -439,82 +435,114 @@ function burst(t, tb, origin, s = 1, seed = 0) {
 }
 
 // ---------------------------------------------------------------- story state
-const ARR = EV.arrive, HITCH = EV.hitch, DRIVE = EV.drive, BREAK = EV.break, LOAD = EV.load;
-const shiftOf = (i, t) => DRIVE.reduce((acc, [a, b, m], kx) => acc + (kx >= i ? m * eIO(k(t, a, b)) : 0), 0);
+// Stacking: truck i backs in ahead of the stack, tilts its bed and winches item i
+// up onto it (item 0 = the car, item i = truck i-1 with everything already on it).
+const ARR = EV.arrive, LOADS = EV.loads, DRIVE = EV.drive, BREAK = EV.break;
+const L_OF = (i) => TRUCK_L * SCALES[i];                 // truck length (world m)
+const ITEM_LEN = (j) => (j === 0 ? 3.9 : L_OF(j - 1));   // item j = car or truck j-1
+const ITEM_ROOT = (j) => (j === 0 ? car.root : trucks[j - 1].root);
+const ORIGIN_AT_REAR = (j) => j > 0;                     // trucks' origin is the rear; the car's is its centre
+const MAX_TILT = 0.205;                                  // bed rear touches the ground at any scale
+const driveShift = (i, t) => DRIVE[i][2] * eIO(k(t, DRIVE[i][0], DRIVE[i][1]));
 const base = [];
 {
-  const gap = 1.8;
-  base[0] = 2.9;
-  for (let i = 1; i < 5; i++) base[i] = base[i - 1] + DRIVE[i - 1][2] + TRUCK_L * SCALES[i - 1] + gap * SCALES[i];
+  base[0] = 1.95 + 0.9;                                  // car front + gap
+  for (let i = 1; i < 5; i++) base[i] = base[i - 1] + DRIVE[i - 1][2] + L_OF(i - 1) + 0.15 + 0.7 * SCALES[i];
 }
-function truckRear(i, t) {
-  const arr = ARR[i];
-  const inX = 46 * Math.pow(1 - eOut(k(t, arr[0], arr[1])), 1.4);
-  return base[i] + inX + shiftOf(i, t);
+// truck i while it is still on the ground (before it gets loaded onto truck i+1)
+function groundRear(i, t) {
+  const inX = (30 + 12 * SCALES[i]) * Math.pow(1 - eOut(k(t, ARR[i][0], ARR[i][1])), 1.4);
+  return base[i] + inX + driveShift(i, t);
 }
-const truckFront = (i, t) => truckRear(i, t) + TRUCK_L * SCALES[i];
 const truckVisible = (i, t) => t >= ARR[i][0] - 0.01;
 const broken = (i, t) => t >= BREAK[i];
-const BED_TOP = 1.23;
+const bedTilt = (i, t) => {
+  const [l0, l1] = LOADS[i];
+  return MAX_TILT * sm(k(t, l0 - 0.3, l0)) * (1 - sm(k(t, l1 - 0.05, l1 + 0.25)));
+};
+// where item j's centre ends up on truck j's bed (world x, while truck j is on the ground)
+const bedSlotCenter = (j, t) => groundRear(j, t) + SCALES[j] * 5.7 - ITEM_LEN(j) / 2;
+// item j's centre while it is still on the ground
+const groundCenter = (j, t) => (j === 0 ? 0 : groundRear(j - 1, t) + L_OF(j - 1) / 2);
 
+function placeItem(j, t) {
+  const root = ITEM_ROOT(j), Lj = ITEM_LEN(j);
+  const carrier = trucks[j], sc = SCALES[j];
+  const [l0, l1] = LOADS[j];
+  if (t >= l1) {                                         // riding on the carrier's bed
+    carrier.bed.add(root);
+    const xc = bedSlotCenter(j, l1) - groundRear(j, l1); // centre, metres from bed rear
+    const xLocal = (xc - (ORIGIN_AT_REAR(j) ? Lj / 2 : 0)) / sc - 6.0;
+    root.position.set(xLocal, 0.11, 0);
+    root.rotation.set(0, 0, 0);
+    root.scale.setScalar(1 / sc);
+    return;
+  }
+  scene.add(root);
+  root.scale.setScalar(1);
+  let cx = groundCenter(j, t), y = 0, pitch = 0;
+  if (t >= l0) {                                         // being winched up the tilted bed
+    const u = eIO(k(t, l0, l1));
+    cx = lerp(groundCenter(j, l0), bedSlotCenter(j, l0), u);
+    const th = bedTilt(j, t), xr = groundRear(j, t);
+    const pivotX = xr + 6.0 * sc, pivotY = 1.23 * sc;
+    const surf = pivotY - Math.max(0, pivotX - cx) * Math.sin(th);
+    const on = sm(k(cx - xr, -Lj * 0.35, Lj * 0.25));
+    y = Math.max(0, surf) * on; pitch = th * on;
+  }
+  if (ORIGIN_AT_REAR(j)) root.position.set(cx - (Lj / 2) * Math.cos(pitch), y - (Lj / 2) * Math.sin(pitch), 0);
+  else root.position.set(cx, y, 0);
+  root.rotation.set(0, 0, pitch);
+}
+
+// Poses only (camera code reads the resulting world positions).
 function updateWorld(t) {
-  smokeUsed = 0;
-  const hz = blinkOn(t);
-  // trucks
   trucks.forEach((tr, i) => {
     const vis = truckVisible(i, t);
-    tr.root.visible = vis; bars[i].visible = false;
+    tr.root.visible = vis;
     if (!vis) return;
-    const x = truckRear(i, t), s = tr.s;
-    tr.root.position.set(x, 0, 0);
+    const s = tr.s;
     const db = t - BREAK[i];
     const jolt = db > 0 && db < 1.2 ? Math.exp(-db * 4.5) * Math.sin(db * 34) : 0;
     tr.body.position.y = jolt * 0.05 * s;
     tr.body.rotation.x = jolt * 0.02;
-    tr.body.rotation.z = db > 0 ? -0.012 * Math.min(1, db * 3) : 0;   // sags after breakdown
+    tr.body.rotation.z = db > 0 ? -0.01 * Math.min(1, db * 3) : 0;   // sags after breakdown
+    tr.bed.rotation.z = bedTilt(i, t);
+    const x = groundRear(i, Math.min(t, i < 4 ? LOADS[i + 1][0] : t));
     tr.wheels.forEach((w) => (w.rotation.z = -x / 0.52 / s));
+  });
+  // bottom-up so a carrier's own pose is irrelevant to the order (scene graph handles nesting)
+  for (let i = 4; i >= 0; i--) {
+    if (!truckVisible(i, t)) continue;
+    if (i < 4 && t >= LOADS[i + 1][0]) placeItem(i + 1, t);
+    else { scene.add(trucks[i].root); trucks[i].root.scale.setScalar(1); trucks[i].root.rotation.set(0, 0, 0); trucks[i].root.position.set(groundRear(i, t), 0, 0); }
+  }
+  placeItem(0, t);
+  car.wheels.forEach((w) => (w.rotation.z = -groundCenter(0, Math.min(t, LOADS[0][1])) / 0.33));
+  car.bonnet.rotation.z = -0.32;
+  scene.updateMatrixWorld(true);
+}
+const worldOf = (obj, local) => obj.localToWorld(local.clone());
+// top of the whole stack (roof of the car) in world space
+const stackTop = () => worldOf(car.body, V(0, 1.7, 0));
+const truckCenter = (i) => worldOf(trucks[i].body, V(4.3, 1.5, 0));
+
+// Lights, smoke, traffic — after the camera is set.
+function updateFx(t) {
+  smokeUsed = 0;
+  const hz = blinkOn(t);
+  trucks.forEach((tr, i) => {
+    if (!tr.root.visible) return;
     tr.beacons.forEach((b, j) => (b.material = !broken(i, t) && blinkOn(t, j % 2 ? 0.5 : 0) ? amberOn : amberOff));
     tr.hazards.forEach((h) => (h.material = broken(i, t) && hz ? amberOn : amberOff));
-    // bed tilt for truck 1 loading
-    let tilt = 0;
-    if (i === 0) tilt = 0.19 * sm(k(t, LOAD[0] - 0.35, LOAD[0])) * (1 - sm(k(t, LOAD[1] - 0.05, LOAD[1] + 0.3)));
-    tr.bed.rotation.z = tilt;
-    // tow bar to the truck behind
-    if (i > 0 && HITCH[i] && t >= HITCH[i]) {
-      const a = V(x - 0.75 * s, 0.45 * s, 0), b = V(truckFront(i - 1, t) + 0.05, 0.75 * SCALES[i - 1], 0);
-      const grow = eOut(k(t, HITCH[i], HITCH[i] + 0.22));
-      const bar = bars[i]; bar.visible = true;
-      const d = b.clone().sub(a);
-      bar.position.copy(a);
-      bar.quaternion.setFromUnitVectors(V(1, 0, 0), d.clone().normalize());
-      bar.scale.set(d.length() * grow, 1, 1);
-    }
-    // smoke from the bonnet once broken
-    const s1 = s;
     if (broken(i, t)) {
-      const origin = V(x + 8.1 * s1, 2.4 * s1, 0);
-      burst(t, BREAK[i], origin, s1 * 1.1, i * 9);
-      plume(t, BREAK[i] + 0.15, origin, s1 * 0.95, 0.35 + i * 0.1, i * 5);
+      const origin = worldOf(tr.body, V(8.1, 2.5, 0));
+      burst(t, BREAK[i], origin, tr.s * 1.1, i * 9);
+      plume(t, BREAK[i] + 0.15, origin, tr.s * 0.95, 0.35 + i * 0.1, i * 5);
     }
   });
-  // car: broken from the start, winched onto truck 1
-  const tr0 = trucks[0];
-  const rear0 = truckRear(0, t);
-  const u = eIO(k(t, LOAD[0], LOAD[1]));
-  const onX = rear0 + 3.3;
-  const carX = lerp(0, onX, u);
-  const tilt = tr0.bed.rotation.z;
-  const xb = carX - rear0;                     // car centre in bed coords (0 = bed rear)
-  const surf = BED_TOP - Math.max(0, 6.0 - xb) * Math.sin(tilt);
-  const onBed = sm(k(xb, -1.6, 0.9));
-  car.root.position.set(carX, Math.max(0, surf) * (u > 0 ? onBed : 0), 0);
-  car.root.rotation.z = tilt * onBed;
-  car.wheels.forEach((w) => (w.rotation.z = -carX / 0.33));
-  car.bonnet.rotation.z = -0.32;
   car.lights.forEach((l) => (l.material = hz ? amberOn : amberOff));
-  plume(t, -3, car.root.position.clone().add(V(1.6, 1.3 + car.root.position.y * 0, 0)), 0.55, 0.0, 99);
-
-  // traffic (only some shots ask for it)
+  plume(t, -3, worldOf(car.body, V(1.6, 1.25, 0)), 0.55, 0.0, 99);
   traffic.forEach((v, j) => {
     const lane = j % 2 ? 7.5 : 3.8, sp = j % 2 ? 22 : 27;
     v.root.position.set(((t * sp + j * 97) % 420) - 180, 0, lane);
@@ -562,6 +590,25 @@ function meCam(t, p, { dist, az = -0.42, dy = -0.05, fov = 32, roll = 0, push = 
   setCam(pos, h.clone().add(V(0, -(0.5 - headY) * 2 * half, 0)), fov, roll);
 }
 
+// Truck i backs in and winches the stack up its bed: frame the ramp, scaled to the truck.
+function loadShot(i, t, p, side) {
+  const sc = SCALES[i], xr = groundRear(i, Math.max(t, ARR[i][1]));
+  const D = 9 + 8.5 * sc, e = eIO(p);
+  const focus = V(xr - 0.5 * sc, 1.7 * sc, 0);
+  setCam(lerpV(focus.clone().add(V(side * 0.42 * D, 0.32 * D, D)), focus.clone().add(V(side * 0.36 * D, 0.26 * D, 0.88 * D)), e),
+    focus.clone().add(V(-side * 0.08 * D, 0, 0)), 42);
+  posePerson(t, { face: 1.5 });
+}
+// The stack on truck i creeps forward and dies: keep the whole tower in frame.
+function breakShot(i, t, p, side) {
+  const c = truckCenter(i), top = stackTop().y + 0.6, L = L_OF(i), e = eIO(p);
+  const D = Math.max(2.1 * top, 1.45 * L) + 4;
+  const sh = shake(t, BREAK[i], 0.12 + 0.08 * SCALES[i]);
+  const pos = lerpV(V(c.x + side * D, top * 0.5, D), V(c.x + side * D * 0.9, top * 0.46, D * 0.9), e).add(sh);
+  setCam(pos, V(c.x - side * 0.1 * D, top * 0.44, 0), 44);
+  posePerson(t, { face: 1.5 });
+}
+
 // Each shot: (t, lt, p, dur) -> sets camera + per-shot state; returns ui flags.
 const SHOTS = {
   establish(t, lt, p) {
@@ -574,90 +621,56 @@ const SHOTS = {
     posePerson(t, { phone: eOut(k(lt, 0.0, 0.35)), mood: 0, talk: speaking(t), face: FACE });
     meCam(t, p, { dist: 3.3, az: -0.45, dy: 0.0, fov: 34, headY: 0.4 });
   },
-  load(t, lt, p) {
-    SHOT_STATE.traffic = false;
-    posePerson(t, { phone: 0, face: 1.4, mood: 0.1 });
-    setCam(lerpV(V(-1, 3.6, 17.5), V(1.5, 3.2, 15.5), eIO(p)), lerpV(V(4, 1.2, 0), V(5, 1.3, 0), eIO(p)), 42);
-  },
-  break1(t, lt, p) {
-    posePerson(t, { face: 1.5, mood: 0.2 });
-    const x = truckRear(0, t);
-    const sh = shake(t, BREAK[0], 0.18);
-    setCam(V(x + 1.0, 2.2, 12.5).add(sh), V(x + 4.6, 1.8, 0), 44);
-  },
+  load(t, lt, p) { loadShot(0, t, p, 1); },
+  break1(t, lt, p) { breakShot(0, t, p, -0.25); },
   call2(t, lt, p) {
     posePerson(t, { phone: eOut(k(lt, 0.1, 0.45)), mood: 0.35, talk: speaking(t), face: FACE });
     meCam(t, p, { dist: 2.6, az: 0.35, dy: 0.1, fov: 32, roll: 0.04, headY: 0.41 });
   },
-  hitch2(t, lt, p) {
-    const gx = truckFront(0, t) + 1.0;
-    setCam(lerpV(V(gx - 3.5, 1.1, 8.5), V(gx - 2.5, 1.3, 7.2), eIO(p)), V(gx + 1.5, 1.4, 0), 46);
-    posePerson(t, { face: 1.5 });
-  },
-  break2(t, lt, p) {
-    const fx = truckFront(1, t);
-    const sh = shake(t, BREAK[1], 0.25);
-    setCam(lerpV(V(fx + 9, 4.2, 15), V(fx + 7, 3.6, 13), eIO(p)).add(sh), V(fx - 5, 1.6, 0), 42);
-    posePerson(t, { face: 1.5 });
-  },
+  hitch2(t, lt, p) { loadShot(1, t, p, -1); },
+  break2(t, lt, p) { breakShot(1, t, p, 0.45); },
   call3(t, lt, p) {
     posePerson(t, { phone: 1, mood: 0.6, talk: speaking(t), face: FACE, sweat: 1 });
     meCam(t, p, { dist: 2.0, az: -0.5, dy: 0.0, fov: 32, roll: -0.07, headY: 0.42 });
   },
-  hitch3(t, lt, p) {
-    const gx = truckFront(1, t) + 1.2;
-    setCam(lerpV(V(gx - 6, 15, 12), V(gx - 3, 12, 10), eIO(p)), V(gx + 2, 0.5, 0), 44);
-    posePerson(t, { face: 1.5 });
-  },
-  break3(t, lt, p) {
-    const fx = truckFront(2, t);
-    const sh = shake(t, BREAK[2], 0.25);
-    setCam(lerpV(V(fx + 8, 1.0, 6.5), V(fx + 6.5, 1.3, 6.0), eIO(p)).add(sh), V(fx - 1, 2.6, 0), 46);
-    posePerson(t, { face: 1.5 });
-  },
+  hitch3(t, lt, p) { loadShot(2, t, p, 1); },
+  break3(t, lt, p) { breakShot(2, t, p, -0.4); },
   call4(t, lt, p) {
     posePerson(t, { phone: 1, mood: 0.85, talk: speaking(t), face: FACE, sweat: 1 });
     meCam(t, p, { dist: 2.3, az: 0.3, dy: -0.7, fov: 36, roll: 0.09, headY: 0.4 });
   },
-  hitch4(t, lt, p) {
-    const fx = truckFront(2, t);
-    setCam(lerpV(V(fx - 7, 3.2, 7.5), V(fx - 5, 3.0, 7.2), eIO(p)), V(fx + 7, 2.2, 0), 44);
-    posePerson(t, { face: 1.5 });
-  },
-  break4(t, lt, p) {
-    const fx = truckFront(3, t);
-    const sh = shake(t, BREAK[3], 0.35);
-    setCam(lerpV(V(fx + 3, 2.6, 13), V(fx + 2, 2.4, 12), eIO(p)).add(sh), V(fx - 4, 2.4, 0), 44);
-    posePerson(t, { face: 1.5 });
-  },
+  hitch4(t, lt, p) { loadShot(3, t, p, -1); },
+  break4(t, lt, p) { breakShot(3, t, p, 0.35); },
   call5(t, lt, p) {
     posePerson(t, { phone: 1, mood: 1, talk: speaking(t), face: FACE, sweat: 1 });
     meCam(t, p, { dist: 1.5, az: -0.2, dy: -0.05, fov: 32, roll: -0.11, push: 0.16, headY: 0.44 });
   },
-  hitch5(t, lt, p) {
-    const fx = truckFront(3, t);
-    setCam(lerpV(V(fx - 0.5, 0.8, 9.5), V(fx + 0.5, 0.9, 8.5), eIO(p)), V(fx + 8, 3.0, 0), 48);
-    posePerson(t, { face: 1.5 });
-  },
+  hitch5(t, lt, p) { loadShot(4, t, p, 1); },
   reveal(t, lt, p) {
     SHOT_STATE.traffic = true;
-    // drone rises behind the car and looks down the whole dead convoy
-    const r0 = car.root.position.x, f4 = truckFront(4, t), e = eIO(p);
-    const mid = (r0 + f4) / 2;
-    setCam(lerpV(V(r0 - 9, 4.5, 11), V(r0 - 20, 22, 24), e), lerpV(V(r0 + 14, 1.5, -1), V(mid + 6, 0, -3), e), 44);
+    // worm's-eye at the foot of the finished tower, then the drone pulls up and back
+    const c = truckCenter(4), top = stackTop().y, L = L_OF(4), e = eIO(p);
+    const sh = shake(t, BREAK[4], 0.5);
+    setCam(lerpV(V(c.x + 0.75 * L, 2.2, 1.35 * L), V(c.x + 0.3 * L, top * 0.62, 1.7 * top + 0.85 * L), e).add(sh),
+      lerpV(V(c.x - 0.15 * L, top * 0.5, 0), V(c.x - 0.12 * L, top * 0.4, 0), e), 44);
     posePerson(t, { face: 1.5, mood: 0.6 });
   },
   still(t, lt, p) {
-    SHOT_STATE.traffic = false;
-    const cx = car.root.position.x;
-    setCam(lerpV(V(cx - 4.2, 3.0, 10.5), V(cx - 3.0, 2.8, 8.6), eIO(p)), V(cx + 0.6, 1.9, 0), 40);
+    // crane up to the car stranded on the very top, family still inside
+    const P = worldOf(car.body, V(0, 1.0, 0)), e = eIO(p);
+    setCam(lerpV(P.clone().add(V(-10, -6.5, 15)), P.clone().add(V(-7.5, 1.0, 11.5)), e),
+      lerpV(P.clone().add(V(0.6, -3.2, 0)), P.clone().add(V(0.6, -1.6, 0)), e), 40);
     posePerson(t, { face: 1.5, mood: 0.6 });
   },
   facepalm(t, lt, p) {
-    posePerson(t, { palm: eOut(k(lt, 0.05, 0.45)), mood: -0.6, face: FACE + 0.25 });
+    posePerson(t, { palm: eOut(k(lt, 0.05, 0.45)), mood: -0.6, face: -1.75 });
+    // him in the foreground, the dead tower behind his shoulder
     const h = ME_HEAD(), e = eIO(p);
-    // over-the-shoulder-ish: him on the left third, the dead chain trailing off to the right
-    setCam(lerpV(h.clone().add(V(-3.6, 0.15, 3.9)), h.clone().add(V(-3.0, 0.1, 3.3)), e), h.clone().add(V(1.6, -0.35, -0.9)), 36);
+    const cam = lerpV(h.clone().add(V(-7.6, -0.15, 1.7)), h.clone().add(V(-6.8, -0.1, 1.5)), e);
+    const T = V(truckCenter(4).x, stackTop().y * 0.5, 0);
+    const dir = h.clone().add(V(0, -0.5, 0)).sub(cam).normalize().multiplyScalar(0.5)
+      .add(T.clone().sub(cam).normalize().multiplyScalar(0.5)).normalize();
+    setCam(cam, cam.clone().addScaledVector(dir, 10), 30);
   },
 };
 
@@ -823,8 +836,9 @@ window.renderAt = (t) => {
   const shot = shotAt(t);
   const lt = t - shot.start, dur = shot.end - shot.start;
   SHOT_STATE.traffic = false;
-  SHOTS[shot.id](t, lt, clamp(lt / dur), dur);
   updateWorld(t);
+  SHOTS[shot.id](t, lt, clamp(lt / dur), dur);
+  updateFx(t);
   // small zoom punch on every cut
   camera.fov *= 1 - 0.045 * (1 - eOut(k(lt, 0, 0.3)));
   camera.updateProjectionMatrix();

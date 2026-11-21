@@ -236,10 +236,9 @@ for i, (a, b) in enumerate(EV["arrive"]):
     while k * BEAT < b + 0.2:
         place(sfx, beep(), k * BEAT, 0.5)
         k += 1
-for h in EV["hitch"]:
-    if h:
-        place(sfx, clank(), h, 0.55)
-place(sfx, winch(EV["load"][1] - EV["load"][0]), EV["load"][0], 0.5)
+for i, (a, b) in enumerate(EV["loads"]):
+    place(sfx, winch(b - a), a, 0.5)
+    place(sfx, clank(), b, 0.45 + 0.05 * i)       # stack lands on the bed
 for a, b, _ in EV["drive"]:
     place(sfx, engine(b - a + 0.3, 1.25), a, 0.5)
 for i, bt in enumerate(breaks):

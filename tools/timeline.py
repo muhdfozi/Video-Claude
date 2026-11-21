@@ -93,26 +93,26 @@ S = {s["id"]: s for s in shots}
 # --- story events -----------------------------------------------------------------
 calls = [at(["panggil"], k) for k in range(5)]
 breaks = [at(["rosak"], k) for k in (1, 2, 3, 4)]          # rosak #0 is the car in line 1
-arrive, hitch, drive = [], [None], []
+# Each truck backs in, then winches the whole stack (car, or the previous truck with
+# everything on it) up its tilted bed: truck i carries item i.
+arrive, loads, drive = [], [], []
 for i, shot in enumerate(["load", "hitch2", "hitch3", "hitch4", "hitch5"]):
     s = S[shot]
     a0 = s["start"] + 0.03
     a1 = a0 + min(2 * BEAT, (s["end"] - s["start"]) * 0.5)
     arrive.append([round(a0, 3), round(a1, 3)])
-    if i:
-        hitch.append(round(a1 + 0.12, 3))
-load = [round(arrive[0][1], 3), round(min(arrive[0][1] + 1.6 * BEAT, S["load"]["end"] - 0.08), 3)]
-# the chain creeps forward during each breakdown shot, stalling right on "rosak"
+    loads.append([round(a1 + 0.02, 3), round(min(a1 + 1.7 * BEAT, s["end"] - 0.06), 3)])
+# the stack creeps forward during each breakdown shot, stalling right on "rosak"
 for i, shot in enumerate(["break1", "break2", "break3", "break4"]):
     s = S[shot]
-    drive.append([round(s["start"] + 0.12, 3), round(breaks[i] - 0.04, 3), [3.5, 2.5, 2.0, 1.5][i]])
-# truck 5 tries at the cut into the reveal and dies on "semua"
+    drive.append([round(s["start"] + 0.12, 3), round(breaks[i] - 0.04, 3), [3.5, 3.0, 2.5, 2.0][i]])
+# truck 5 tries once the tower is complete and dies on "semua"
 breaks.append(at(["semua"]))
-drive.append([round(S["reveal"]["start"] - 0.3, 3), round(breaks[-1] - 0.04, 3), 1.0])
+drive.append([round(S["reveal"]["start"] + 0.05, 3), round(breaks[-1] - 0.04, 3), 1.5])
 
 events = {
     "bpm": BPM, "beat": BEAT,
-    "calls": calls, "arrive": arrive, "load": load, "hitch": hitch, "drive": drive, "break": breaks,
+    "calls": calls, "arrive": arrive, "loads": loads, "drive": drive, "break": breaks,
     "gag": at(["masih"]),               # "BENGKEL masih 42 km" + the band stops
     "facepalm": S["facepalm"]["start"],
     "reveal": S["reveal"]["start"],

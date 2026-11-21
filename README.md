@@ -47,7 +47,8 @@ node tools/render.mjs --stills 4.4,17.5,36   # PNG stills for checking shots
 
 ## Where things live
 
-- `video/scene.js` — the whole 3D scene: world, car, five tow trucks (each bigger),
+- `video/scene.js` — the whole 3D scene: world, car, five tow trucks (each ~1.35x
+  bigger so its bed can carry the previous one; they stack into a tower),
   the character, smoke, per-shot cameras (`SHOTS`), and the 2D overlay
   (captions, call card, tally).
 - `tools/vo_words.py` — Whisper mishearings fixed, word onsets corrected.
