@@ -1,11 +1,11 @@
 # Video-Claude — "Lori Towing"
 
 A 38-second vertical (1080×1920) 3D animated short built entirely in code,
-on top of a recorded Malay voiceover. Style is inspired by second-person
-3D explainer shorts ("kalau kau…"): constant slow camera moves, ~2 s shots,
-word-by-word captions, but with its own look — Malaysian highway world,
-keyword pills (yellow = escalation, red = "rosak"), phone call cards and a
-running tow-truck tally.
+on top of a recorded Malay voiceover. Visual language follows cinematic
+explainer reels: dusk/night lighting with practical light glows, sentence
+subtitles in a dark box with coloured keywords (blue = info, red = failure),
+big punch titles ("ROSAK! ✗"), data numbers ("• TINGGI MENARA 13.9 m"),
+leader-line callouts pinned to 3D objects, and a closing question.
 
 Every cut, hazard-light blink, reverse beeper and drum hit is locked to a
 **110 BPM** grid (1 beat = 0.545 s, 1 bar = 2.18 s). The voiceover is tightened
@@ -50,7 +50,8 @@ node tools/render.mjs --stills 4.4,17.5,36   # PNG stills for checking shots
 - `video/scene.js` — the whole 3D scene: world, car, five tow trucks (each ~1.35x
   bigger so its bed can carry the previous one; they stack into a tower),
   the character, smoke, per-shot cameras (`SHOTS`), and the 2D overlay
-  (captions, call card, tally).
+  (subtitles, titles, data numbers, callouts — all listed in one block, timed
+  from the timeline).
 - `tools/vo_words.py` — Whisper mishearings fixed, word onsets corrected.
 - `tools/vo_edit.py` — pause/breath detection and the tightened voice edit.
 - `tools/timeline.py` — anchor phrases for each shot, story events, caption styles.

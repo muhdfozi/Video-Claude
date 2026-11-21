@@ -31,45 +31,59 @@ renderer.setPixelRatio(1);
 renderer.setSize(W, H);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 1.15;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.environmentIntensity = 0.35;
+scene.environmentIntensity = 0.12;
 
-// Sky gradient as screen-space background.
-{
-  const c = document.createElement('canvas'); c.width = 4; c.height = 512;
-  const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, 512);
-  gr.addColorStop(0, '#3f8fdc'); gr.addColorStop(0.55, '#8cc4ef'); gr.addColorStop(1, '#e6f1f4');
-  g.fillStyle = gr; g.fillRect(0, 0, 4, 512);
-  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-  scene.background = tex;
-}
-scene.fog = new THREE.Fog(0xd9e9ef, 70, 320);
+// Dusk sky dome: deep navy overhead, burnt-orange glow on the horizon toward the set sun.
+const SUN_DIR = V(-0.82, 0.16, 0.55).normalize();
+const sky = new THREE.Mesh(new THREE.SphereGeometry(700, 32, 20), new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: { sunDir: { value: SUN_DIR } },
+  vertexShader: `varying vec3 vDir; void main(){ vDir = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `varying vec3 vDir; uniform vec3 sunDir;
+    void main(){
+      float h = vDir.y;
+      vec3 horizon = vec3(0.86, 0.45, 0.26), mid = vec3(0.20, 0.21, 0.36), top = vec3(0.035, 0.05, 0.11);
+      vec3 c = mix(horizon, mid, smoothstep(-0.02, 0.16, h));
+      c = mix(c, top, smoothstep(0.16, 0.65, h));
+      float sd = max(dot(normalize(vDir), normalize(sunDir)), 0.0);
+      c += vec3(1.0, 0.55, 0.25) * pow(sd, 10.0) * 0.55 * (1.0 - smoothstep(0.0, 0.35, h));
+      c = mix(c, vec3(0.06, 0.07, 0.09), smoothstep(0.0, -0.08, h));
+      gl_FragColor = vec4(c, 1.0);
+      #include <colorspace_fragment>
+    }`,
+}));
+sky.renderOrder = -1;
+scene.add(sky);
+scene.fog = new THREE.Fog(0x1b2234, 30, 210);
 
 const camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 1200);
 
-const hemi = new THREE.HemisphereLight(0xcfe8ff, 0x6f8f4a, 1.0);
+const hemi = new THREE.HemisphereLight(0x55628f, 0x141710, 0.75);
 scene.add(hemi);
-const sun = new THREE.DirectionalLight(0xfff1dc, 2.7);
+const sun = new THREE.DirectionalLight(0xff9d63, 1.6);     // low dusk sun: warm rim light
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
 sun.shadow.bias = -0.0004;
 sun.shadow.normalBias = 0.02;
 scene.add(sun, sun.target);
-const SUN_DIR = V(-0.55, 1, 0.65).normalize();
+const moon = new THREE.DirectionalLight(0x8fa6ff, 0.55);   // cool fill from above
+moon.position.set(20, 60, 30);
+scene.add(moon);
 
 // ---------------------------------------------------------------- materials
 const mat = (color, o = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.7, metalness: 0, ...o });
 const M = {
-  grass: mat(0x86b25c, { roughness: 1 }),
+  grass: mat(0x34482a, { roughness: 1 }),
   grass2: mat(0x79a653, { roughness: 1 }),
-  asphalt: mat(0x45484e, { roughness: 0.95 }),
-  shoulder: mat(0x55585e, { roughness: 0.95 }),
+  asphalt: mat(0x2b2d33, { roughness: 0.82 }),
+  shoulder: mat(0x34363c, { roughness: 0.85 }),
   white: mat(0xf2f2ee, { roughness: 0.6 }),
   yellowLine: mat(0xf2c230, { roughness: 0.6 }),
   steel: mat(0xb9c0c6, { roughness: 0.35, metalness: 0.8 }),
@@ -83,10 +97,10 @@ const M = {
   glass: mat(0x1d2c3a, { roughness: 0.1, metalness: 0.3, transparent: true, opacity: 0.62 }),
   car: mat(0x2f7fb8, { roughness: 0.35, metalness: 0.15 }),
   carDark: mat(0x1f2328, { roughness: 0.6 }),
-  head: mat(0xfff7d6, { emissive: 0xfff2c0, emissiveIntensity: 0.6 }),
-  tail: mat(0xb3121b, { emissive: 0x550000, emissiveIntensity: 0.4 }),
-  trunk: mat(0x6e5a44, { roughness: 1 }),
-  frond: mat(0x3f7f35, { roughness: 0.9, side: THREE.DoubleSide }),
+  head: mat(0xfff7d6, { emissive: 0xfff2c0, emissiveIntensity: 2.2 }),
+  tail: mat(0xb3121b, { emissive: 0xff1010, emissiveIntensity: 1.4 }),
+  trunk: mat(0x4a3d30, { roughness: 1 }),
+  frond: mat(0x2b5428, { roughness: 0.9, side: THREE.DoubleSide }),
   skin: mat(0xc78a64, { roughness: 0.75 }),
   skinKid: mat(0xe0b08e, { roughness: 0.75 }),
   hair: mat(0x16110f, { roughness: 0.9 }),
@@ -94,7 +108,7 @@ const M = {
   jeans: mat(0x3d5577, { roughness: 0.9 }),
   shoe: mat(0x2b2b2b, { roughness: 0.8 }),
   hijab: mat(0xd8cfc4, { roughness: 0.95 }),
-  cloud: mat(0xffffff, { roughness: 1, emissive: 0xffffff, emissiveIntensity: 0.25 }),
+  cloud: mat(0x5a5f80, { roughness: 1, emissive: 0x4a2f3a, emissiveIntensity: 0.5, fog: false }),
 };
 const amberOn = mat(0xffa000, { emissive: 0xff8a00, emissiveIntensity: 3.2 });
 const amberOff = mat(0x8a5a12, { emissive: 0x000000, roughness: 0.4 });
@@ -120,6 +134,26 @@ function doorTexture(n) {
   g.fillStyle = '#f4b400'; g.font = '800 34px "Inter Display", Inter, sans-serif';
   g.fillText('TOWING 24J', 128, 228);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+const radialTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
+  const g = c.getContext('2d'), gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.2, 'rgba(255,255,255,0.55)');
+  gr.addColorStop(0.5, 'rgba(255,255,255,0.14)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+  return new THREE.CanvasTexture(c);
+})();
+function glow(parent, color, size, x = 0, y = 0, z = 0, opacity = 1) {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: radialTex, color, blending: THREE.AdditiveBlending,
+    transparent: true, depthWrite: false, opacity }));
+  sp.position.set(x, y, z); sp.scale.setScalar(size); parent.add(sp); return sp;
+}
+const poolGeo = new THREE.PlaneGeometry(1, 1); poolGeo.rotateX(-Math.PI / 2);
+function lightPool(parent, color, sx, sz, x, y, z, opacity) {
+  const m = new THREE.Mesh(poolGeo, new THREE.MeshBasicMaterial({ map: radialTex, color, blending: THREE.AdditiveBlending,
+    transparent: true, depthWrite: false, opacity }));
+  m.position.set(x, y, z); m.scale.set(sx, 1, sz); parent.add(m); return m;
 }
 
 const add = (parent, geo, material, x = 0, y = 0, z = 0, cast = true) => {
@@ -181,22 +215,28 @@ const ROAD = { z0: -2.3, z1: 9.8 };
       q.setFromEuler(new THREE.Euler(tilt, a, 0, 'YXZ'));
       sc.set(1, 0.8 + hash(i + f * 3) * 0.45, 1);
       m4.compose(V(x, h, z), q, sc); fronds.setMatrixAt(i * NF + f, m4);
-      col.setHSL(0.28 + hash(i * 3 + f) * 0.05, 0.45, 0.28 + hash(i + f) * 0.1); fronds.setColorAt(i * NF + f, col);
+      col.setHSL(0.28 + hash(i * 3 + f) * 0.05, 0.35, 0.5 + hash(i + f) * 0.25); fronds.setColorAt(i * NF + f, col);
     }
   });
   trunks.castShadow = fronds.castShadow = true; trunks.receiveShadow = fronds.receiveShadow = true;
   world.add(trunks, fronds);
 
-  // Clouds.
-  const cg = new THREE.SphereGeometry(1, 12, 8);
-  for (let i = 0; i < 26; i++) {
-    const cx = -250 + i * 28 + hash(i) * 20, cz = -180 - hash(i * 3) * 120, cy = 55 + hash(i * 7) * 35;
-    for (let j = 0; j < 5; j++) {
-      const s = 7 + hash(i * 5 + j) * 7;
-      const m = add(world, cg, M.cloud, cx + (j - 2) * 7, cy + hash(i + j) * 4, cz + hash(j) * 5, false);
-      m.scale.set(s * 1.4, s * 0.7, s); m.receiveShadow = false;
+  // Highway street lamps (fake light pools instead of real lights).
+  const poleG = new THREE.CylinderGeometry(0.09, 0.13, 9, 8); poleG.translate(0, 4.5, 0);
+  const armG = new THREE.BoxGeometry(0.1, 0.1, 2.6);
+  const headG = rbox(0.7, 0.16, 0.36, 0.06);
+  const lampMat = mat(0xfff0c8, { emissive: 0xffd9a0, emissiveIntensity: 3 });
+  for (let x = -96; x < 300; x += 34) {
+    for (const [zp, dir] of [[-3.7, 1]]) {
+      const lx = x + (dir < 0 ? 17 : 0);
+      add(world, poleG, M.darkSteel, lx, 0, zp);
+      add(world, armG, M.darkSteel, lx, 8.95, zp + dir * 1.25);
+      add(world, headG, lampMat, lx, 8.85, zp + dir * 2.5, false);
+      glow(world, 0xffd59a, 3.2, lx, 8.7, zp + dir * 2.5, 0.9);
+      lightPool(world, 0xffb56a, 15, 12, lx, 0.012, zp + dir * 3.2, 0.42);
     }
   }
+
 }
 
 // ---------------------------------------------------------------- vehicles
@@ -240,7 +280,10 @@ function makeCar() {
   add(kid, new THREE.SphereGeometry(0.12, 14, 10), M.skinKid, 0, 0.16, 0);
   add(kid, new THREE.SphereGeometry(0.125, 14, 10, 0, Math.PI * 2, 0, 1.3), M.hair, -0.01, 0.17, 0);
   add(kid, new THREE.CylinderGeometry(0.1, 0.13, 0.22, 12), M.white, 0, -0.03, 0);
-  return { root, body, bonnet, lights, wheels };
+  const glows = lights.map((l) => glow(l, 0xffa323, 1.1, 0, 0, 0, 0));
+  for (const z of [-0.6, 0.6]) glow(body, 0xff2a1a, 0.45, -2.0, 0.88, z, 0.8);
+  const pool = lightPool(body, 0xff9a1a, 7, 4.5, 0, 0.03, 0, 0);
+  return { root, body, bonnet, lights, wheels, glows, pool };
 }
 
 const SCALES = [1.0, 1.35, 1.82, 2.46, 3.32];   // each bed must carry the previous truck
@@ -285,7 +328,12 @@ function makeTruck(n, s) {
   const wheels = [];
   for (const x of [1.4, 2.65, 7.55]) for (const z of [-1.0, 1.0]) wheels.push(wheel(body, 0.52, 0.42, x, 0.52, z));
   for (const x of [2.0]) for (const z of [-1.0, 1.0]) add(body, new THREE.BoxGeometry(2.4, 0.08, 0.5), M.truckDark, x, 1.08, z);
-  return { root, body, bed, beacons, hazards, wheels, s, n };
+  const hazGlows = hazards.map((h) => glow(h, 0xffa323, 1.2, 0, 0, 0, 0));
+  const beaconGlows = beacons.map((b) => glow(b, 0xffb030, 1.4, 0, 0, 0, 0));
+  for (const z of [-0.95, 0.95]) glow(body, 0xfff1d0, 1.6, 8.75, 1.25, z, 0.9);
+  lightPool(body, 0xfff0d0, 9, 4.5, 13.5, 0.03, 0, 0.35);              // headlight throw
+  const pool = lightPool(body, 0xff9a1a, 7, 5, -0.5, 0.03, 0, 0);       // hazard spill behind
+  return { root, body, bed, beacons, hazards, wheels, s, n, hazGlows, beaconGlows, pool };
 }
 
 const car = makeCar(); scene.add(car.root);
@@ -344,7 +392,9 @@ function makePerson() {
     arms.push({ sh, el, hand });
   }
   const phone = add(arms[0].el, rbox(0.035, 0.15, 0.075, 0.012), M.black, -0.03, -0.3, 0.02, false);
-  return { root, hips, torso, head, legs, arms, brows, mouth, sweat, phone, eyes };
+  const phoneLight = new THREE.PointLight(0xbcd6ff, 0, 1.6, 1.5); phoneLight.position.set(0.05, 0, 0.12); phone.add(phoneLight);
+  const phoneGlow = glow(phone, 0x9cc4ff, 0.22, 0.03, 0, 0, 0);
+  return { root, hips, torso, head, legs, arms, brows, mouth, sweat, phone, eyes, phoneLight, phoneGlow };
 }
 const me = makePerson(); scene.add(me.root);
 const ME_POS = V(-3.6, 0, 1.05);
@@ -379,6 +429,7 @@ function posePerson(t, { phone = 0, palm = 0, mood = 0, talk = 0, face = 0, look
   armIK(R, lerpV(V(-0.25, -0.05 + sw, 0.06), V(-0.165, 0.76, 0.02), eIO(phone)), lerpV(V(-0.3, 0, -1), V(-0.8, -0.45, 0.35), phone));
   armIK(L, lerpV(V(0.25, -0.05 - sw, 0.06), V(0.0, 0.84, 0.19), eIO(palm)), lerpV(V(0.3, 0, -1), V(0.8, -0.5, 0.45), palm));
   P.phone.visible = palm < 0.5;
+  P.phoneLight.intensity = 1.6 * phone; P.phoneGlow.material.opacity = 0.7 * phone;
   // face
   const ang = mood * 0.35;
   P.brows[0].rotation.z = -ang; P.brows[1].rotation.z = ang;
@@ -533,21 +584,27 @@ function updateFx(t) {
   const hz = blinkOn(t);
   trucks.forEach((tr, i) => {
     if (!tr.root.visible) return;
-    tr.beacons.forEach((b, j) => (b.material = !broken(i, t) && blinkOn(t, j % 2 ? 0.5 : 0) ? amberOn : amberOff));
-    tr.hazards.forEach((h) => (h.material = broken(i, t) && hz ? amberOn : amberOff));
+    tr.beacons.forEach((b, j) => {
+      const on = !broken(i, t) && blinkOn(t, j % 2 ? 0.5 : 0);
+      b.material = on ? amberOn : amberOff; tr.beaconGlows[j].material.opacity = on ? 1 : 0;
+    });
+    const hon = broken(i, t) && hz;
+    tr.hazards.forEach((h, j) => { h.material = hon ? amberOn : amberOff; tr.hazGlows[j].material.opacity = hon ? 1 : 0; });
+    tr.pool.material.opacity = hon ? 0.5 : 0;
     if (broken(i, t)) {
       const origin = worldOf(tr.body, V(8.1, 2.5, 0));
       burst(t, BREAK[i], origin, tr.s * 1.1, i * 9);
       plume(t, BREAK[i] + 0.15, origin, tr.s * 0.95, 0.35 + i * 0.1, i * 5);
     }
   });
-  car.lights.forEach((l) => (l.material = hz ? amberOn : amberOff));
+  car.lights.forEach((l, j) => { l.material = hz ? amberOn : amberOff; car.glows[j].material.opacity = hz ? 1 : 0; });
+  car.pool.material.opacity = hz ? 0.55 : 0;
   plume(t, -3, worldOf(car.body, V(1.6, 1.25, 0)), 0.55, 0.0, 99);
   traffic.forEach((v, j) => {
     const lane = j % 2 ? 7.5 : 3.8, sp = j % 2 ? 22 : 27;
     v.root.position.set(((t * sp + j * 97) % 420) - 180, 0, lane);
     v.wheels.forEach((w) => (w.rotation.z = -(t * sp) / 0.33));
-    v.lights.forEach((l) => (l.material = amberOff));
+    v.lights.forEach((l, j) => { l.material = amberOff; v.glows[j].material.opacity = 0; }); v.pool.material.opacity = 0;
     v.root.visible = SHOT_STATE.traffic;
   });
   for (let i = smokeUsed; i < smokePool.length; i++) smokePool[i].visible = false;
@@ -659,7 +716,7 @@ const SHOTS = {
     // crane up to the car stranded on the very top, family still inside
     const P = worldOf(car.body, V(0, 1.0, 0)), e = eIO(p);
     setCam(lerpV(P.clone().add(V(-10, -6.5, 15)), P.clone().add(V(-7.5, 1.0, 11.5)), e),
-      lerpV(P.clone().add(V(0.6, -3.2, 0)), P.clone().add(V(0.6, -1.6, 0)), e), 40);
+      lerpV(P.clone().add(V(0.6, -1.0, 0)), P.clone().add(V(0.6, 1.1, 0)), e), 40);
     posePerson(t, { face: 1.5, mood: 0.6 });
   },
   facepalm(t, lt, p) {
@@ -675,159 +732,215 @@ const SHOTS = {
 };
 
 // ---------------------------------------------------------------- 2D overlay
+// Text system: sentence subtitles in a dark box, big punch titles up top, data
+// numbers ("• LABEL / 13.9 m"), leader-line callouts pinned to 3D objects.
 const ui = document.getElementById('ui');
 ui.width = W; ui.height = H;
 const g = ui.getContext('2d');
 const FONT = '"Inter Display", Inter, sans-serif';
+const C = { blue: '#62b0ff', red: '#ff5f78', green: '#4fe08a', yellow: '#ffd23f', white: '#ffffff' };
+const SH = Object.fromEntries(TL.shots.map((s) => [s.id, s]));
+function rr(x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+const inOut = (t, t0, t1, fi = 0.18, fo = 0.16) => Math.min(eOut(k(t, t0, t0 + fi)), 1 - k(t, t1 - fo, t1));
 
-// caption chunks: up to 4 words, break on punctuation or pauses
-const chunks = [];
+// --- subtitles: clauses, split before "untuk" / at punctuation
+const clauses = [];
 {
   let cur = [];
   TL.words.forEach((w, i) => {
-    const prev = TL.words[i - 1];
-    if (cur.length && (cur.length >= 4 || /[.,?!]$/.test(prev.w) || w.t0 - prev.t1 > 0.45)) { chunks.push(cur); cur = []; }
+    const n = w.w.toLowerCase();
+    if (cur.length >= 3 && (n === 'untuk')) { clauses.push(cur); cur = []; }
     cur.push(w);
+    const next = TL.words[i + 1];
+    if (!next || (/[.,?!]$/.test(w.w) && cur.length >= 3) || cur.length >= 9) { clauses.push(cur); cur = []; }
   });
-  if (cur.length) chunks.push(cur);
-  chunks.forEach((c, i) => { c.start = c[0].t0 - 0.02; c.end = i + 1 < chunks.length ? Math.min(chunks[i + 1][0].t0 - 0.02, c[c.length - 1].t1 + 0.9) : c[c.length - 1].t1 + 1.2; });
+  if (cur.length) clauses.push(cur);
+  clauses.forEach((c, i) => {
+    const nx = clauses[i + 1], last = c[c.length - 1];
+    c.t0 = c[0].t0 - 0.08;
+    c.t1 = nx ? Math.min(nx[0].t0 - 0.08, last.t1 + 1.1) : last.t1 + 0.7;
+  });
 }
-function rr(x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
-
-function drawCaption(t) {
-  const c = chunks.find((ch) => t >= ch.start && t < ch.end);
+function drawSubtitle(t) {
+  const c = clauses.find((cl) => t >= cl.t0 && t < cl.t1);
   if (!c) return;
-  const size = 64 * S;
-  g.font = `800 ${size}px ${FONT}`;
-  const padX = 16 * S, gap = 16 * S;
-  const items = c.map((w) => ({ ...w, text: w.w.replace(/[.,?!]+$/, '').toLowerCase(), width: g.measureText(w.w.replace(/[.,?!]+$/, '').toLowerCase()).width + (w.style ? padX * 2 : 0) }));
-  // wrap to lines
-  const maxW = 920 * S, lines = [[]]; let lw = 0;
+  const a = inOut(t, c.t0, c.t1, 0.14, 0.1);
+  const size = 42 * S, sp = g.measureText(' ').width;
+  g.save();
+  g.font = `700 ${size}px ${FONT}`;
+  const space = size * 0.26, maxW = 760 * S;
+  const items = c.map((w) => ({ text: w.w, col: w.style === 'red' ? C.red : w.style === 'yel' ? C.blue : C.white, w: g.measureText(w.w).width }));
+  const lines = [[]]; let lw = 0;
   for (const it of items) {
-    if (lw && lw + gap + it.width > maxW) { lines.push([]); lw = 0; }
-    lines[lines.length - 1].push(it); lw += (lw ? gap : 0) + it.width;
+    if (lw && lw + space + it.w > maxW) { lines.push([]); lw = 0; }
+    lines[lines.length - 1].push(it); lw += (lw ? space : 0) + it.w;
   }
-  const lh = size * 1.32;
-  let y = H * 0.635 - ((lines.length - 1) * lh) / 2;
-  for (const line of lines) {
-    const total = line.reduce((a, it) => a + it.width, 0) + gap * (line.length - 1);
-    let x = (W - total) / 2;
-    for (const it of line) {
-      const a = k(t, it.t0 - 0.03, it.t0 + 0.05);
-      if (a > 0) {
-        const sc = 0.72 + 0.28 * eBack(k(t, it.t0 - 0.03, it.t0 + 0.13));
-        g.save();
-        g.translate(x + it.width / 2, y);
-        g.scale(sc, sc);
-        g.globalAlpha = a;
-        g.textAlign = 'center'; g.textBaseline = 'middle';
-        if (it.style) {
-          g.fillStyle = it.style === 'red' ? '#ff4545' : '#ffd23f';
-          g.shadowColor = 'rgba(0,0,0,0.35)'; g.shadowBlur = 14 * S; g.shadowOffsetY = 4 * S;
-          rr(-it.width / 2, -size * 0.62, it.width, size * 1.2, 18 * S); g.fill();
-          g.shadowColor = 'transparent';
-          g.fillStyle = it.style === 'red' ? '#ffffff' : '#17171b';
-          g.fillText(it.text, 0, size * 0.02);
-        } else {
-          g.shadowColor = 'rgba(0,0,0,0.65)'; g.shadowBlur = 16 * S; g.shadowOffsetY = 3 * S;
-          g.lineWidth = 7 * S; g.strokeStyle = 'rgba(15,15,20,0.55)'; g.lineJoin = 'round';
-          g.strokeText(it.text, 0, size * 0.02);
-          g.shadowColor = 'transparent';
-          g.fillStyle = '#ffffff'; g.fillText(it.text, 0, size * 0.02);
-        }
-        g.restore();
-      }
-      x += it.width + gap;
-    }
-    y += lh;
-  }
-}
-
-function truckIcon(x, y, s, color = '#f4b400') {
-  g.save(); g.translate(x, y); g.scale(s, s);
-  g.fillStyle = color;
-  rr(-34, -10, 44, 16, 3); g.fill();              // bed
-  rr(10, -22, 22, 28, 5); g.fill();               // cab
-  g.fillStyle = '#1b2a38'; rr(20, -18, 9, 10, 2); g.fill();
-  g.fillStyle = '#111'; for (const wx of [-22, -8, 22]) { g.beginPath(); g.arc(wx, 8, 7, 0, Math.PI * 2); g.fill(); }
-  g.fillStyle = '#ff9d00'; rr(14, -27, 14, 5, 2); g.fill();
+  const widths = lines.map((l) => l.reduce((s2, it) => s2 + it.w, 0) + space * (l.length - 1));
+  const lh = size * 1.22, padX = 28 * S, padY = 18 * S;
+  const bw = Math.max(...widths) + padX * 2, bh = lines.length * lh + padY * 2;
+  const cy = H * 0.695 + (1 - a) * 10 * S, bx = (W - bw) / 2, by = cy - bh / 2;
+  g.globalAlpha = a;
+  g.filter = a < 1 ? `blur(${(1 - a) * 8 * S}px)` : 'none';
+  g.fillStyle = 'rgba(15,17,23,0.8)'; rr(bx, by, bw, bh, 16 * S); g.fill();
+  g.textBaseline = 'middle'; g.textAlign = 'left';
+  lines.forEach((l, li) => {
+    let x = (W - widths[li]) / 2; const y = by + padY + lh * (li + 0.5);
+    for (const it of l) { g.fillStyle = it.col; g.fillText(it.text, x, y); x += it.w + space; }
+  });
   g.restore();
 }
 
-const CALL_NAMES = ['Towing 24 Jam', 'Towing Express', 'Towing Laju Gila', 'Towing Mega', 'Towing GIGA'];
-const CALL_SHOTS = ['call1', 'call2', 'call3', 'call4', 'call5'];
-function drawCallCard(t, shot) {
-  const n = CALL_SHOTS.indexOf(shot.id);
-  if (n < 0) return;
-  const lt = t - shot.start, rem = shot.end - t;
-  const a = eOut(k(lt, 0, 0.22)) * k(rem, 0, 0.12);
-  const y = 300 * S - (1 - eOut(k(lt, 0, 0.25))) * 60 * S;
-  const w = 780 * S, h = 156 * S, x = (W - w) / 2;
+// --- icons
+function icon(kind, x, y, sz, col) {
+  g.save(); g.strokeStyle = col; g.lineWidth = sz * 0.16; g.lineCap = 'round'; g.lineJoin = 'round';
+  g.beginPath();
+  if (kind === 'x') { g.moveTo(x, y - sz / 2); g.lineTo(x + sz, y + sz / 2); g.moveTo(x + sz, y - sz / 2); g.lineTo(x, y + sz / 2); }
+  else { g.moveTo(x, y); g.lineTo(x + sz * 0.38, y + sz * 0.4); g.lineTo(x + sz, y - sz * 0.5); }
+  g.stroke(); g.restore();
+}
+
+// --- big titles
+const TITLES = [], DATA = [], CALLOUTS = [], BADGES = [];
+function drawTitle(o, t) {
+  const a = inOut(t, o.t0, o.t1, 0.25, 0.18); if (a <= 0) return;
+  const size = (o.size || 86) * S;
+  g.save();
+  g.globalAlpha = a;
+  g.filter = a < 1 ? `blur(${(1 - a) * 14 * S}px)` : 'none';
+  const sc = 1 + 0.06 * (1 - eOut(k(t, o.t0, o.t0 + 0.3)));
+  g.translate(W / 2, H * o.y); g.scale(sc, sc);
+  g.font = `900 ${size}px ${FONT}`; g.textBaseline = 'middle'; g.textAlign = 'left';
+  g.shadowColor = 'rgba(0,0,0,0.55)'; g.shadowBlur = 24 * S; g.shadowOffsetY = 4 * S;
+  o.lines.forEach(([text, col, ic], i) => {
+    const tw = g.measureText(text).width, iw = ic ? size * 0.62 : 0, gap = ic ? size * 0.22 : 0;
+    const x0 = -(tw + gap + iw) / 2, y = (i - (o.lines.length - 1) / 2) * size * 1.02;
+    g.fillStyle = col; g.fillText(text, x0, y);
+    if (ic) icon(ic, x0 + tw + gap, y, iw, col);
+  });
+  g.restore();
+}
+// --- data number: small label with a dot, big value under it
+function drawData(o, t) {
+  const a = inOut(t, o.t0, o.t1, 0.25, 0.18); if (a <= 0) return;
   g.save(); g.globalAlpha = a;
-  g.shadowColor = 'rgba(0,0,0,0.35)'; g.shadowBlur = 30 * S; g.shadowOffsetY = 10 * S;
-  g.fillStyle = 'rgba(24,25,30,0.9)'; rr(x, y, w, h, 44 * S); g.fill();
-  g.shadowColor = 'transparent';
-  // avatar
-  g.fillStyle = '#2e3038'; g.beginPath(); g.arc(x + 84 * S, y + h / 2, 52 * S, 0, Math.PI * 2); g.fill();
-  truckIcon(x + 82 * S, y + h / 2 + 6 * S, 1.25 * S);
-  g.textAlign = 'left'; g.textBaseline = 'alphabetic';
-  g.fillStyle = '#ffffff'; g.font = `800 ${42 * S}px ${FONT}`;
-  g.fillText(CALL_NAMES[n], x + 160 * S, y + 68 * S);
-  const dots = '.'.repeat(1 + (Math.floor(t * 4) % 3));
-  g.fillStyle = '#a7abb6'; g.font = `600 ${30 * S}px ${FONT}`;
-  g.fillText(`memanggil${dots}   lori #${n + 1}`, x + 160 * S, y + 112 * S);
-  // pulsing green call button
-  const cx = x + w - 84 * S, cy = y + h / 2, pulse = (t / BEAT) % 1;
-  g.fillStyle = `rgba(52,199,89,${0.35 * (1 - pulse)})`;
-  g.beginPath(); g.arc(cx, cy, (44 + pulse * 26) * S, 0, Math.PI * 2); g.fill();
-  g.fillStyle = '#34c759'; g.beginPath(); g.arc(cx, cy, 44 * S, 0, Math.PI * 2); g.fill();
-  // handset glyph
-  g.save(); g.translate(cx, cy); g.rotate(-0.75); g.fillStyle = '#fff';
-  rr(-20 * S, -7 * S, 40 * S, 14 * S, 7 * S); g.fill();
-  rr(-24 * S, -7 * S, 12 * S, 22 * S, 5 * S); g.fill(); rr(12 * S, -7 * S, 12 * S, 22 * S, 5 * S); g.fill();
-  g.restore();
+  g.filter = a < 1 ? `blur(${(1 - a) * 12 * S}px)` : 'none';
+  const y = H * (o.y || 0.19);
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = `800 ${24 * S}px ${FONT}`; g.letterSpacing = `${3 * S}px`;
+  const lw = g.measureText(o.label).width;
+  g.fillStyle = C.yellow; g.beginPath(); g.arc(W / 2 - lw / 2 - 16 * S, y - 62 * S, 6 * S, 0, Math.PI * 2); g.fill();
+  g.fillStyle = 'rgba(255,255,255,0.85)'; g.fillText(o.label, W / 2, y - 62 * S);
+  g.letterSpacing = '0px';
+  g.shadowColor = 'rgba(0,0,0,0.5)'; g.shadowBlur = 24 * S;
+  const v = o.value(t), unit = o.unit || '';
+  g.font = `900 ${130 * S}px ${FONT}`; const vw = g.measureText(v).width;
+  g.font = `800 ${54 * S}px ${FONT}`; const uw = g.measureText(unit).width;
+  const x0 = W / 2 - (vw + uw) / 2;
+  g.textAlign = 'left'; g.fillStyle = C.white;
+  g.font = `900 ${130 * S}px ${FONT}`; g.fillText(v, x0, y + 14 * S);
+  g.font = `800 ${54 * S}px ${FONT}`; g.fillText(unit, x0 + vw + 6 * S, y + 36 * S);
   g.restore();
 }
-
-function drawTally(t) {
-  const calls = EV.calls;
-  const n = calls.filter((c) => t >= c).length;
-  if (!n) return;
-  const tn = calls[n - 1];
-  const pop = 1 + 0.25 * (1 - eOut(k(t, tn, tn + 0.3)));
-  const a = eOut(k(t, calls[0], calls[0] + 0.25));
-  const x = 44 * S, y = 150 * S, w = 400 * S, h = 116 * S;
+// --- callout: ring on the object, leader line, "• label"
+const _v = new THREE.Vector3();
+function project(p) {
+  _v.copy(p).project(camera);
+  if (_v.z > 1) return null;
+  return [(_v.x + 1) / 2 * W, (1 - _v.y) / 2 * H];
+}
+function drawCallout(o, t) {
+  const a = inOut(t, o.t0, o.t1, 0.3, 0.15); if (a <= 0) return;
+  const p = project(o.anchor()); if (!p) return;
+  const draw = eOut(k(t, o.t0, o.t0 + 0.25));
+  const q = [p[0] + o.dx * S * draw, p[1] + o.dy * S * draw];
   g.save(); g.globalAlpha = a;
-  g.fillStyle = 'rgba(20,21,26,0.82)'; rr(x, y, w, h, 26 * S); g.fill();
-  truckIcon(x + 70 * S, y + h / 2 + 6 * S, 1.3 * S);
-  g.fillStyle = '#c9ccd4'; g.font = `700 ${27 * S}px ${FONT}`; g.textAlign = 'left'; g.textBaseline = 'alphabetic';
-  g.fillText('LORI TOWING', x + 132 * S, y + 46 * S);
-  g.save(); g.translate(x + 132 * S, y + 96 * S); g.scale(pop, pop);
-  g.fillStyle = '#ffd23f'; g.font = `900 ${50 * S}px ${FONT}`; g.fillText(`× ${n}`, 0, 0);
-  g.restore();
-  const broke = EV.break.filter((b) => t >= b).length;
-  if (broke) {
-    g.fillStyle = '#ff5a4f'; g.font = `800 ${28 * S}px ${FONT}`;
-    g.fillText(`${broke} rosak`, x + 250 * S, y + 92 * S);
-  }
-  // final gag row
-  const tg = EV.gag;
-  if (t >= tg) {
-    const b = eOut(k(t, tg, tg + 0.3));
-    const y2 = y + h + 14 * S;
-    g.globalAlpha = a * b;
-    g.fillStyle = 'rgba(20,21,26,0.82)'; rr(x, y2, w + 40 * S, 90 * S, 24 * S); g.fill();
-    g.fillStyle = '#c9ccd4'; g.font = `700 ${27 * S}px ${FONT}`; g.fillText('BENGKEL', x + 28 * S, y2 + 56 * S);
-    g.fillStyle = '#ff5a4f'; g.font = `900 ${42 * S}px ${FONT}`; g.fillText('masih 42 km', x + 172 * S, y2 + 60 * S);
-  }
+  g.strokeStyle = 'rgba(255,255,255,0.85)'; g.lineWidth = 2.2 * S;
+  g.beginPath(); g.moveTo(p[0], p[1]); g.lineTo(q[0], q[1]); g.stroke();
+  g.fillStyle = '#fff'; g.beginPath(); g.arc(p[0], p[1], 5 * S, 0, Math.PI * 2); g.fill();
+  g.font = `700 ${32 * S}px ${FONT}`; g.textBaseline = 'middle';
+  const text = typeof o.text === 'function' ? o.text(t) : o.text;
+  const tw = g.measureText(text).width + (o.icon ? 34 * S : 0);
+  let right = o.dx >= 0;
+  if (right && q[0] + 28 * S + tw > W - 30 * S) right = false;      // keep labels on screen
+  if (!right && q[0] - 28 * S - tw < 46 * S) right = true;
+  const lx = right ? q[0] + 28 * S : q[0] - 28 * S - tw;
+  const ly = q[1] - 2 * S;
+  g.shadowColor = 'rgba(0,0,0,0.8)'; g.shadowBlur = 10 * S;
+  g.fillStyle = o.dot || C.yellow; g.beginPath(); g.arc(lx - 16 * S, ly, 6 * S, 0, Math.PI * 2); g.fill();
+  g.globalAlpha = a * k(t, o.t0 + 0.12, o.t0 + 0.32);
+  g.fillStyle = '#fff'; g.textAlign = 'left'; g.fillText(text, lx, ly);
+  if (o.icon) icon(o.icon, lx + tw - 22 * S, ly, 22 * S, o.dot || C.red);
   g.restore();
 }
+// --- badge: yellow pill pinned to an object, with a ring on the spot
+function drawBadge(o, t) {
+  const a = inOut(t, o.t0, o.t1, 0.22, 0.15); if (a <= 0) return;
+  const p = project(o.anchor()); if (!p) return;
+  const pop = 0.85 + 0.15 * eBack(k(t, o.t0, o.t0 + 0.25));
+  g.save(); g.globalAlpha = a;
+  g.strokeStyle = C.yellow; g.lineWidth = 4 * S;
+  g.beginPath(); g.ellipse(p[0], p[1], 46 * S * pop, 34 * S * pop, 0, 0, Math.PI * 2); g.stroke();
+  g.font = `800 ${30 * S}px ${FONT}`;
+  const tw = g.measureText(o.text).width, iw = 22 * S;
+  const bw = tw + iw + 46 * S, bh = 50 * S, bx = p[0] + o.dx * S - bw / 2, by = p[1] + o.dy * S - bh / 2;
+  g.fillStyle = C.yellow; rr(bx, by, bw, bh, 12 * S); g.fill();
+  g.fillStyle = '#16171b'; g.textBaseline = 'middle'; g.textAlign = 'left';
+  g.fillText(o.text, bx + 16 * S, by + bh / 2 + 1);
+  icon('x', bx + 24 * S + tw, by + bh / 2, iw * 0.8, '#d9263f');
+  g.restore();
+}
+function drawVignette() {
+  const gr = g.createRadialGradient(W / 2, H * 0.48, H * 0.25, W / 2, H * 0.5, H * 0.72);
+  gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,0.55)');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const top = g.createLinearGradient(0, 0, 0, H * 0.34);
+  top.addColorStop(0, 'rgba(0,0,0,0.45)'); top.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = top; g.fillRect(0, 0, W, H * 0.34);
+}
 
-function drawFlash(t) {
-  for (const b of EV.break) {
-    const d = t - b;
-    if (d >= 0 && d < 0.12) { g.fillStyle = `rgba(255,255,255,${0.35 * (1 - d / 0.12)})`; g.fillRect(0, 0, W, H); }
+// --- what appears when (all derived from the timeline)
+{
+  const callShots = ['call1', 'call2', 'call3', 'call4', 'call5'];
+  const shotOfBreak = ['break1', 'break2', 'break3', 'break4'];
+  const cab = (i) => () => worldOf(trucks[i].body, V(7.3, 3.1, 0));
+  const bonnet = (i) => () => worldOf(trucks[i].body, V(8.2, 2.5, 0));
+  TITLES.push({ t0: 0, t1: SH.call1.start - 0.02, y: 0.17, size: 86,
+    lines: [['KERETA ROSAK.', C.white], ['TOWING PUN ROSAK?!', C.yellow]] });
+  CALLOUTS.push({ t0: 0.7, t1: SH.call1.start, anchor: () => ME_HEAD().add(V(0, 0.25, 0)), text: 'kau', dot: C.yellow, dx: -110, dy: -150 });
+  CALLOUTS.push({ t0: 1.1, t1: SH.call1.start, anchor: () => worldOf(car.body, V(1.4, 1.2, 0)), text: 'kereta rosak', dot: C.red, dx: 120, dy: -190 });
+  callShots.forEach((id, n) => {
+    DATA.push({ t0: SH[id].start + 0.04, t1: SH[id].end, label: 'LORI TOWING KE-', value: () => String(n + 1), y: 0.2 });
+    CALLOUTS.push({ t0: EV.calls[n] - 0.05, t1: SH[id].end, anchor: () => worldOf(me.phone, V(0, 0.02, 0)),
+      text: (t) => 'memanggil' + '.'.repeat(1 + (Math.floor(t * 4) % 3)), dot: C.blue, dx: n % 2 ? 150 : -150, dy: 150 });
+  });
+  CALLOUTS.push({ t0: ARR[0][1] - 0.2, t1: SH.load.end, anchor: cab(0), text: 'lori #1', dot: C.yellow, dx: 90, dy: -170 });
+  for (let i = 1; i < 5; i++) {
+    const sh = SH[`hitch${i + 1}`];
+    CALLOUTS.push({ t0: sh.start + 0.25, t1: sh.end, anchor: cab(i - 1), text: `lori #${i}`, dot: C.red, icon: 'x', dx: -90, dy: -170 });
+    CALLOUTS.push({ t0: ARR[i][1] - 0.15, t1: sh.end, anchor: cab(i), text: `lori #${i + 1}`, dot: C.yellow, dx: 90, dy: -200 });
   }
+  shotOfBreak.forEach((id, i) => {
+    TITLES.push({ t0: BREAK[i], t1: SH[id].end, y: 0.22, size: 96, lines: [['ROSAK!', C.red, 'x']] });
+    BADGES.push({ t0: BREAK[i] + 0.35, t1: SH[id].end, anchor: bonnet(i), text: 'enjin', dx: 40, dy: -110 });
+  });
+  DATA.push({ t0: SH.reveal.start + 0.1, t1: SH.reveal.end, label: 'TINGGI MENARA',
+    value: (t) => (stackTop().y * eOut(k(t, SH.reveal.start + 0.1, SH.reveal.start + 1.0))).toFixed(1), unit: 'm', y: 0.2 });
+  CALLOUTS.push({ t0: BREAK[4] + 0.1, t1: SH.reveal.end, anchor: cab(4), text: 'lori #5', dot: C.red, icon: 'x', dx: 80, dy: -150 });
+  CALLOUTS.push({ t0: SH.still.start + 0.35, t1: SH.still.end, anchor: () => worldOf(car.body, V(-0.3, 1.75, 0)), text: 'kereta kau', dot: C.red, dx: 110, dy: -170 });
+  CALLOUTS.push({ t0: SH.still.start + 1.0, t1: SH.still.end, anchor: () => worldOf(car.body, V(0.05, 1.3, 0.2)), text: 'isteri & anak', dot: C.blue, dx: -120, dy: 150 });
+  TITLES.push({ t0: EV.gag, t1: SH.still.end, y: 0.21, size: 80, lines: [['MASIH TAK GERAK', C.red, 'x']] });
+  DATA.push({ t0: SH.facepalm.start + 0.05, t1: SH.facepalm.start + 1.25, label: 'JARAK KE BENGKEL', value: () => '42', unit: 'km', y: 0.2 });
+  TITLES.push({ t0: SH.facepalm.start + 1.3, t1: TL.duration + 1, y: 0.19, size: 88, lines: [['LORI KE-6,', C.white], ['KAU PANGGIL?', C.yellow]] });
+}
+
+function drawOverlay(t) {
+  g.clearRect(0, 0, W, H);
+  drawVignette();
+  for (const o of CALLOUTS) if (t >= o.t0 && t < o.t1) drawCallout(o, t);
+  for (const o of BADGES) if (t >= o.t0 && t < o.t1) drawBadge(o, t);
+  for (const o of DATA) if (t >= o.t0 && t < o.t1) drawData(o, t);
+  for (const o of TITLES) if (t >= o.t0 && t < o.t1) drawTitle(o, t);
+  drawSubtitle(t);
 }
 
 // ---------------------------------------------------------------- frame
@@ -839,18 +952,19 @@ window.renderAt = (t) => {
   updateWorld(t);
   SHOTS[shot.id](t, lt, clamp(lt / dur), dur);
   updateFx(t);
+  sky.position.copy(camera.position);
   // small zoom punch on every cut
   camera.fov *= 1 - 0.045 * (1 - eOut(k(lt, 0, 0.3)));
   camera.updateProjectionMatrix();
+  // soft blur-in on every cut
+  const bl = 9 * S * (1 - eOut(k(lt, 0, 0.18)));
+  glCanvas.style.filter = bl > 0.05 ? `blur(${bl.toFixed(2)}px)` : 'none';
   renderer.render(scene, camera);
-  g.clearRect(0, 0, W, H);
-  drawFlash(t);
-  drawTally(t);
-  drawCallCard(t, shot);
-  drawCaption(t);
+  drawOverlay(t);
 };
 
 await document.fonts.load(`800 64px "Inter Display"`);
+await document.fonts.load(`700 64px "Inter Display"`);
 await document.fonts.load(`900 64px "Inter Display"`);
 window.renderAt(0);
 window.sceneReady = true;
