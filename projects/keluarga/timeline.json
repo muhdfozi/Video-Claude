@@ -1,0 +1,190 @@
+{
+  "title": "Hari Kanak-Kanak Sedunia — Raysha ke Pusat Sains Negara",
+  "bpm": 110,
+  "beatsPerBar": 4,
+  "totalBeats": 126.0,
+  "tailSeconds": 1.5,
+  "fps": 30,
+  "width": 1080,
+  "height": 1920,
+  "lines": [
+    {
+      "text": "Hari ini adalah *hari kanak-kanak.* | Hari kanak-kanak *sedunia.*",
+      "captionHidden": true
+    },
+    {
+      "text": "Hari ini, Raysha pergi | *Pusat Sains Negara.*"
+    },
+    {
+      "text": "Dia pergi dengan *bapa*, | dan pergi dengan *ibu.*"
+    },
+    {
+      "text": "Dia pergi naik *kereta.*"
+    },
+    {
+      "text": "Sampai saja, Raysha *main semua*, | semua barang yang ada di Pusat Sains Negara."
+    },
+    {
+      "text": "Dia main *playground*, | dia tengok *Didi & Friends*, | dia main *toys*,"
+    },
+    {
+      "text": "lepas tu dia main *lari-lari*, | lepas tu dia main *lompat-lompat*, | dan macam-macam lagi."
+    },
+    {
+      "text": "Lepas tu dia *balik*, | dia pergi beli *barang-barang dapur*,"
+    },
+    {
+      "text": "dia pergi *shopping* | dengan ibu dan bapak."
+    },
+    {
+      "text": "Raysha *happy*, dia tengok *banyak makanan*, | dia *pilih* makanan yang ada."
+    },
+    {
+      "text": "Lepas itu dia *terjumpa Pikachu.*"
+    },
+    {
+      "text": "Lepas itu dia balik dengan *Pikachu*, | *Didi & Friends.* | Balik ke *rumah.*"
+    }
+  ],
+  "sfx": [
+    [
+      0,
+      "pop"
+    ],
+    [
+      5.9,
+      "sparkle"
+    ],
+    [
+      7.6,
+      "whoosh"
+    ],
+    [
+      11.21,
+      "ding"
+    ],
+    [
+      20.76,
+      "pop"
+    ],
+    [
+      24.32,
+      "pop"
+    ],
+    [
+      25.6,
+      "whoosh"
+    ],
+    [
+      28.04,
+      "zip"
+    ],
+    [
+      29.6,
+      "whoosh"
+    ],
+    [
+      33.17,
+      "sparkle"
+    ],
+    [
+      44.6,
+      "whoosh"
+    ],
+    [
+      47.77,
+      "boing"
+    ],
+    [
+      52.28,
+      "ding"
+    ],
+    [
+      55.21,
+      "pop"
+    ],
+    [
+      57.6,
+      "whoosh"
+    ],
+    [
+      61.68,
+      "zip"
+    ],
+    [
+      67.0,
+      "boing"
+    ],
+    [
+      68.0,
+      "boing"
+    ],
+    [
+      73.1,
+      "whoosh"
+    ],
+    [
+      84.63,
+      "pop"
+    ],
+    [
+      87.29,
+      "pop"
+    ],
+    [
+      94.65,
+      "sparkle"
+    ],
+    [
+      98.24,
+      "pop"
+    ],
+    [
+      100.77,
+      "ding"
+    ],
+    [
+      105.6,
+      "whoosh"
+    ],
+    [
+      108.62,
+      "sparkle"
+    ],
+    [
+      110.1,
+      "whoosh"
+    ],
+    [
+      112.98,
+      "pop"
+    ],
+    [
+      115.29,
+      "pop"
+    ],
+    [
+      119.39,
+      "ding"
+    ],
+    [
+      121.0,
+      "hit"
+    ],
+    [
+      121.1,
+      "sparkle"
+    ]
+  ],
+  "music": {
+    "breakBeat": 105.5,
+    "returnBeat": 112,
+    "endBeat": 121.0,
+    "introBeats": 6,
+    "crashBeats": [
+      8.001,
+      30.001,
+      73.5
+    ]
+  }
+}

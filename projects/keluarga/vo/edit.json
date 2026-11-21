@@ -1,0 +1,60 @@
+{
+ "source": "raw.m4a",
+ "note": "Rakaman lancar; kebanyakan suntingan ialah jeda antara ayat. 'DD and friend' = Didi & Friends (kapsyen sahaja, watak tidak dilukis).",
+ "lineStarts": [
+  0.0,
+  4.3,
+  9.06,
+  14.55,
+  16.64,
+  24.46,
+  32.85,
+  41.2,
+  48.7,
+  51.7,
+  58.5,
+  60.56
+ ],
+ "lineEnds": [
+  3.95,
+  8.82,
+  13.83,
+  16.4,
+  24.4,
+  31.15,
+  40.95,
+  48.6,
+  51.6,
+  58.4,
+  60.5,
+  65.45
+ ],
+ "innerGaps": [
+  [
+   13.06,
+   13.38,
+   0.18,
+   ""
+  ],
+  [
+   41.73,
+   42.06,
+   0.15,
+   "lepas ... tu"
+  ],
+  [
+   44.6,
+   45.31,
+   0.2,
+   ""
+  ]
+ ],
+ "fullBeatLines": [
+  0,
+  10
+ ],
+ "lineGapRange": [
+  0.2,
+  0.5
+ ]
+}

@@ -1,0 +1,434 @@
+[
+ {
+  "line": 1,
+  "start": 0.0,
+  "end": 2.23,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "Hari ini adalah ",
+    "hl": false
+   },
+   {
+    "t": "hari kanak-kanak.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 1,
+  "start": 2.23,
+  "end": 4.364,
+  "hidden": true,
+  "segs": [
+   {
+    "t": "Hari kanak-kanak ",
+    "hl": false
+   },
+   {
+    "t": "sedunia.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 4.364,
+  "end": 6.064,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Hari ini, Raysha pergi",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "start": 6.064,
+  "end": 9.273,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Pusat Sains Negara.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 9.273,
+  "end": 12.353,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia pergi dengan ",
+    "hl": false
+   },
+   {
+    "t": "bapa",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "start": 12.353,
+  "end": 14.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dan pergi dengan ",
+    "hl": false
+   },
+   {
+    "t": "ibu.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "start": 14.182,
+  "end": 16.364,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia pergi naik ",
+    "hl": false
+   },
+   {
+    "t": "kereta.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 16.364,
+  "end": 18.764,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Sampai saja, Raysha ",
+    "hl": false
+   },
+   {
+    "t": "main semua",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "start": 18.764,
+  "end": 24.545,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "semua barang yang ada di Pusat Sains Negara.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 24.545,
+  "end": 27.385,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Dia main ",
+    "hl": false
+   },
+   {
+    "t": "playground",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 27.385,
+  "end": 29.105,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia tengok ",
+    "hl": false
+   },
+   {
+    "t": "Didi & Friends",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "start": 29.105,
+  "end": 31.636,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia main ",
+    "hl": false
+   },
+   {
+    "t": "toys",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 31.636,
+  "end": 35.116,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "lepas tu dia main ",
+    "hl": false
+   },
+   {
+    "t": "lari-lari",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 35.116,
+  "end": 38.196,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "lepas tu dia main ",
+    "hl": false
+   },
+   {
+    "t": "lompat-lompat",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "start": 38.196,
+  "end": 40.091,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dan macam-macam lagi.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 40.091,
+  "end": 43.751,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Lepas tu dia ",
+    "hl": false
+   },
+   {
+    "t": "balik",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "start": 43.751,
+  "end": 47.182,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia pergi beli ",
+    "hl": false
+   },
+   {
+    "t": "barang-barang dapur",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 47.182,
+  "end": 47.982,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia pergi ",
+    "hl": false
+   },
+   {
+    "t": "shopping",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "start": 47.982,
+  "end": 50.455,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dengan ibu dan bapak.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 50.455,
+  "end": 54.775,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Raysha ",
+    "hl": false
+   },
+   {
+    "t": "happy",
+    "hl": true
+   },
+   {
+    "t": ", dia tengok ",
+    "hl": false
+   },
+   {
+    "t": "banyak makanan",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "start": 54.775,
+  "end": 57.818,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "dia ",
+    "hl": false
+   },
+   {
+    "t": "pilih",
+    "hl": true
+   },
+   {
+    "t": " makanan yang ada.",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "start": 57.818,
+  "end": 60.273,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Lepas itu dia ",
+    "hl": false
+   },
+   {
+    "t": "terjumpa Pikachu.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 60.273,
+  "end": 62.833,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Lepas itu dia balik dengan ",
+    "hl": false
+   },
+   {
+    "t": "Pikachu",
+    "hl": true
+   },
+   {
+    "t": ",",
+    "hl": false
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 62.833,
+  "end": 64.013,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Didi & Friends.",
+    "hl": true
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "start": 64.013,
+  "end": 65.963,
+  "hidden": false,
+  "segs": [
+   {
+    "t": "Balik ke ",
+    "hl": false
+   },
+   {
+    "t": "rumah.",
+    "hl": true
+   }
+  ]
+ }
+]

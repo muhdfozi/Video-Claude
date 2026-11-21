@@ -23,6 +23,13 @@ if ellipse:
     yy, xx = np.mgrid[0:H, 0:W]
     d = ((xx - ex) / erx) ** 2 + ((yy - ey) / ery) ** 2
     a[..., 3] *= np.clip((1.0 - d) * 12, 0, 1)
+# simpan komponen terbesar sahaja (buang serpihan terpisah)
+from scipy import ndimage
+lab, nlab = ndimage.label(a[..., 3] > 40)
+if nlab > 1:
+    sizes = ndimage.sum(np.ones_like(lab), lab, range(1, nlab + 1))
+    keep = ndimage.binary_dilation(lab == (int(np.argmax(sizes)) + 1), iterations=3)
+    a[..., 3] *= keep
 img = Image.fromarray(a.astype(np.uint8), "RGBA")
 rgb = ImageEnhance.Color(ImageEnhance.Contrast(img.convert("RGB")).enhance(1.08)).enhance(1.12)
 r, g, b = rgb.split(); r = r.point(lambda v: min(255, v * 1.03))
