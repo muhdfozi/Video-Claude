@@ -25,7 +25,7 @@ assets/voiceover.m4a ──transcribe.py──> video/transcript.json  (Whisper,
         │       events derived from anchor words, snapped to the beat grid
         ▼
    build/timeline.json
-        ├── audio.py    110 BPM music + SFX + voice mix      -> build/mix.wav
+        ├── audio.py    relaxed music + SFX + voice mix     -> build/mix.wav
         └── render.mjs  Three.js scene in headless Chromium  -> out/preview.mp4 | out/final.mp4
 ```
 
