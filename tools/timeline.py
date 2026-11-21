@@ -1,87 +1,129 @@
-"""Build build/timeline.json from the transcribed voiceover (video/transcript.json).
+"""Build build/timeline.json on the EDITED voiceover clock.
 
-Whisper's words are corrected here (mishearings, onset times checked against
-the audio envelope), styled for captions, and combined with the story events
-(calls, tow trucks arriving / hitching / breaking down) that both the 3D scene
-and the audio mix read. All story beats sit on the 110 BPM grid.
+Word times come from vo_words.py (original clock) and are moved through
+build/vo_map.json (written by vo_edit.py). Every shot cut and story event is
+then derived from anchor words and snapped to the 110 BPM grid, so re-editing
+the voice never needs hand-typed times.
 """
-import json, os
+import json, math, os, re
+from vo_words import corrected_words
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BPM = 110
 BEAT = 60 / BPM
-BARS = 19
-DURATION = round(BARS * 4 * BEAT, 4)          # 41.4545 s
+HALF = BEAT / 2
 
-# --- caption words -------------------------------------------------------
-raw = [w for s in json.load(open(os.path.join(ROOT, "video", "transcript.json"))) for w in s["words"]]
-words = []
-for w in raw:
-    t = w["w"]
-    if t == "perusak.":                         # "pun rosak." misheard
-        words += [{"w": "pun", "t0": 29.42}, {"w": "rosak.", "t0": 29.62}]
-    elif t == "tersahadai":
-        words.append({"w": "tersadai", "t0": w["t0"]})
-    elif t == "terbijalan.":                    # "tepi jalan." misheard
-        words += [{"w": "tepi", "t0": 36.62}, {"w": "jalan.", "t0": 36.86}]
-    else:
-        words.append({"w": t, "t0": w["t0"]})
+pieces = json.load(open(os.path.join(ROOT, "build", "vo_map.json")))
 
-# Onsets corrected from the audio envelope.
-fix = {0: 0.80}                                 # "Kalau"
-for i, w in enumerate(words):
-    if w["w"] == "Sekali":
-        fix[i], fix[i + 1] = 28.10, 28.42
-    if w["w"] == "Akhirnya":
-        fix[i] = 34.60
-for i, t in fix.items():
-    words[i]["t0"] = t
-for i, w in enumerate(words):
-    w["t1"] = words[i + 1]["t0"] if i + 1 < len(words) else 39.15
-    w["t1"] = min(w["t1"], w["t0"] + 0.7)
+
+def remap(t):
+    """Original-recording time -> edited time."""
+    for a, b, d in pieces:
+        if t < a:
+            return d                       # inside a removed pause: snap to the next piece
+        if t <= b:
+            return d + (t - a)
+    a, b, d = pieces[-1]
+    return d + (b - a)
+
+
+words = corrected_words()
+for w in words:
+    w["t0"], w["t1"] = round(remap(w["t0"]), 3), round(remap(w["t1"]), 3)
+    w["t1"] = max(w["t1"], w["t0"] + 0.12)
 
 # Caption styling: red = breakdowns / failure, yellow = escalating numbers.
-RED = {"rosak", "rosak.", "tak", "bergerak."}
-YEL = {"pertama", "pertama.", "kedua", "kedua.", "ketiga", "ketiga.", "keempat", "keempat.", "kelima", "tersadai"}
+RED = {"rosak", "tak", "bergerak"}
+YEL = {"pertama", "kedua", "ketiga", "keempat", "kelima", "tersadai"}
+norm = lambda s: re.sub(r"[^a-z]", "", s.lower())
 for w in words:
-    base = w["w"].lower()
-    w["style"] = "red" if base in RED else "yel" if base in YEL else ""
-i = next(i for i, w in enumerate(words) if w["w"] == "lori")   # first "lori towing" is the hook
+    n = norm(w["w"])
+    w["style"] = "red" if n in RED else "yel" if n in YEL else ""
+i = next(i for i, w in enumerate(words) if norm(w["w"]) == "lori")   # first "lori towing" is the hook
 words[i]["style"] = words[i + 1]["style"] = "yel"
-words[next(i for i, w in enumerate(words) if w["w"] == "tak")]["style"] = "red"
 
-# --- story events (seconds) ---------------------------------------------
-def b(n):  # beat n -> seconds
-    return round(n * BEAT, 4)
+
+def find(seq, nth=0):
+    """Index of the first word of the nth occurrence of a word sequence."""
+    seq = [norm(s) for s in seq]
+    hits = [i for i in range(len(words) - len(seq) + 1) if [norm(w["w"]) for w in words[i:i + len(seq)]] == seq]
+    return hits[nth]
+
+
+def at(seq, nth=0):
+    return words[find(seq, nth)]["t0"]
+
+
+def snap_down(t, grid=HALF):
+    return round(math.floor((t + 1e-6) / grid) * grid, 4)
+
+
+def snap_up(t, grid=HALF):
+    return round(math.ceil((t - 1e-6) / grid) * grid, 4)
+
+
+# --- shot cuts: just before each anchor phrase, floored to the half-beat --------
+anchors = [
+    ("establish", 0.0),
+    ("call1", at(["kau", "panggil"])),
+    ("load", at(["untuk", "angkut"])),
+    ("break1", at(["tapi", "lori", "towing", "pertama"])),
+    ("call2", at(["jadi", "kau", "panggil"], 0)),
+    ("hitch2", at(["untuk", "towing", "lori", "towing", "pertama"])),
+    ("break2", at(["lepas", "tu"])),
+    ("call3", at(["kau", "panggil", "lori", "towing", "ketiga"])),
+    ("hitch3", at(["untuk", "towing", "lori", "towing", "kedua"])),
+    ("break3", at(["tapi", "lori", "towing", "ketiga"])),
+    ("call4", at(["panggil", "lori", "towing", "keempat"])),
+    ("hitch4", at(["untuk", "towing", "lori", "towing", "ketiga"])),
+    ("break4", at(["sekali"])),
+    ("call5", at(["jadi", "kau", "panggil"], 1)),
+    ("hitch5", at(["untuk", "towing", "lori", "towing", "keempat"])),
+    ("reveal", at(["akhirnya"])),
+    ("still", at(["kereta", "kau", "pula"])),
+    ("facepalm", words[-1]["t1"] + 0.15),
+]
+cuts = [0.0] + [snap_down(t - 0.06) for _, t in anchors[1:]]
+cuts[-1] = snap_up(anchors[-1][1])
+DURATION = round(snap_up(cuts[-1] + 2.55, BEAT), 4)       # room for the sad-trombone tag
+shots = [{"id": n, "start": c, "end": cuts[i + 1] if i + 1 < len(cuts) else DURATION}
+         for i, ((n, _), c) in enumerate(zip(anchors, cuts))]
+S = {s["id"]: s for s in shots}
+
+# --- story events -----------------------------------------------------------------
+calls = [at(["panggil"], k) for k in range(5)]
+breaks = [at(["rosak"], k) for k in (1, 2, 3, 4)]          # rosak #0 is the car in line 1
+arrive, hitch, drive = [], [None], []
+for i, shot in enumerate(["load", "hitch2", "hitch3", "hitch4", "hitch5"]):
+    s = S[shot]
+    a0 = s["start"] + 0.03
+    a1 = a0 + min(2 * BEAT, (s["end"] - s["start"]) * 0.5)
+    arrive.append([round(a0, 3), round(a1, 3)])
+    if i:
+        hitch.append(round(a1 + 0.12, 3))
+load = [round(arrive[0][1], 3), round(min(arrive[0][1] + 1.6 * BEAT, S["load"]["end"] - 0.08), 3)]
+# the chain creeps forward during each breakdown shot, stalling right on "rosak"
+for i, shot in enumerate(["break1", "break2", "break3", "break4"]):
+    s = S[shot]
+    drive.append([round(s["start"] + 0.12, 3), round(breaks[i] - 0.04, 3), [3.5, 2.5, 2.0, 1.5][i]])
+# truck 5 tries at the cut into the reveal and dies on "semua"
+breaks.append(at(["semua"]))
+drive.append([round(S["reveal"]["start"] - 0.3, 3), round(breaks[-1] - 0.04, 3), 1.0])
 
 events = {
     "bpm": BPM, "beat": BEAT,
-    # phone calls: tally increments, call card shows
-    "calls": [3.42, 10.42, 16.84, 23.80, 30.42],
-    # tow truck i reverses in [start, end]
-    "arrive": [[b(9) + 0.05, b(11)], [b(22), b(24)], [b(33), b(35)], [b(46), b(48)], [b(58.5), b(61)]],
-    "load": [b(11), b(12.75)],                  # car winched onto truck 1
-    "hitch": [None, b(24.25), b(35.25), b(48.25), b(61.25)],
-    # whole chain creeps forward [start, end, metres]
-    "drive": [[b(13.5), b(16.5), 3.5], [b(26.5), b(29.8), 2.5], [b(37.25), b(40.4), 2.0],
-              [b(51.5), b(54.1), 1.5], [b(62.5), b(64.1), 1.0]],
-    # breakdown moments, on the spoken "rosak"
-    "break": [9.02, 16.36, 22.08, 29.62, b(64.2)],
-    "facepalm": 37.9,
+    "calls": calls, "arrive": arrive, "load": load, "hitch": hitch, "drive": drive, "break": breaks,
+    "gag": at(["masih"]),               # "BENGKEL masih 42 km" + the band stops
+    "facepalm": S["facepalm"]["start"],
+    "reveal": S["reveal"]["start"],
 }
 
-# Shot cuts on the beat / half-beat grid.
-cuts = [0, b(6), b(9), b(13), b(18), b(22), b(26), b(31), b(33), b(37), b(43), b(46),
-        b(51), b(55), b(58.5), b(63), b(68), b(72)]
-shots = ["establish", "call1", "load", "break1", "call2", "hitch2", "break2", "call3", "hitch3",
-         "break3", "call4", "hitch4", "break4", "call5", "hitch5", "reveal", "still", "facepalm"]
-assert len(cuts) == len(shots)
-shot_list = [{"id": s, "start": c, "end": cuts[i + 1] if i + 1 < len(cuts) else DURATION}
-             for i, (s, c) in enumerate(zip(shots, cuts))]
-
 out = {"title": "Lori Towing", "fps": 30, "width": 1080, "height": 1920, "duration": DURATION,
-       "words": words, "events": events, "shots": shot_list}
+       "words": words, "events": events, "shots": shots}
 json.dump(out, open(os.path.join(ROOT, "build", "timeline.json"), "w"), indent=1, ensure_ascii=False)
-print(f"timeline: {len(words)} words, {len(shot_list)} shots, {DURATION:.2f}s")
-for s in shot_list:
+print(f"timeline: {len(words)} words, {len(shots)} shots, {DURATION:.2f}s ({DURATION / BEAT / 4:.2f} bars)")
+for s in shots:
     print(f"  {s['id']:10s} {s['start']:6.2f} -> {s['end']:6.2f}  ({s['end'] - s['start']:.2f}s)")
+print("calls", [round(c, 2) for c in calls]); print("breaks", [round(b, 2) for b in breaks])
+assert all(s["end"] - s["start"] > 0.7 for s in shots), "a shot is too short"
+assert all(d[1] > d[0] for d in drive), drive

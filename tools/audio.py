@@ -98,7 +98,7 @@ ARP = [0, 2, 1, 3, 2, 1, 3, 2]                 # 8th-note arpeggio pattern
 music = np.zeros(N)
 drums = np.zeros(N)
 breaks = EV["break"]
-stop_at = 38.10                                 # "masih tak bergerak": the band stops
+stop_at = EV["gag"]                             # "masih tak bergerak": the band stops
 n_beats = int(DUR / BEAT)
 
 
@@ -132,7 +132,7 @@ for bi in range(n_beats):
             place(music, pluck(note(n + 12)), th, 0.16 if h else 0.2)
 
 # drum fill into the big reveal (last bar before 34.36)
-fill_start = 63 * BEAT - 4 * BEAT
+fill_start = EV["reveal"] - 4 * BEAT
 for i in range(8):
     place(drums, clap(), fill_start + 2 * BEAT + i * BEAT / 4, 0.18 + i * 0.04)
 
@@ -145,7 +145,7 @@ def trombone(midi, sec, vib=False):
     s = lowpass(s, 1400)
     return s * np.minimum(1, t / 0.04) * np.minimum(1, (sec - t) / 0.12)
 
-tr = 39.27
+tr = EV["facepalm"]
 for i, (m, d) in enumerate([(62, 0.42), (61, 0.42), (60, 0.42), (59, 1.3)]):
     place(music, trombone(m, d, vib=(i == 3)), tr + i * 0.43, 0.22)
 
@@ -248,7 +248,7 @@ for i, bt in enumerate(breaks):
     place(sfx, hiss(), bt + 0.1, 0.5)
 
 # ---------------------------------------------------------------- voice + mix
-pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(ROOT, "assets", "voiceover.m4a"),
+pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", os.path.join(ROOT, "build", "voice_edit.wav"),
                       "-af", "highpass=f=70,acompressor=threshold=-20dB:ratio=3:attack=5:release=120,loudnorm=I=-15:TP=-1.5:LRA=7",
                       "-f", "s16le", "-ac", "1", "-ar", str(SR), "-"], capture_output=True, check=True).stdout
 vo = np.frombuffer(pcm, np.int16).astype(np.float64) / 32768

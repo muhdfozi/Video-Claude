@@ -21,6 +21,7 @@ const eIO = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 const eBack = (x) => { const c = 1.9; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 const hash = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
+const speaking = (t) => TL.words.some((w) => t >= w.t0 && t < w.t1 - 0.04) ? 1 : 0;
 const blinkOn = (t, phase = 0) => ((t / BEAT + phase) % 1 + 1) % 1 < 0.5;
 
 // ---------------------------------------------------------------- renderer
@@ -164,7 +165,7 @@ const ROAD = { z0: -2.3, z1: 9.8 };
   }
   for (let gx = -40; gx < 70; gx++) for (let gz = 0; gz < 8; gz++) {
     const x = gx * 7 + (gz % 2) * 3.5 + (hash(gx * 5 + gz) - 0.5) * 2;
-    const z = 20 + gz * 7 + (hash(gx * 3 + gz * 7) - 0.5) * 2;
+    const z = 38 + gz * 7 + (hash(gx * 3 + gz * 7) - 0.5) * 2;
     palms.push([x, z, 4 + hash(gx * 2 + gz * 17) * 4]);
   }
   const trunks = new THREE.InstancedMesh(trunkG, M.trunk, palms.length);
@@ -570,7 +571,7 @@ const SHOTS = {
     setCam(lerpV(V(-21, 13, 19), V(-9.8, 2.9, 8.8), e), lerpV(V(0.5, 0.4, -1), V(-0.8, 1.1, 0), e), 38);
   },
   call1(t, lt, p) {
-    posePerson(t, { phone: eOut(k(lt, 0.0, 0.35)), mood: 0, talk: t > 3.42 && t < 4.9 ? 1 : 0, face: FACE });
+    posePerson(t, { phone: eOut(k(lt, 0.0, 0.35)), mood: 0, talk: speaking(t), face: FACE });
     meCam(t, p, { dist: 3.3, az: -0.45, dy: 0.0, fov: 34, headY: 0.4 });
   },
   load(t, lt, p) {
@@ -585,7 +586,7 @@ const SHOTS = {
     setCam(V(x + 1.0, 2.2, 12.5).add(sh), V(x + 4.6, 1.8, 0), 44);
   },
   call2(t, lt, p) {
-    posePerson(t, { phone: eOut(k(lt, 0.1, 0.45)), mood: 0.35, talk: t > 10.42 && t < 11.95 ? 1 : 0, face: FACE });
+    posePerson(t, { phone: eOut(k(lt, 0.1, 0.45)), mood: 0.35, talk: speaking(t), face: FACE });
     meCam(t, p, { dist: 2.6, az: 0.35, dy: 0.1, fov: 32, roll: 0.04, headY: 0.41 });
   },
   hitch2(t, lt, p) {
@@ -600,7 +601,7 @@ const SHOTS = {
     posePerson(t, { face: 1.5 });
   },
   call3(t, lt, p) {
-    posePerson(t, { phone: 1, mood: 0.6, talk: 1, face: FACE, sweat: 1 });
+    posePerson(t, { phone: 1, mood: 0.6, talk: speaking(t), face: FACE, sweat: 1 });
     meCam(t, p, { dist: 2.0, az: -0.5, dy: 0.0, fov: 32, roll: -0.07, headY: 0.42 });
   },
   hitch3(t, lt, p) {
@@ -615,7 +616,7 @@ const SHOTS = {
     posePerson(t, { face: 1.5 });
   },
   call4(t, lt, p) {
-    posePerson(t, { phone: 1, mood: 0.85, talk: t > 23.8 ? 1 : 0, face: FACE, sweat: 1 });
+    posePerson(t, { phone: 1, mood: 0.85, talk: speaking(t), face: FACE, sweat: 1 });
     meCam(t, p, { dist: 2.3, az: 0.3, dy: -0.7, fov: 36, roll: 0.09, headY: 0.4 });
   },
   hitch4(t, lt, p) {
@@ -630,7 +631,7 @@ const SHOTS = {
     posePerson(t, { face: 1.5 });
   },
   call5(t, lt, p) {
-    posePerson(t, { phone: 1, mood: 1, talk: t > 30.42 && t < 31.85 ? 1 : 0, face: FACE, sweat: 1 });
+    posePerson(t, { phone: 1, mood: 1, talk: speaking(t), face: FACE, sweat: 1 });
     meCam(t, p, { dist: 1.5, az: -0.2, dy: -0.05, fov: 32, roll: -0.11, push: 0.16, headY: 0.44 });
   },
   hitch5(t, lt, p) {
@@ -640,9 +641,10 @@ const SHOTS = {
   },
   reveal(t, lt, p) {
     SHOT_STATE.traffic = true;
-    const mid = (truckRear(0, t) + truckFront(4, t)) / 2 - 6;
-    const e = eIO(p);
-    setCam(lerpV(V(mid - 6, 5, 22), V(mid - 14, 24, 34), e), lerpV(V(mid, 2, 0), V(mid + 3, 0, -2), e), 46);
+    // drone rises behind the car and looks down the whole dead convoy
+    const r0 = car.root.position.x, f4 = truckFront(4, t), e = eIO(p);
+    const mid = (r0 + f4) / 2;
+    setCam(lerpV(V(r0 - 9, 4.5, 11), V(r0 - 20, 22, 24), e), lerpV(V(r0 + 14, 1.5, -1), V(mid + 6, 0, -3), e), 44);
     posePerson(t, { face: 1.5, mood: 0.6 });
   },
   still(t, lt, p) {
@@ -796,7 +798,7 @@ function drawTally(t) {
     g.fillText(`${broke} rosak`, x + 250 * S, y + 92 * S);
   }
   // final gag row
-  const tg = 38.15;
+  const tg = EV.gag;
   if (t >= tg) {
     const b = eOut(k(t, tg, tg + 0.3));
     const y2 = y + h + 14 * S;
