@@ -1,0 +1,6 @@
+node_modules/
+build/
+out/
+# personal media from Google Drive (voiceover, photos) - not committed
+assets/
+__pycache__/
