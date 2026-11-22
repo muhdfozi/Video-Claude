@@ -718,6 +718,8 @@ if getattr(edl, "BEHIND", None):
                 _rb["s"] = new_session(getattr(edl, "MASK_MODEL", "birefnet-general-lite")); _rb["remove"] = remove
             m = np.array(_rb["remove"](Image.fromarray(frame[..., ::-1]), session=_rb["s"], only_mask=True))
             cv2.imwrite(key, m)
+        if m.shape[:2] != frame.shape[:2]:                 # masks may be precomputed at a lower resolution
+            m = cv2.resize(m, (frame.shape[1], frame.shape[0]), interpolation=cv2.INTER_LINEAR)
         return m.astype(np.float32) / 255.0
     def behind_title(out, mk, bh, T):
         e = min(1.0, max(0.0, (T - bh["a"]) / 0.35)); e = 1 - (1 - e) ** 3
