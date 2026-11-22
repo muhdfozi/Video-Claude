@@ -115,7 +115,7 @@ SHOWROOM = dict(
         # features
         *_feat_lowers,
         # CTA
-        dict(at=A45(33.22), until=A45(35.30), kicker="Alphard Z 2025", big="BERMINAT?", chips=[(A45(34.60), "TEKAN LINK", True)], thump=True),
+        dict(at=A45(33.26), until=A45(35.30), kicker="Alphard Z 2025", big="BERMINAT?", chips=[(A45(34.60), "TEKAN LINK", True)], thump=True),
     ],
 )
 
