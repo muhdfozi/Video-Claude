@@ -237,7 +237,7 @@ if cur: chunks.append(cur)
 # ---------------------------------------------------------------- beat grid (THEME "rentak": speed rule)
 BEATS = []
 RENTAK = getattr(edl, "RENTAK", None)
-if THEME == "rentak" and RENTAK:
+if RENTAK and THEME in ("rentak", "showroom"):   # speed rule: beat grid (poji hebat, poji padu)
     BPM = RENTAK.get("bpm", 110); beat = 60.0 / BPM
     cuts = [s["o0"] for s in subs]
     def _hits(ph):
@@ -381,7 +381,7 @@ CARDS, SCRIMS = [], []
 if THEME == "showroom":
     import showroom_gfx
     CARDS, SCRIMS = showroom_gfx.render(getattr(edl, "SHOWROOM", {}), src2out, add, TOTAL, C, sfx_events, FPS,
-                                        getattr(edl, "ACCENT", "E6C07B"))
+                                        getattr(edl, "ACCENT", "E6C07B"), BEATS)
 
 if args.keypoints and THEME == "clean":
     from PIL import ImageFont

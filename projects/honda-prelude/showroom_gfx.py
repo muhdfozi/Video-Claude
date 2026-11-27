@@ -70,14 +70,23 @@ def money(v, prefix="RM"):
     return prefix + f"{v:,.0f}"
 
 
-def render(SR, src2out, add, TOTAL, C, sfx_events, FPS, accent="E6C07B"):
+def render(SR, src2out, add, TOTAL, C, sfx_events, FPS, accent="E6C07B", BEATS=None):
     ACC, WHITE, GREY, DIM, BLACK, INK = C(accent), C("F5F3EE"), C("A7A39B"), C("4A4844"), C("000000"), C("0B0B0E")
     MONT, ANTON, MONO, SANS = r"\fnMontserrat Black", r"\fnAnton", r"\fnJetBrains Mono ExtraBold", r"\fnInter Display SemiBold"
     A7 = r"\an7\pos(0,0)"
     cards, scrims = [], []
 
+    def snap(t, tol=0.22):
+        """Speed rule (RENTAK/BPM in the EDL): land a graphic on the nearest beat of the grid."""
+        if not BEATS or t is None: return t
+        b = min(BEATS, key=lambda x: abs(x - t))
+        return b if abs(b - t) <= tol else t
+
     def T(x):
         return src2out(x) if x is not None else None
+
+    def TS(x):
+        return snap(T(x))
 
     def T_end(x):
         """End of a window given in source time: map a point just inside it (a segment end can map elsewhere)."""
@@ -251,7 +260,7 @@ def render(SR, src2out, add, TOTAL, C, sfx_events, FPS, accent="E6C07B"):
             frame_line(a + 0.2, b, x, y, w, h); ticks(a + 0.2, b, x, y, w, h)
             if cd.get("box_label"): chip(a + 0.5, b, cd["box_label"], x + 30, y + h, an=4, solid=True, fs=30)
         for it in cd.get("items", []):
-            k = it["kind"]; st = max(a + 0.2, T(it["at"])) if "at" in it else a + 0.35
+            k = it["kind"]; st = max(a + 0.2, TS(it["at"])) if "at" in it else snap(a + 0.35)
             if st >= b: continue
             if k == "counter":
                 if it.get("lab"): typewriter(st - 0.15 if st - 0.15 > a else st, b, it["lab"].upper(), 540, it["y"] - it.get("fs", 190) * 0.62 - 30, fs=30, col=GREY)
@@ -284,14 +293,14 @@ def render(SR, src2out, add, TOTAL, C, sfx_events, FPS, accent="E6C07B"):
             add(a + 0.3, b, "{" + rf"\an5\pos(540,1790)\fad(150,180)" + MONO + rf"\fs22\fsp5\bord0\shad0\c{DIM}&" + "}" + cd["footer"].upper(), 8)
 
     # ------------------------------------------------------------ lower-thirds on footage
-    LO = sorted(SR.get("lowers", []), key=lambda o: T(o["at"]) or 0)
+    LO = sorted(SR.get("lowers", []), key=lambda o: TS(o["at"]) or 0)
     for i, lo in enumerate(LO):
-        t0 = T(lo["at"])
+        t0 = TS(lo["at"])
         if t0 is None: continue
         t1 = T_end(lo["until"]) if lo.get("until") else t0 + lo.get("dur", 2.0)
         t1 = t1 if t1 and t1 > t0 else t0 + lo.get("dur", 2.0)
         if i + 1 < len(LO) and not lo.get("keep"):
-            nx = T(LO[i + 1]["at"])
+            nx = TS(LO[i + 1]["at"])
             if nx is not None and nx > t0: t1 = min(t1, nx - 0.02)
         t1 = min(t1, TOTAL)
         if t1 <= t0: continue
