@@ -32,6 +32,19 @@ susunan hook → kereta → kira-kira → jawapan → features → CTA, hantar v
   Letak per shot supaya hanya bahagian bawah huruf tersorok (shot depan kereta: `bottom≈625`; presenter
   berdiri depan kereta: `bottom≈975`). Kaunter OTR + soalan hook di bawah.
 
+## Speed rule 110 BPM (user: "macam biasa 110 bpm")
+Letak `RENTAK = dict(bpm=110)` dalam EDL: build.py pilih fasa grid yang paling banyak potongan atas beat,
+regangkan muzik ke 110 BPM (`atempo`), dan `showroom_gfx` snap setiap lower-third + item kad ke beat terdekat
+(toleransi 0.22 s). Jika dua lower jatuh pada beat yang sama, jarakkan masa `at` (contoh: projects/alphard-z-2025-c).
+Contoh: `projects/alphard-z-2025-c/edl.py`.
+
+## Pengajaran
+- Hujung segmen mesti tunggu perkataan habis (semak RMS): "RM840" pernah terpotong jadi "804" bila segmen tamat 0.6 s awal.
+- Voiceover dengan take berulang: guna take lengkap TERAKHIR; sahkan dengan transcribe semula `voice_proc.wav`
+  (+ transcribe klip pendek untuk bahagian yang whisper langkau).
+- Mask BiRefNet makan ~12 GB RAM: kira dahulu dengan `work11/premask.py` (proses berasingan, 1080×1920),
+  jangan jalankan serentak dengan Whisper.
+
 ## Cara guna
 1. Potong & susun macam `style-kira-detail` (EDL `SEGMENTS` boleh dikongsi: `from edl import ...`).
 2. EDL baru: `THEME = "showroom"`, `ACCENT = "E6C07B"`, `SHOWROOM = dict(cards=[...], lowers=[...])`,
