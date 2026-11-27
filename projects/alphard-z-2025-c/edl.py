@@ -40,7 +40,7 @@ SEGMENTS = [
     # maths
     seg("jom", 19.64, 21.54, "m71", 10.2, K(10.2, 1.06), "Jom kira."),
     seg("harga", 22.04, 26.28, "m71", 12.0, K(12.0), "Body price RM280,000 (card)."),
-    seg("kos1", 26.28, 34.90, "m71", 12.1, K(12.1, 1.05, CC, 1.12, 8.6), "Insurance, road tax 2.5 (ledger box)."),
+    seg("kos1", 26.28, 35.52, "m71", 12.1, K(12.1, 1.05, CC, 1.12, 8.6), "Insurance, road tax 2.5 (ledger box)."),
     seg("kos2", 37.78, 41.80, "m72", 0.0, K(0.0, 1.05, CC, 1.10, 4.0), "Processing fee (false start before it removed)."),
     seg("total", 41.80, 47.12, "m72", 3.0, K(3.0), "Total on the road (card)."),
     seg("loan", 47.12, 55.06, "m72", 3.0, K(3.0), "9-year full loan, no DP -> ~RM3,200 (card)."),
@@ -63,11 +63,11 @@ FRONT = W + "still_front.png"
 F1 = "/home/user/fonts_dl/f1/Formula1-Bold.ttf"
 MASK_MODEL = "birefnet-general-lite"
 BEHIND = [
-    dict(win=(15.74, 17.42), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=640, width=1050, top_scale=0.42, dim=0.45, enter="slam", exit=False),
-    dict(win=(17.42, 19.56), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=725, width=1050, top_scale=0.42, dim=0.45, enter="settle", exit=True),
+    dict(win=(15.74, 17.42), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=600, width=1050, top_scale=0.42, dim=0.45, enter="slam", exit=False),
+    dict(win=(17.42, 19.56), font=F1, top="TOYOTA", main="ALPHARD *Z*", bottom=690, width=1050, top_scale=0.42, dim=0.45, enter="settle", exit=True),
 ]
 
-FEATS = [(76.46, "Unit ni", "SERBA *LENGKAP*", 78.32), (79.94, "Body kit", "*MODELISTA*", 81.00), (81.00, "Siap dengan", "2 POWER *DOOR*", 82.62),
+FEATS = [(77.72, "Datang dengan", "SERBA *LENGKAP*", 79.12), (79.94, "Body kit", "*MODELISTA*", 81.00), (81.00, "Siap dengan", "2 POWER *DOOR*", 82.62),
          (82.64, "Siap dengan", "PILOT *SEAT*", 83.52), (83.52, "Siap dengan", "*SUNROOF*", 84.70), (84.72, "Siap dengan", "SIDE *STEP*", 85.70),
          (85.72, "Siap dengan", "HEAD-UP *DISPLAY*", 87.06), (87.08, "Siap dengan", "TOYOTA *TEAMMATE*", 88.28),
          (88.30, "Siap dengan", "PARKING *ASSIST*", 89.10), (93.28, "Dan juga", "ROOF *MONITOR*", 94.12)]
@@ -110,7 +110,7 @@ SHOWROOM = dict(
         dict(at=26.28, until=41.78, box="Kos on the road", box_h=460, y=1300,
              rows=[(29.34, "Insurans · NCD 55%", "RM3,900"), (33.16, "Road tax · 2.5", "RM840"), (40.22, "Processing fee", "RM2,800")]),
         # features
-        dict(at=75.76, until=76.44, kicker="Toyota Alphard Z", big="UNIT *NI*"),
+        dict(at=75.76, until=77.70, kicker="Unit ni", big="ALPHARD *Z*", fs=118),
         *[dict(at=a, until=u, kicker=k, big=b, fs=118) for a, k, b, u in FEATS],
         # CTA
         dict(at=94.52, until=98.28, kicker="Alphard Z 2025", big="BERMINAT?", chips=[(97.12, "TEKAN LINK", True)], thump=True),
