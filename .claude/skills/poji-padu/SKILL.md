@@ -32,7 +32,13 @@ susunan hook → kereta → kira-kira → jawapan → features → CTA, hantar v
   Letak per shot supaya hanya bahagian bawah huruf tersorok (shot depan kereta: `bottom≈625`; presenter
   berdiri depan kereta: `bottom≈975`). Kaunter OTR + soalan hook di bawah.
 
-## Speed rule 110 BPM (user: "macam biasa 110 bpm")
+## Speed rule / BPM
+**Default: BPM asal muzik** (user: "buat standard BPM, 110 bpm tak best"): `RENTAK = dict(bpm="auto")` — muzik
+kekal tempo asalnya, grafik snap ke beat muzik itu sendiri. 110 BPM (regang muzik) hanya bila user minta.
+**Jeda janggal (user rule):** `GAP_MIN, GAP_PAD = 0.20, 0.05` dalam EDL; buang perkataan penyambung meleret
+("Dan..." + senyap) di awal segmen; semak `voice_proc.wav` tiada senyap > ~0.25 s.
+
+### Pilihan 110 BPM
 Letak `RENTAK = dict(bpm=110)` dalam EDL: build.py pilih fasa grid yang paling banyak potongan atas beat,
 regangkan muzik ke 110 BPM (`atempo`), dan `showroom_gfx` snap setiap lower-third + item kad ke beat terdekat
 (toleransi 0.22 s). Jika dua lower jatuh pada beat yang sama, jarakkan masa `at` (contoh: projects/alphard-z-2025-c).

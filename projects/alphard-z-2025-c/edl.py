@@ -7,7 +7,8 @@ Retakes removed (last complete take kept): "Jadi gaji berapakah yang layak untuk
 Exact totals (user rule): 280,000 + 3,900 + 840 + 2,800 = RM287,540 (VO: "287,000 lebih");
 rule 1/3: RM3,200 x 3 = RM9,600 (VO gives the method; monthly is his "3,200 lebih").
 Whisper fixes: "Alphazard"/"Alpha Z" = Alphard Z, "RM12,000" mileage = 12,000 km, "Rotax" = road tax, "server lengkap" = serba lengkap.
-Speed rule (user: "macam biasa 110 bpm"): RENTAK grid -> music stretched to 110 BPM, graphics snap to the beat.
+Speed rule: first tried 110 BPM (user: "tak best") -> bpm="auto": music at its own tempo, graphics snap to its beat.
+Pauses tightened (GAP_MIN 0.20); the dragged "Dan ..." before "kalau korang buat loan" dropped.
 Order (poji padu): hook -> car -> maths -> answer -> features -> CTA. All a= are VOICEOVER seconds.
 """
 R = "/home/user/drive_dl/Raw Video 13/"
@@ -19,7 +20,8 @@ ACCENT = "E6C07B"
 AUDIO = W + "vo48k_df.wav"
 VOICE = "studio"
 VAD_DB = -40
-RENTAK = dict(bpm=110)
+RENTAK = dict(bpm="auto")       # user: "standard BPM" (110 tak best) -> music keeps its own tempo, graphics on its beat
+GAP_MIN, GAP_PAD = 0.20, 0.05  # user: buang awkward pause
 GRAPHICS, KEYPOINTS = [], []
 CC = (0.5, 0.5)
 
@@ -43,7 +45,7 @@ SEGMENTS = [
     seg("kos1", 26.28, 35.52, "m71", 12.1, K(12.1, 1.05, CC, 1.12, 8.6), "Insurance, road tax 2.5 (ledger box)."),
     seg("kos2", 37.78, 41.80, "m72", 0.0, K(0.0, 1.05, CC, 1.10, 4.0), "Processing fee (false start before it removed)."),
     seg("total", 41.80, 47.12, "m72", 3.0, K(3.0), "Total on the road (card)."),
-    seg("loan", 47.12, 55.06, "m72", 3.0, K(3.0), "9-year full loan, no DP -> ~RM3,200 (card)."),
+    seg("loan", 48.10, 55.06, "m72", 3.0, K(3.0), "9-year full loan, no DP -> ~RM3,200 (card)."),
     seg("rule", 55.06, 61.46, "m72", 3.0, K(3.0), "Rule paling simple: bulanan <= 1/3 gaji, darab 3 (card)."),
     seg("answer", 70.40, 74.92, "m72", 3.0, K(3.0), "Final take: 'Dan inilah gaji yang selayaknya...' (card)."),
     # features
@@ -83,7 +85,7 @@ SHOWROOM = dict(
                                                      (42.35, "Road tax", "840"), (42.55, "Processing", "2,800")]),
                     dict(kind="counter", at=44.46, to=287540, y=1200, fs=180, lab="On the road",
                          sub="280,000 + 3,900 + 840 + 2,800")]),
-        dict(win=(47.12, 55.06), kicker="Full loan · tanpa DP", heading="KIRA LOAN", head_fs=120, ghost="LOAN",
+        dict(win=(48.10, 55.06), kicker="Full loan · tanpa DP", heading="KIRA LOAN", head_fs=120, ghost="LOAN",
              items=[dict(kind="ring", at=48.92, n=9, y=760, unit="TAHUN"),
                     dict(kind="chip", at=49.78, text="TANPA DOWN PAYMENT", y=1055),
                     dict(kind="counter", at=52.70, to=3200, y=1330, fs=160, pre="± ", lab="Bulanan (anggaran)")]),

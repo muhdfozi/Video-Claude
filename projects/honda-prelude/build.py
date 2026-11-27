@@ -92,6 +92,7 @@ mono = voice_src.mean(1)
 HOP = 480                                           # 10 ms
 nfr = len(mono) // HOP
 rms_db = 20 * np.log10(np.sqrt((mono[:nfr * HOP].reshape(nfr, HOP) ** 2).mean(1)) + 1e-9)
+GAP_MIN, GAP_PAD = getattr(edl, "GAP_MIN", 0.28), getattr(edl, "GAP_PAD", 0.07)
 THR = getattr(edl, "VAD_DB", None) or max(np.percentile(rms_db, 15) + 9, -46)   # EDL can override (boosted audio)
 voiced = rms_db > THR
 # close tiny holes (< 60 ms) inside words
@@ -122,14 +123,14 @@ for si, seg in enumerate(SEGMENTS):
     if runs:
         if not contig_prev: a0 = max(a0, runs[0][0] / 100 - 0.06)
         if not contig_next: a1 = min(a1, runs[-1][1] / 100 + 0.12)
-    # internal pauses -> jump cuts (each kept piece >= 0.35 s)
+    # internal pauses -> jump cuts (each kept piece >= 0.35 s); EDL GAP_MIN / GAP_PAD tighten the pace
     pieces = [(a0, a1)]
     if seg.get("cut_pauses", True):
         pieces, cur = [], a0
         for (r0, r1), (n0, n1) in zip(runs, runs[1:]):
             gap0, gap1 = r1 / 100, n0 / 100
-            if gap1 - gap0 >= 0.28 and gap0 + 0.07 - cur >= 0.35 and a1 - (gap1 - 0.07) >= 0.35:
-                pieces.append((cur, gap0 + 0.07)); cur = gap1 - 0.07
+            if gap1 - gap0 >= GAP_MIN and gap0 + GAP_PAD - cur >= 0.35 and a1 - (gap1 - GAP_PAD) >= 0.35:
+                pieces.append((cur, gap0 + GAP_PAD)); cur = gap1 - GAP_PAD
         pieces.append((cur, a1))
     for k, (p0, p1) in enumerate(pieces):
         p0, p1 = q(p0), q(p1)
@@ -238,12 +239,8 @@ if cur: chunks.append(cur)
 BEATS = []
 RENTAK = getattr(edl, "RENTAK", None)
 if RENTAK and THEME in ("rentak", "showroom"):   # speed rule: beat grid (poji hebat, poji padu)
-    BPM = RENTAK.get("bpm", 110); beat = 60.0 / BPM
-    cuts = [s["o0"] for s in subs]
-    def _hits(ph):
-        return sum(1 for c in cuts if min((c - ph) % beat, beat - (c - ph) % beat) < 0.06)
-    phase = max(np.arange(0, beat, 0.005), key=_hits)
-    BEATS = [float(x) for x in np.arange(phase, TOTAL + beat, beat)]
+    # bpm=<number>: stretch the music to that tempo; bpm="auto": keep the music's own tempo (user's "standard BPM")
+    BPM = RENTAK.get("bpm", 110); _t, b0 = None, 0.0
     if MUSIC:
         import librosa
         _tw = os.path.join(args.work, "_music_tempo.wav")
@@ -252,16 +249,23 @@ if RENTAK and THEME in ("rentak", "showroom"):   # speed rule: beat grid (poji h
         _y, _sr = librosa.load(_tw, sr=22050)
         _tempo, _bf = librosa.beat.beat_track(y=_y, sr=_sr)
         _t = float(np.atleast_1d(_tempo)[0])
+        _bt = librosa.frames_to_time(_bf, sr=_sr)
+        b0 = float(_bt[0]) if len(_bt) else 0.0
+    if BPM == "auto": BPM = _t or 110.0
+    beat = 60.0 / BPM
+    cuts = [s["o0"] for s in subs]
+    def _hits(ph):
+        return sum(1 for c in cuts if min((c - ph) % beat, beat - (c - ph) % beat) < 0.06)
+    phase = max(np.arange(0, beat, 0.005), key=_hits)
+    BEATS = [float(x) for x in np.arange(phase, TOTAL + beat, beat)]
+    if MUSIC and _t:
         while _t < BPM * 0.75: _t *= 2
         while _t > BPM * 1.5: _t /= 2
         at = BPM / _t
-        _bt = librosa.frames_to_time(_bf, sr=_sr)
-        b0 = float(_bt[0]) if len(_bt) else 0.0
-        # trim the music start so its (stretched) beats land on our phase
-        x = (b0 - at * phase) % (beat * at)
+        x = (b0 - at * phase) % (beat * at)        # trim the music start so its beats land on our phase
         MUSIC["start"] = MUSIC["start"] + x
         MUSIC["atempo"] = at
-        print(f"rentak: {BPM} bpm grid, phase {phase:.3f}s ({_hits(phase)}/{len(cuts)} cuts on beat), music {_t:.1f}->{BPM} bpm (atempo {at:.3f})")
+        print(f"rentak: {BPM:.1f} bpm grid, phase {phase:.3f}s ({_hits(phase)}/{len(cuts)} cuts on beat), music {_t:.1f}->{BPM:.1f} bpm (atempo {at:.3f})")
 
 # ---------------------------------------------------------------- ASS
 GFX_GAIN = 0.80 if args.hdr else 1.0     # HLG: graphics white ~75-80% signal (BT.2408 ref white), not 100%
