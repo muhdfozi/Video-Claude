@@ -87,7 +87,7 @@ FRONT, CABIN = W + "still_front.png", W + "still_cabin.png"
 F1 = "/home/user/fonts_dl/f1/Formula1-Bold.ttf"
 MASK_MODEL = "birefnet-general-lite"
 BEHIND = [
-    dict(win=(1.68, 4.28), font=F1, top="MERCEDES-AMG", main="CLE *53*", bottom=655, width=920, top_scale=0.24, dim=0.42, enter="slam", exit=False),
+    dict(win=(1.68, 4.28), font=F1, top="MERCEDES-AMG", main="CLE *53*", bottom=615, width=920, top_scale=0.24, dim=0.42, enter="slam", exit=False),
     dict(win=(4.28, 7.20), font=F1, top="MERCEDES-AMG", main="CLE *53*", bottom=830, width=920, top_scale=0.24, dim=0.42, enter="settle", exit=True),
 ]
 
@@ -108,7 +108,7 @@ SHOWROOM = dict(
                     dict(kind="counter", at=70.70, to=491130, y=1170, fs=170, lab="Jumlah loan", sub="610,730 − 119,600"),
                     dict(kind="chip", at=73.92, text="INTEREST 2.30%", y=1420, solid=True)]),
         dict(win=(74.94, 88.96), kicker="Loan RM491,130 · interest 2.3%", heading="ANSURAN", head_fs=130, ghost="BULAN",
-             items=[dict(kind="counter", at=77.30, to=5488.83, y=650, fs=130, lab="9 tahun", sub="RM5,488.83 sebulan"),
+             items=[dict(kind="counter", at=75.72, to=5488.83, y=650, fs=130, lab="9 tahun", sub="RM5,488.83 sebulan"),
                     dict(kind="counter", at=79.84, to=6788.12, y=980, fs=130, lab="7 tahun", sub="RM6,788.12 sebulan"),
                     dict(kind="counter", at=83.72, to=9126.83, y=1310, fs=130, lab="5 tahun", sub="RM9,126.83 sebulan"),
                     dict(kind="chip", at=87.58, text="KORANG PILIH YANG MANA? KOMEN ↓", y=1560, solid=True)]),
